@@ -54,7 +54,7 @@ public class AttackTreeDesignerModule extends AbstractJavaModule {
     @objid ("e72f2768-ac10-450a-b7eb-92df79b496ce")
     @Override
     public IParameterEditionModel getParametersEditionModel() {
-           return super.getParametersEditionModel();
+        return super.getParametersEditionModel();
     }
 
     @objid ("2be751bb-dc4e-4605-90c3-232252cb8b51")

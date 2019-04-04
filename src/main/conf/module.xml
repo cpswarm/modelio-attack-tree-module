@@ -4,6 +4,101 @@
         <PathEntry path="lib/${project.artifactId}-${project.version}.jar"/>
     </ClassPath>
     <Profiles>
-        <Profile uid="e37a5820-06b4-4268-a1de-46eb78224dce" id="AttackTreeProfile"/>
+        <Profile uid="e37a5820-06b4-4268-a1de-46eb78224dce" id="AttackTreeProfile">
+            <Stereotype name="AND" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.AND.label" uid="25f299d0-3f80-4347-964f-4a317676e21e" is-abstract="false">
+                <Icon path="res/icon/gui/and2.png"/>
+                <Image path=""/>
+            </Stereotype>
+            <Stereotype name="OR" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.OR.label" uid="3664495d-49db-45c1-a18b-4e4e7cb08345" is-abstract="false">
+                <Icon path=""/>
+                <Image path=""/>
+            </Stereotype>
+            <Stereotype name="EVENT" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.EVENT.label" uid="b3e39c51-3f77-4fc4-bc2a-10234dd8e236" is-abstract="false">
+                <Icon path=""/>
+                <Image path=""/>
+            </Stereotype>
+            <Stereotype name="GOAL" metaclass="Standard.Class" owner-stereotype="mref#'' {9b0ef033-dd0c-456b-847f-8297fd3f9a3a} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.OR.label" uid="98a31175-827e-4d13-bcaa-da132b3ab216" is-abstract="false">
+                <Icon path=""/>
+                <Image path=""/>
+            </Stereotype>
+            <Stereotype name="AttackTreeDiagram" metaclass="Standard.ClassDiagram" owner-stereotype="" is-hidden="false" label="%stereotype.AttackTreeDiagram.label" uid="c16cc837-ad64-4363-824b-622cc4b523ab" is-abstract="false">
+                <Icon path=""/>
+                <Image path=""/>
+            </Stereotype>
+            <Stereotype name="SUBGOAL" metaclass="Standard.Class" owner-stereotype="mref#'' {b3e39c51-3f77-4fc4-bc2a-10234dd8e236} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.OR.label" uid="9b0ef033-dd0c-456b-847f-8297fd3f9a3a" is-abstract="false">
+                <Icon path=""/>
+                <Image path=""/>
+            </Stereotype>
+        </Profile>
+        <Profile uid="f6e49e9e-e19b-4a74-a8c2-ce13127bf422" id="Automatic">
+            <Stereotype name="Attack_Tree" metaclass="Standard.StaticDiagram" owner-stereotype="" is-hidden="false" label="%stereotype.Attack_Tree.label" uid="6b524d26-a75d-4ff8-966b-8794593a391e" is-abstract="false">
+                <Icon path=""/>
+                <Image path=""/>
+            </Stereotype>
+        </Profile>
     </Profiles>
+    <Gui>
+        <Commands>
+            <Command id="AttackTreeDiagramExplorerCommand" label="%command.AttackTreeDiagramExplorerCommand.label" tooltip="%command.AttackTreeDiagramExplorerCommand.tooltip" image="" modify-model="false">
+                <Scope metaclass="Standard.Package" stereotype=""/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.explorer.AttackTreeDiagramCommand">
+                    <HParameter name="name" value=""/>
+                </Handler>
+            </Command>
+            <Command id="Import" label="%command.Import.label" tooltip="%command.Import.tooltip" image="" modify-model="false">
+                <Scope metaclass="Infrastructure.ModelElement" stereotype=""/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.explorer.ImportCommand"/>
+            </Command>
+            <Command id="Export" label="%command.Export.label" tooltip="%command.Export.tooltip" image="" modify-model="false">
+                <Scope metaclass="Infrastructure.ModelElement" stereotype=""/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.explorer.ExportCommand"/>
+            </Command>
+        </Commands>
+        <Tools>
+            <Tool id="Event" label="%tool.Event.label" tooltip="%tool.Event.tooltip" image="">
+                <Scope-source metaclass="Standard.Package" stereotype=""/>
+                <Handler class="Box">
+                    <HParameter name="stereotype" value="AttackTreeDesigner#EVENT"/>
+                    <HParameter name="metaclass" value="Standard.Class"/>
+                    <HParameter name="name" value="Event"/>
+                </Handler>
+            </Tool>
+            <Tool id="test" label="%tool.test.label" tooltip="%tool.test.tooltip" image="">
+                <Scope-source metaclass="Infrastructure.ModelElement" stereotype=""/>
+                <Handler class="Multilink">
+                    <HParameter name="metaclass" value="Standard.Class"/>
+                </Handler>
+            </Tool>
+        </Tools>
+        <ContextualMenu>
+            <CommandRef refid="AttackTreeDiagramExplorerCommand" group="" group-image=""/>
+            <CommandRef refid="Export" group="" group-image=""/>
+            <CommandRef refid="Import" group="" group-image=""/>
+        </ContextualMenu>
+        <Diagrams>
+            <DiagramType base-diagram="Standard.StaticDiagram" stereotype="AttackTreeDesigner#Attack_Tree">
+                <Palette keepBasePalette="true"/>
+                <Wizard label="%wizard.Attack_Tree.label" icon="" information="%wizard.Attack_Tree.info" details="%wizard.Attack_Tree.detail" preview-image="">
+                    <Scope metaclass="Standard.Package" stereotype=""/>
+                    <Handler class="org.modelio.module.attacktreedesigner.command.wizard.AttackTreeDiagramWizard">
+                        <HParameter name="stereotype" value="AttackTreeDesigner#Attack_Tree"/>
+                        <HParameter name="metaclass" value="Standard.StaticDiagram"/>
+                        <HParameter name="style" value="attacktree"/>
+                    </Handler>
+                </Wizard>
+                <Handler class="org.modelio.module.attacktreedesigner.customizer.AttackTreeDiagramCustomizer">
+                    <HParameter name="stereotype" value="AttackTreeDesigner#Attack_Tree"/>
+                    <HParameter name="metaclass" value="Standard.StaticDiagram"/>
+                </Handler>
+            </DiagramType>
+        </Diagrams>
+        <Views>
+            <PropertyPage id="Attack_Tree" class="org.modelio.module.attacktreedesigner.property.AttackTreePropertyPage" label="%propertypage.Attack_Tree.label" image=""/>
+        </Views>
+    </Gui>
+    <Resources>
+        <Styles>
+            <Style id="attacktree" path="res/generated/styles/attacktree.style"/>
+        </Styles>
+    </Resources>
 </Module>

@@ -20,21 +20,25 @@ public class AttackTreeDesignerPeerModule implements IAttackTreeDesignerPeerModu
     }
 
     @objid ("a08ebdae-a18c-4fe7-9dd5-5631f0b98d79")
+    @Override
     public IModuleAPIConfiguration getConfiguration() {
         return this.peerConfiguration;
     }
 
     @objid ("3ae0ebfb-8455-4ce2-8a47-43fc53277e35")
+    @Override
     public String getDescription() {
         return this.module.getDescription();
     }
 
     @objid ("e5b3c43a-d81d-4087-be54-04464ae90d08")
+    @Override
     public String getName() {
         return this.module.getName();
     }
 
     @objid ("0d41c7ad-3ff5-4138-9bf1-4acfeff33940")
+    @Override
     public Version getVersion() {
         return this.module.getVersion();
     }
