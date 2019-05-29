@@ -40,6 +40,7 @@
 
     <!-- // Build // -->
     <build>
+        <sourceDirectory></sourceDirectory>
         <plugins>
             <!-- Use JVM 1.8 -->
             <plugin>
@@ -75,6 +76,7 @@
                 </executions>
                 <configuration>
                     <moduleFile>${project.basedir}/src/main/conf/module.xml</moduleFile>
+                    <sourceBasedir></sourceBasedir>
                 </configuration>
             </plugin>
 
