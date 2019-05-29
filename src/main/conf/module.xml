@@ -26,8 +26,8 @@
                 <Image path=""/>
             </Stereotype>
         </Profile>
-        <Profile uid="999eafb2-b369-4e46-82c7-b186abc7e429" id="attacktree.diagrams">
-            <Stereotype name="AttackTreeDiagram" metaclass="Standard.ClassDiagram" owner-stereotype="" is-hidden="false" label="%stereotype.AttackTreeDiagram.label" uid="de1761a2-3ffc-42c7-ad37-dcd7dfaaa780" is-abstract="false">
+        <Profile uid="dcb18dc7-0d64-4e62-9a9c-fbbe60ed42df" id="attacktree.diagrams">
+            <Stereotype name="AttackTreeDiagram" metaclass="Standard.ClassDiagram" owner-stereotype="" is-hidden="false" label="%stereotype.AttackTreeDiagram.label" uid="76f18db6-c75b-4873-86dd-c382e5e7c4f7" is-abstract="false">
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
