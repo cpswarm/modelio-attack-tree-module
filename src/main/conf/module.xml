@@ -13,21 +13,21 @@
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
-            <Stereotype name="Event" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.EVENT.label" uid="b3e39c51-3f77-4fc4-bc2a-10234dd8e236" is-abstract="false">
+            <Stereotype name="Root" metaclass="Standard.Class" owner-stereotype="mref#'' {6199b1b7-1b67-4b2a-95f8-0a6a5eecbe90} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.Root.label" uid="4fa8564e-1fdc-4733-9cc9-53073cfd3d20" is-abstract="false">
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
-            <Stereotype name="Goal" metaclass="Standard.Class" owner-stereotype="mref#'' {9b0ef033-dd0c-456b-847f-8297fd3f9a3a} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.OR.label" uid="98a31175-827e-4d13-bcaa-da132b3ab216" is-abstract="false">
+            <Stereotype name="Attack" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.Attack.label" uid="6199b1b7-1b67-4b2a-95f8-0a6a5eecbe90" is-abstract="false">
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
-            <Stereotype name="SubGoal" metaclass="Standard.Class" owner-stereotype="mref#'' {b3e39c51-3f77-4fc4-bc2a-10234dd8e236} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.OR.label" uid="9b0ef033-dd0c-456b-847f-8297fd3f9a3a" is-abstract="false">
+            <Stereotype name="SubTree" metaclass="Standard.Class" owner-stereotype="mref#'' {6199b1b7-1b67-4b2a-95f8-0a6a5eecbe90} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.SubTree.label" uid="5840353b-987c-4ba5-a640-27cb64e7b462" is-abstract="false">
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
         </Profile>
-        <Profile uid="dcb18dc7-0d64-4e62-9a9c-fbbe60ed42df" id="attacktree.diagrams">
-            <Stereotype name="AttackTreeDiagram" metaclass="Standard.ClassDiagram" owner-stereotype="" is-hidden="false" label="%stereotype.AttackTreeDiagram.label" uid="76f18db6-c75b-4873-86dd-c382e5e7c4f7" is-abstract="false">
+        <Profile uid="fa9d21c9-cc25-4eb3-a90e-3df7023348ff" id="attacktree.diagrams">
+            <Stereotype name="AttackTreeDiagram" metaclass="Standard.ClassDiagram" owner-stereotype="" is-hidden="false" label="%stereotype.AttackTreeDiagram.label" uid="c9876c18-02b9-4a5d-9514-7a7ec27d8f4b" is-abstract="false">
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
@@ -54,7 +54,6 @@
             <Tool id="Event" label="%tool.Event.label" tooltip="%tool.Event.tooltip" image="">
                 <Scope-source metaclass="Standard.Package" stereotype=""/>
                 <Handler class="Box">
-                    <HParameter name="stereotype" value="AttackTreeDesigner#Event"/>
                     <HParameter name="metaclass" value="Standard.Class"/>
                     <HParameter name="name" value="Event"/>
                 </Handler>
