@@ -32,14 +32,14 @@
         </Profile>
         <Profile uid="6f44d2e9-1fa5-46cd-9763-62c01694f4e1" id="attacktree.diagrams">
             <Stereotype name="AttackTreeDiagram" metaclass="Standard.ClassDiagram" owner-stereotype="" is-hidden="false" label="%stereotype.AttackTreeDiagram.label" uid="17c8cb6f-3fd4-4187-91a7-02752ca2c4a6" is-abstract="false">
-                <Icon path=""/>
+                <Icon path="res/icon/gui/diag_24.png"/>
                 <Image path=""/>
             </Stereotype>
         </Profile>
     </Profiles>
     <Gui>
         <Commands>
-            <Command id="AttackTreeDiagramExplorerCommand" label="%command.AttackTreeDiagramExplorerCommand.label" tooltip="%command.AttackTreeDiagramExplorerCommand.tooltip" image="" modify-model="false">
+            <Command id="AttackTreeDiagramExplorerCommand" label="%command.AttackTreeDiagramExplorerCommand.label" tooltip="%command.AttackTreeDiagramExplorerCommand.tooltip" image="res/icon/gui/diag_24.png" modify-model="false">
                 <Scope metaclass="Standard.Package" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.AttackTreeDiagramCommand">
                     <HParameter name="name" value=""/>
@@ -77,15 +77,15 @@
                     <HParameter name="name" value="Association"/>
                 </Handler>
             </Tool>
-            <Tool id="And" label="%tool.And.label" tooltip="%tool.And.tooltip" image="res/icon/gui/AndGate_24.png">
+            <Tool id="AND" label="%tool.AND.label" tooltip="%tool.AND.tooltip" image="res/icon/gui/AndGate_24.png">
                 <Scope-source metaclass="Standard.Package" stereotype=""/>
-                <Handler class="Box">
+                <Handler class="org.modelio.module.attacktreedesigner.command.tools.CustomAndTool">
                     <HParameter name="stereotype" value="AttackTreeDesigner#AND"/>
                     <HParameter name="metaclass" value="Standard.Class"/>
                     <HParameter name="name" value="AND"/>
                 </Handler>
             </Tool>
-            <Tool id="Or" label="%tool.Or.label" tooltip="%tool.Or.tooltip" image="res/icon/gui/OrGate_24.png">
+            <Tool id="OR" label="%tool.OR.label" tooltip="%tool.OR.tooltip" image="res/icon/gui/OrGate_24.png">
                 <Scope-source metaclass="Standard.Package" stereotype=""/>
                 <Handler class="Box">
                     <HParameter name="stereotype" value="AttackTreeDesigner#OR"/>
@@ -102,7 +102,7 @@
         <Diagrams>
             <DiagramType base-diagram="Standard.ClassDiagram" stereotype="AttackTreeDesigner#AttackTreeDiagram">
                 <Palette keepBasePalette="true"/>
-                <Wizard label="%wizard.Attack_Tree_Diagram.label" icon="" information="%wizard.Attack_Tree_Diagram.info" details="%wizard.Attack_Tree_Diagram.detail" preview-image="res/icon/gui/Untitled drawing (1).png">
+                <Wizard label="%wizard.Attack_Tree_Diagram.label" icon="res/icon/gui/diag_24.png" information="%wizard.Attack_Tree_Diagram.info" details="%wizard.Attack_Tree_Diagram.detail" preview-image="res/icon/gui/Untitled drawing (1).png">
                     <Scope metaclass="Standard.Package" stereotype=""/>
                     <Handler class="GenericWizardContributor">
                         <HParameter name="style" value="attacktree"/>

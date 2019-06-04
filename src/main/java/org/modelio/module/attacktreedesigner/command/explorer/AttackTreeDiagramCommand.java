@@ -2,7 +2,9 @@ package org.modelio.module.attacktreedesigner.command.explorer;
 
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
+import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.api.modelio.diagram.IDiagramHandle;
+import org.modelio.api.modelio.diagram.IDiagramNode;
 import org.modelio.api.modelio.diagram.IDiagramService;
 import org.modelio.api.modelio.diagram.dg.IDiagramDG;
 import org.modelio.api.modelio.diagram.style.IStyleHandle;
@@ -22,6 +24,8 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
+import org.modelio.module.attacktreedesigner.utils.DiagramElementBounds;
+import org.modelio.module.attacktreedesigner.utils.IAttackTreeCustomizerPredefinedField;
 import org.modelio.vcore.smkernel.mapi.MClass;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
@@ -40,44 +44,41 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
         String name = Messages.getString ("Ui.Command.AttackTreeDiagramExplorerCommand.Name", owner.getName());
         
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.Create", "AttackTree Diagram"))){
-            
+        
             MClass mclass = moduleContext.getModelioServices().getMetamodelService().getMetamodel().getMClass(ClassDiagram.class);
             Stereotype ster = session.getMetamodelExtensions().getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACKTREEDIAGRAM, mclass);
             ClassDiagram diagram = session.getModel().createClassDiagram(name, owner, ster);
         
-            if (diagram != null) {
-                /*
-                 * Create default Root node
-                 */
-                //moduleContext.getModelioServices().getMetamodelService().getMetamodel().getMClass(arg0)
-        //                org.modelio.metamodel.uml.statik.Class rootClass = session.getModel().createClass();
-        //                Stereotype rootStereotype = session.getMetamodelExtensions().getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT, org.modelio.metamodel.uml.statik.Class);
+            /*
+             * Create default Root node in the Attack Tree
+             */
+            Element rootElement = session.getModel().createClass(IAttackTreeCustomizerPredefinedField.ROOT, (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
         
-                Element rootElement = session.getModel().createClass("Root", (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
-                
-                IDiagramService diagramServices = moduleContext.getModelioServices().getDiagramService();
-                
-                IDiagramHandle diagramHandle = diagramServices.getDiagramHandle(diagram);
-                diagramHandle.unmask(rootElement, 200, 50);
-                diagramHandle.save();
-                diagramHandle.close();
-                
-                /*
-                 * 
-                 */
-                IDiagramService ds = moduleContext.getModelioServices().getDiagramService();
-                try(  IDiagramHandle handler = ds.getDiagramHandle(diagram);){
-                    IDiagramDG dg = handler.getDiagramNode();
+            if (diagram != null && rootElement != null) {
         
-                    for (IStyleHandle style : ds.listStyles()){
+                IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();
+                try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+        
+                    IDiagramDG dg = diagramHandle.getDiagramNode();
+        
+                    for (IStyleHandle style : diagramService.listStyles()){
                         if (style.getName().equals("attacktree")){
                             dg.setStyle(style);
                             break;
                         }
                     }
         
-                    handler.save();
-                    handler.close();
+                    /*
+                     * Unmask default Root node in the diagram
+                     */
+                    List<IDiagramGraphic> diagramGraphics = diagramHandle.unmask(rootElement, 0, 0);
+                    for (IDiagramGraphic diagramGraphic : diagramGraphics) {
+                        if(diagramGraphic.getElement().equals(rootElement)){
+                            ((IDiagramNode) diagramGraphic).setBounds(DiagramElementBounds.ROOT.createRectangleBounds());
+                        }
+                    }
+                    diagramHandle.save();
+                    diagramHandle.close();
                 }
         
                 moduleContext.getModelioServices().getEditionService().openEditor(diagram);
