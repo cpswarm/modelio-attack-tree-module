@@ -12,9 +12,11 @@ import org.modelio.api.module.IModule;
 import org.modelio.api.module.command.DefaultModuleCommandHandler;
 import org.modelio.api.module.context.IModuleContext;
 import org.modelio.metamodel.diagrams.ClassDiagram;
+import org.modelio.metamodel.uml.infrastructure.Element;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.Profile;
 import org.modelio.metamodel.uml.infrastructure.Stereotype;
+import org.modelio.metamodel.uml.statik.NameSpace;
 import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
@@ -44,6 +46,25 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
             ClassDiagram diagram = session.getModel().createClassDiagram(name, owner, ster);
         
             if (diagram != null) {
+                /*
+                 * Create default Root node
+                 */
+                //moduleContext.getModelioServices().getMetamodelService().getMetamodel().getMClass(arg0)
+        //                org.modelio.metamodel.uml.statik.Class rootClass = session.getModel().createClass();
+        //                Stereotype rootStereotype = session.getMetamodelExtensions().getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT, org.modelio.metamodel.uml.statik.Class);
+        
+                Element rootElement = session.getModel().createClass("Root", (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
+                
+                IDiagramService diagramServices = moduleContext.getModelioServices().getDiagramService();
+                
+                IDiagramHandle diagramHandle = diagramServices.getDiagramHandle(diagram);
+                diagramHandle.unmask(rootElement, 200, 50);
+                diagramHandle.save();
+                diagramHandle.close();
+                
+                /*
+                 * 
+                 */
                 IDiagramService ds = moduleContext.getModelioServices().getDiagramService();
                 try(  IDiagramHandle handler = ds.getDiagramHandle(diagram);){
                     IDiagramDG dg = handler.getDiagramNode();

@@ -1,6 +1,10 @@
 #
-#Thu Apr 04 15:58:03 CEST 2019
+#Mon Jun 03 16:10:15 CEST 2019
+DEPENDENCY_SHOWSTEREOTYPES=NONE
+CLASS_REPRES_MODE=SIMPLE
+DEPENDENCY_SHOWLABEL=false
 stylename=attacktree
 basestyle=default
 theme=false
+provider=Modelio
 

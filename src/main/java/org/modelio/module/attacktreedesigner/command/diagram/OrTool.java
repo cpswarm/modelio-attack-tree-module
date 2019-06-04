@@ -53,7 +53,7 @@ public class OrTool extends DefaultBoxTool {
                 owner = ((AbstractDiagram) owner).getOrigin();
             }
         
-            Element event = session.getModel().createClass("Or", (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR);
+            Element event = session.getModel().createClass("Or", (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
             List<IDiagramGraphic> graph = representation.unmask(event, rect.x, rect.y);
         
             if((graph != null) &&  (graph.size() > 0) && (graph.get(0) instanceof IDiagramNode))

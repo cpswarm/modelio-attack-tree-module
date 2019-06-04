@@ -17,7 +17,7 @@ import org.modelio.module.attacktreedesigner.utils.IAttackTreeCustomizerPredefin
 import org.modelio.module.attacktreedesigner.utils.IDiagramCustomizerPredefinedField;
 
 /**
- * This class handles the palette configuration of SysML block diagram
+ * This class handles the palette configuration of Attack Tree block diagram
  * @author ebrosse
  */
 @objid ("5a0c2f27-1450-435c-8e32-0baf5103b679")
@@ -33,14 +33,14 @@ public class AttackTreeDiagramCustomizer implements IDiagramCustomizer {
         commonGroup.add(new MarqueeToolEntry());
         paletteRoot.add(commonGroup);
         
-        paletteRoot.add(this.createTreeGroup(toolRegistry));
+        paletteRoot.add(this.createAttackTreeGroup(toolRegistry));
         paletteRoot.add(this.createDefaultNotesGroup(toolRegistry));
         paletteRoot.add(this.createDefaultFreeDrawingGroup(toolRegistry));
     }
 
     @objid ("afed292a-8eec-4200-8d61-c57146011c8d")
     protected PaletteEntry createDefaultFreeDrawingGroup(final IDiagramService toolRegistry) {
-        final PaletteDrawer group = new PaletteDrawer(Messages.getString("SysMLPaletteGroup.Freedrawing"), null);
+        final PaletteDrawer group = new PaletteDrawer(Messages.getString("AttackTreePaletteGroup.Freedrawing"), null);
         
         group.add(toolRegistry.getRegisteredTool(IDiagramCustomizerPredefinedField.DrawingRectangle));
         group.add(toolRegistry.getRegisteredTool(IDiagramCustomizerPredefinedField.DrawingEllipse));
@@ -53,7 +53,7 @@ public class AttackTreeDiagramCustomizer implements IDiagramCustomizer {
 
     @objid ("8e0c2a1a-b308-4084-87b2-2eb56d6515b9")
     protected PaletteEntry createDefaultNotesGroup(final IDiagramService toolRegistry) {
-        final PaletteDrawer group = new PaletteDrawer(Messages.getString("SysMLPaletteGroup.NotesAndConstraints"), null);
+        final PaletteDrawer group = new PaletteDrawer(Messages.getString("AttackTreePaletteGroup.NotesAndConstraints"), null);
         
         group.add(toolRegistry.getRegisteredTool(IDiagramCustomizerPredefinedField.Note));
         group.add(toolRegistry.getRegisteredTool(IDiagramCustomizerPredefinedField.Constraint));
@@ -63,12 +63,12 @@ public class AttackTreeDiagramCustomizer implements IDiagramCustomizer {
     }
 
     @objid ("5c0fdacf-103f-4b1d-af08-68727854c72e")
-    private PaletteEntry createTreeGroup(final IDiagramService toolRegistry) {
-        final PaletteDrawer group = new PaletteDrawer(Messages.getString("AttackTreePaletteGroup.Tree"), null);
-        group.add(toolRegistry.getRegisteredTool(IAttackTreeCustomizerPredefinedField.EVENT));
+    private PaletteEntry createAttackTreeGroup(final IDiagramService toolRegistry) {
+        final PaletteDrawer group = new PaletteDrawer(Messages.getString("AttackTreePaletteGroup.AttackTree"), null);
+        group.add(toolRegistry.getRegisteredTool(IAttackTreeCustomizerPredefinedField.ATTACK));
         group.add(toolRegistry.getRegisteredTool(IAttackTreeCustomizerPredefinedField.AND));
         group.add(toolRegistry.getRegisteredTool(IAttackTreeCustomizerPredefinedField.OR));
-        group.add(toolRegistry.getRegisteredTool(IDiagramCustomizerPredefinedField.Dependency));
+        group.add(toolRegistry.getRegisteredTool(IAttackTreeCustomizerPredefinedField.CONNECTION));
         
         group.setInitialState(PaletteDrawer.INITIAL_STATE_OPEN);
         return group;
