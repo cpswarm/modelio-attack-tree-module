@@ -53,9 +53,6 @@ public class CustomAndTool extends DefaultBoxTool {
                 graphNode.setProperty(PropertyLabel.CLASS_SHOWNAME.name(), DiagramElementStyle.OPERATOR.getShowNameProperty());
                 graphNode.setProperty(PropertyLabel.CLASS_REPRES_MODE.name(), DiagramElementStyle.OPERATOR.getRepresentationMode());
             }
-            /*
-             * Style A faire
-             */
             
             diagramHandle.save();
             diagramHandle.close();

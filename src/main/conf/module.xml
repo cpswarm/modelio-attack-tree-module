@@ -5,11 +5,11 @@
     </ClassPath>
     <Profiles>
         <Profile uid="e37a5820-06b4-4268-a1de-46eb78224dce" id="attacktree">
-            <Stereotype name="AND" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.AND.label" uid="25f299d0-3f80-4347-964f-4a317676e21e" is-abstract="false">
+            <Stereotype name="AND" metaclass="Standard.Class" owner-stereotype="mref#'' {661729c8-31ab-40bb-a3fc-7a065dbae0c2} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.AND.label" uid="25f299d0-3f80-4347-964f-4a317676e21e" is-abstract="false">
                 <Icon path="res/icon/gui/AndGate_24.png"/>
                 <Image path="res/icon/gui/AndGate_48.png"/>
             </Stereotype>
-            <Stereotype name="OR" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.OR.label" uid="3664495d-49db-45c1-a18b-4e4e7cb08345" is-abstract="false">
+            <Stereotype name="OR" metaclass="Standard.Class" owner-stereotype="mref#'' {661729c8-31ab-40bb-a3fc-7a065dbae0c2} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.OR.label" uid="3664495d-49db-45c1-a18b-4e4e7cb08345" is-abstract="false">
                 <Icon path="res/icon/gui/OrGate_24.png"/>
                 <Image path="res/icon/gui/OrGate_48.png"/>
             </Stereotype>
@@ -21,13 +21,17 @@
                 <Icon path="res/icon/gui/Root_24.png"/>
                 <Image path="res/icon/gui/Root_48.png"/>
             </Stereotype>
-            <Stereotype name="SubTree" metaclass="Standard.Class" owner-stereotype="mref#'' {02703c05-0dd1-4698-b017-b46d57d79e0e} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.SubTree.label" uid="eb03144b-ffdf-4643-9eea-d9008800a617" is-abstract="false">
+            <Stereotype name="SubTree" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.SubTree.label" uid="eb03144b-ffdf-4643-9eea-d9008800a617" is-abstract="false">
                 <Icon path="res/icon/gui/SubTree_24.png"/>
                 <Image path="res/icon/gui/SubTree_48.png"/>
             </Stereotype>
             <Stereotype name="Connection" metaclass="Infrastructure.Dependency" owner-stereotype="" is-hidden="false" label="%stereotype.Connection.label" uid="040af89d-22db-4117-acb5-e9ae7f333c60" is-abstract="false">
                 <Icon path="res/icon/gui/Connection.png"/>
                 <Image path="res/icon/gui/Connection (1).png"/>
+            </Stereotype>
+            <Stereotype name="Operator" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.Operator.label" uid="661729c8-31ab-40bb-a3fc-7a065dbae0c2" is-abstract="true">
+                <Icon path=""/>
+                <Image path=""/>
             </Stereotype>
         </Profile>
         <Profile uid="6f44d2e9-1fa5-46cd-9763-62c01694f4e1" id="attacktree.diagrams">
@@ -87,7 +91,7 @@
             </Tool>
             <Tool id="OR" label="%tool.OR.label" tooltip="%tool.OR.tooltip" image="res/icon/gui/OrGate_24.png">
                 <Scope-source metaclass="Standard.Package" stereotype=""/>
-                <Handler class="Box">
+                <Handler class="org.modelio.module.attacktreedesigner.command.tools.CustomOrTool">
                     <HParameter name="stereotype" value="AttackTreeDesigner#OR"/>
                     <HParameter name="metaclass" value="Standard.Class"/>
                     <HParameter name="name" value="OR"/>
