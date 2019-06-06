@@ -22,4 +22,10 @@ public interface IAttackTreeCustomizerPredefinedField {
     @objid ("1eb29493-2f18-4239-afd4-30e9ec33990c")
     public static final String ROOT = "Root";
 
+    @objid ("435c0a19-79e6-4f75-8950-0c0cf9ea214a")
+    public static final String MULTILINK_AND = "AND_Connection";
+
+    @objid ("c1a3a6b3-cc55-4b3e-91b5-44821e33c0c6")
+    public static final String MULTILINK_OR = "OR_Connection";
+
 }

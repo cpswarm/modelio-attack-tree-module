@@ -13,15 +13,15 @@
                 <Icon path="res/icon/gui/OrGate_24.png"/>
                 <Image path="res/icon/gui/OrGate_48.png"/>
             </Stereotype>
-            <Stereotype name="Attack" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.Attack.label" uid="02703c05-0dd1-4698-b017-b46d57d79e0e" is-abstract="false">
+            <Stereotype name="Attack" metaclass="Standard.Class" owner-stereotype="mref#'' {a7444bc1-7b28-4e4f-a6f7-535e01528c04} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.Attack.label" uid="02703c05-0dd1-4698-b017-b46d57d79e0e" is-abstract="false">
                 <Icon path="res/icon/gui/Attack_24.png"/>
                 <Image path="res/icon/gui/Attack_48.png"/>
             </Stereotype>
-            <Stereotype name="Root" metaclass="Standard.Class" owner-stereotype="mref#'' {02703c05-0dd1-4698-b017-b46d57d79e0e} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.Root.label" uid="d05ac5e1-3789-443f-8fb9-d7be2ce89edc" is-abstract="false">
+            <Stereotype name="Root" metaclass="Standard.Class" owner-stereotype="mref#'' {a7444bc1-7b28-4e4f-a6f7-535e01528c04} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.Root.label" uid="d05ac5e1-3789-443f-8fb9-d7be2ce89edc" is-abstract="false">
                 <Icon path="res/icon/gui/Root_24.png"/>
                 <Image path="res/icon/gui/Root_48.png"/>
             </Stereotype>
-            <Stereotype name="SubTree" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.SubTree.label" uid="eb03144b-ffdf-4643-9eea-d9008800a617" is-abstract="false">
+            <Stereotype name="SubTree" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.SubTree.label" uid="eb03144b-ffdf-4643-9eea-d9008800a617" is-abstract="false">
                 <Icon path="res/icon/gui/SubTree_24.png"/>
                 <Image path="res/icon/gui/SubTree_48.png"/>
             </Stereotype>
@@ -29,7 +29,19 @@
                 <Icon path="res/icon/gui/Connection.png"/>
                 <Image path="res/icon/gui/Connection (1).png"/>
             </Stereotype>
-            <Stereotype name="Operator" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.Operator.label" uid="661729c8-31ab-40bb-a3fc-7a065dbae0c2" is-abstract="true">
+            <Stereotype name="Operator" metaclass="Standard.Class" owner-stereotype="mref#'' {c5b20e19-650c-4954-99a4-2f8c11473688} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.Operator.label" uid="661729c8-31ab-40bb-a3fc-7a065dbae0c2" is-abstract="true">
+                <Icon path=""/>
+                <Image path=""/>
+            </Stereotype>
+            <Stereotype name="Node" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.Node.label" uid="9c3f6aa5-547c-4558-87db-d64dca132d75" is-abstract="true">
+                <Icon path=""/>
+                <Image path=""/>
+            </Stereotype>
+            <Stereotype name="AbstractAttack" metaclass="Standard.Class" owner-stereotype="mref#'' {c5b20e19-650c-4954-99a4-2f8c11473688} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.AbstractAttack.label" uid="a7444bc1-7b28-4e4f-a6f7-535e01528c04" is-abstract="true">
+                <Icon path=""/>
+                <Image path=""/>
+            </Stereotype>
+            <Stereotype name="NodeWithMaskableDescendants" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.NodeWithMaskableDescendants.label" uid="c5b20e19-650c-4954-99a4-2f8c11473688" is-abstract="true">
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
@@ -95,6 +107,13 @@
                     <HParameter name="stereotype" value="AttackTreeDesigner#OR"/>
                     <HParameter name="metaclass" value="Standard.Class"/>
                     <HParameter name="name" value="OR"/>
+                </Handler>
+            </Tool>
+            <Tool id="AND_Connection" label="%tool.AND_Connection.label" tooltip="%tool.AND_Connection.tooltip" image="res/icon/gui/AndGate_24.png">
+                <Scope-source metaclass="Infrastructure.ModelElement" stereotype=""/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.tools.AndMultiLinkTool">
+                    <HParameter name="metaclass" value="Standard.Constraint"/>
+                    <HParameter name="name" value="AND"/>
                 </Handler>
             </Tool>
         </Tools>

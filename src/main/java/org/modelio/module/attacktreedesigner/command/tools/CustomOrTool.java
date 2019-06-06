@@ -57,7 +57,7 @@ public class CustomOrTool extends DefaultBoxTool {
             diagramHandle.save();
             diagramHandle.close();
             transaction.commit ();
-        }   
+        }
     }
 
 }
