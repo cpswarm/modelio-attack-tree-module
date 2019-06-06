@@ -16,4 +16,7 @@ public interface AttackTreeStereotypes {
     @objid ("13509460-cf81-4611-9e0a-20cc54a11b9e")
     public static final String AND = "AND";
 
+    @objid ("6d01b8a6-7e7d-4dd7-9f2e-3ed1609bff3c")
+    public static final String OR = "OR";
+
 }
