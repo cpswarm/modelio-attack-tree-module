@@ -23,6 +23,7 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
+import org.modelio.module.attacktreedesigner.property.PropertyLabel;
 import org.modelio.module.attacktreedesigner.utils.DiagramElementBounds;
 import org.modelio.vcore.smkernel.mapi.MClass;
 import org.modelio.vcore.smkernel.mapi.MObject;
@@ -46,7 +47,7 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
             /*
              * Create default Root node in the Attack Tree
              */
-            ModelElement rootElement = session.getModel().createClass(AttackTreeStereotypes.ROOT, (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
+            ModelElement rootElement = session.getModel().createClass(PropertyLabel.DEFAULT_NAME.toString(), (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
         
         
             /*
@@ -83,6 +84,7 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
                 diagramHandle.close();
             }
         
+            session.getModel().getDefaultNameService().setDefaultName(rootElement, AttackTreeStereotypes.ROOT);
             moduleContext.getModelioServices().getEditionService().openEditor(diagram);
         
             transaction.commit ();

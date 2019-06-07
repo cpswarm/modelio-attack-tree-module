@@ -85,8 +85,7 @@
             <Tool id="AND" label="%tool.AND.label" tooltip="%tool.AND.tooltip" image="res/icon/gui/AndGate_24.png">
                 <Scope-source metaclass="Infrastructure.ModelElement" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.tools.AndMultiLinkTool">
-                    <HParameter name="stereotype" value="AttackTreeDesigner#AND"/>
-                    <HParameter name="metaclass" value="Standard.Class"/>
+                    <HParameter name="metaclass" value="Standard.Constraint"/>
                     <HParameter name="name" value="AND"/>
                 </Handler>
             </Tool>
@@ -101,8 +100,7 @@
             <Tool id="OR" label="%tool.OR.label" tooltip="%tool.OR.tooltip" image="res/icon/gui/OrGate_24.png">
                 <Scope-source metaclass="Infrastructure.ModelElement" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.tools.OrMultiLinkTool">
-                    <HParameter name="stereotype" value="AttackTreeDesigner#OR"/>
-                    <HParameter name="metaclass" value="Standard.Class"/>
+                    <HParameter name="metaclass" value="Standard.Constraint"/>
                     <HParameter name="name" value="OR"/>
                 </Handler>
             </Tool>
