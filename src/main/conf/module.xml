@@ -41,7 +41,7 @@
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
-            <Stereotype name="NodeWithMaskableDescendants" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.NodeWithMaskableDescendants.label" uid="c5b20e19-650c-4954-99a4-2f8c11473688" is-abstract="true">
+            <Stereotype name="NodeWithRepresentedDescendants" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.NodeWithRepresentedDescendants.label" uid="c5b20e19-650c-4954-99a4-2f8c11473688" is-abstract="true">
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
@@ -71,49 +71,39 @@
             </Command>
         </Commands>
         <Tools>
-            <Tool id="Attack" label="%tool.Attack.label" tooltip="%tool.Attack.tooltip" image="res/icon/gui/Attack_24.png">
-                <Scope-source metaclass="Standard.Package" stereotype=""/>
-                <Handler class="Box">
-                    <HParameter name="stereotype" value="AttackTreeDesigner#Attack"/>
-                    <HParameter name="metaclass" value="Standard.Class"/>
-                    <HParameter name="name" value="Attack"/>
-                </Handler>
-            </Tool>
             <Tool id="Connection" label="%tool.Connection.label" tooltip="%tool.Connection.tooltip" image="res/icon/gui/Connection.png">
-                <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#Root"/>
-                <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#Attack"/>
-                <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#AND"/>
-                <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#OR"/>
+                <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#NodeWithRepresentedDescendants"/>
                 <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#Attack"/>
-                <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#AND"/>
-                <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#OR"/>
+                <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#Operator"/>
+                <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#SubTree"/>
                 <Handler class="Link">
                     <HParameter name="stereotype" value="AttackTreeDesigner#Connection"/>
                     <HParameter name="metaclass" value="Infrastructure.Dependency"/>
-                    <HParameter name="name" value="Association"/>
+                    <HParameter name="name" value="Connection"/>
                 </Handler>
             </Tool>
             <Tool id="AND" label="%tool.AND.label" tooltip="%tool.AND.tooltip" image="res/icon/gui/AndGate_24.png">
-                <Scope-source metaclass="Standard.Package" stereotype=""/>
-                <Handler class="org.modelio.module.attacktreedesigner.command.tools.CustomAndTool">
+                <Scope-source metaclass="Infrastructure.ModelElement" stereotype=""/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.tools.AndMultiLinkTool">
                     <HParameter name="stereotype" value="AttackTreeDesigner#AND"/>
                     <HParameter name="metaclass" value="Standard.Class"/>
                     <HParameter name="name" value="AND"/>
                 </Handler>
             </Tool>
+            <Tool id="Attack" label="%tool.Attack.label" tooltip="%tool.Attack.tooltip" image="res/icon/gui/Attack_24.png">
+                <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#Root"/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.tools.CreateAttackTool">
+                    <HParameter name="stereotype" value="AttackTreeDesigner#Attack"/>
+                    <HParameter name="metaclass" value="Standard.Class"/>
+                    <HParameter name="name" value="Attack"/>
+                </Handler>
+            </Tool>
             <Tool id="OR" label="%tool.OR.label" tooltip="%tool.OR.tooltip" image="res/icon/gui/OrGate_24.png">
-                <Scope-source metaclass="Standard.Package" stereotype=""/>
-                <Handler class="org.modelio.module.attacktreedesigner.command.tools.CustomOrTool">
+                <Scope-source metaclass="Infrastructure.ModelElement" stereotype=""/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.tools.OrMultiLinkTool">
                     <HParameter name="stereotype" value="AttackTreeDesigner#OR"/>
                     <HParameter name="metaclass" value="Standard.Class"/>
                     <HParameter name="name" value="OR"/>
-                </Handler>
-            </Tool>
-            <Tool id="AND_Connection" label="%tool.AND_Connection.label" tooltip="%tool.AND_Connection.tooltip" image="res/icon/gui/AndGate_24.png">
-                <Scope-source metaclass="Infrastructure.ModelElement" stereotype=""/>
-                <Handler class="org.modelio.module.attacktreedesigner.command.tools.AndMultiLinkTool">
-                    <HParameter name="metaclass" value="Standard.Constraint"/>
-                    <HParameter name="name" value="AND"/>
                 </Handler>
             </Tool>
         </Tools>

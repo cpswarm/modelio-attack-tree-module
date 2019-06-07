@@ -38,6 +38,6 @@ public interface AttackTreeStereotypes {
     public static final String OPERATOR = "Operator";
 
     @objid ("1d412940-e0f7-4fdf-91cc-2ea45bca17b3")
-    public static final String NODEWITHMASKABLEDESCENDANTS = "NodeWithMaskableDescendants";
+    public static final String NODEWITHREPRESENTEDDESCENDANTS = "NodeWithRepresentedDescendants";
 
 }
