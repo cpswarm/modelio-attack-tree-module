@@ -1,16 +1,15 @@
 package org.modelio.module.attacktreedesigner.command.tools;
 
-import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.api.modelio.diagram.IDiagramHandle;
 import org.modelio.api.modelio.diagram.IDiagramLink.LinkRouterKind;
 import org.modelio.api.modelio.diagram.ILinkPath;
-import org.modelio.api.modelio.diagram.tools.DefaultMultiLinkTool;
+import org.modelio.api.modelio.diagram.tools.DefaultLinkTool;
 import org.modelio.api.modelio.model.IModelingSession;
 import org.modelio.api.modelio.model.ITransaction;
-import org.modelio.metamodel.diagrams.AbstractDiagram;
+import org.modelio.metamodel.uml.infrastructure.ModelElement;
+import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
@@ -19,9 +18,11 @@ import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.module.attacktreedesigner.utils.ElementCreationManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
-@objid ("306d4fc0-625f-4bb7-9934-b8e01a97ce9f")
-public class OrMultiLinkTool extends DefaultMultiLinkTool {
-    @objid ("4a50c985-f95d-4c28-bba3-8a61b7abf167")
+@objid ("2a0856e5-abef-4f86-ae8a-6609fa50c760")
+public class ConnectionTool extends DefaultLinkTool {
+// TODO Do not allow connection between two consecutive attacks,
+// TODO target must not have parent
+    @objid ("51dd6bb6-90ef-4d03-8c37-c8c7c2a41a34")
     @Override
     public boolean acceptFirstElement(IDiagramHandle diagramHandle, IDiagramGraphic targetNode) {
         MObject element = targetNode.getElement();
@@ -29,30 +30,40 @@ public class OrMultiLinkTool extends DefaultMultiLinkTool {
                 && (((Class) element).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.NODEWITHREPRESENTEDDESCENDANTS))) ;
     }
 
-    @objid ("ebfafd9f-995f-4219-b76b-9f27ea6d8f86")
+    @objid ("29f80b38-9ce1-482b-980b-2ed98b5f2730")
     @Override
-    public boolean acceptAdditionalElement(IDiagramHandle diagramHandle, List<IDiagramGraphic> previousNodes, IDiagramGraphic targetNode) {
+    public boolean acceptSecondElement(IDiagramHandle diagramHandle, IDiagramGraphic sourceNode, IDiagramGraphic targetNode) {
         MObject element = targetNode.getElement();
         return (element instanceof Class 
                 && (((Class) element).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.NODE))
                 && !((Class) element).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT) ) ;
     }
 
-    @objid ("38d296c4-1868-4e48-a814-3d13f3763e3a")
+    @objid ("e019777d-2d6c-4712-bec4-d46af7e96675")
     @Override
-    public boolean acceptLastElement(IDiagramHandle diagramHandle, List<IDiagramGraphic> otherNodes, IDiagramGraphic targetNode) {
-        MObject element = targetNode.getElement();
-        return (element instanceof AbstractDiagram);
-    }
-
-    @objid ("7e23fc39-13ca-4e43-9370-396c5e87efe6")
-    @Override
-    public void actionPerformed(IDiagramHandle diagramHandle, IDiagramGraphic lastNode, List<IDiagramGraphic> otherNodes, List<LinkRouterKind> routerKinds, List<ILinkPath> paths, Rectangle rectangle) {
+    public void actionPerformed(IDiagramHandle diagramHandle, IDiagramGraphic originNode, IDiagramGraphic targetNode, LinkRouterKind touterType, ILinkPath path) {
         IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession();
-        try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", AttackTreeStereotypes.OR))){
+        try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", AttackTreeStereotypes.CONNECTION))){
         
-            ElementCreationManager.createOperatorElement(diagramHandle, otherNodes, rectangle, session, AttackTreeStereotypes.OR);
         
+            ModelTree firstElement = (ModelTree) originNode.getElement();
+            ModelTree secondElement = (ModelTree) targetNode.getElement();
+        
+            secondElement.setOwner(firstElement);
+        
+            ModelElement connection = session.getModel().createDependency(firstElement, 
+                    secondElement, 
+                    IAttackTreeDesignerPeerModule.MODULE_NAME, 
+                    AttackTreeStereotypes.CONNECTION); 
+            diagramHandle.unmask(connection, 0, 0);
+        
+            
+            diagramHandle.save();
+            diagramHandle.close();
+        
+        
+            ElementCreationManager.renameElement(session, secondElement); 
+            
             transaction.commit ();
         }
     }

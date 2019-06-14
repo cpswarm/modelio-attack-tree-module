@@ -87,6 +87,10 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
             session.getModel().getDefaultNameService().setDefaultName(rootElement, AttackTreeStereotypes.ROOT);
             moduleContext.getModelioServices().getEditionService().openEditor(diagram);
         
+            /*
+             * Add change handler for delete events
+             */
+            
             transaction.commit ();
         }
     }

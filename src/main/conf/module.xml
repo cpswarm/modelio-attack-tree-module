@@ -71,7 +71,7 @@
             </Command>
         </Commands>
         <Tools>
-            <Tool id="Connection" label="%tool.Connection.label" tooltip="%tool.Connection.tooltip" image="res/icon/gui/Connection.png">
+            <Tool id="ConnectionOLD" label="%tool.ConnectionOLD.label" tooltip="%tool.ConnectionOLD.tooltip" image="res/icon/gui/Connection.png">
                 <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#NodeWithRepresentedDescendants"/>
                 <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#Attack"/>
                 <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#Operator"/>
@@ -79,7 +79,7 @@
                 <Handler class="Link">
                     <HParameter name="stereotype" value="AttackTreeDesigner#Connection"/>
                     <HParameter name="metaclass" value="Infrastructure.Dependency"/>
-                    <HParameter name="name" value="Connection"/>
+                    <HParameter name="name" value=""/>
                 </Handler>
             </Tool>
             <Tool id="AND" label="%tool.AND.label" tooltip="%tool.AND.tooltip" image="res/icon/gui/AndGate_24.png">
@@ -102,6 +102,17 @@
                 <Handler class="org.modelio.module.attacktreedesigner.command.tools.OrMultiLinkTool">
                     <HParameter name="metaclass" value="Standard.Constraint"/>
                     <HParameter name="name" value="OR"/>
+                </Handler>
+            </Tool>
+            <Tool id="Connection" label="%tool.Connection.label" tooltip="%tool.Connection.tooltip" image="res/icon/gui/Connection_24.png">
+                <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#NodeWithRepresentedDescendants"/>
+                <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#Attack"/>
+                <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#Operator"/>
+                <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#SubTree"/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.tools.ConnectionTool">
+                    <HParameter name="stereotype" value="AttackTreeDesigner#Connection"/>
+                    <HParameter name="metaclass" value="Infrastructure.Dependency"/>
+                    <HParameter name="name" value=""/>
                 </Handler>
             </Tool>
         </Tools>

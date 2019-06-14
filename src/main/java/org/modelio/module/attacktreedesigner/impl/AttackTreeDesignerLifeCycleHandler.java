@@ -2,12 +2,16 @@ package org.modelio.module.attacktreedesigner.impl;
 
 import java.util.Map;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
+import org.modelio.api.modelio.model.IModelingSession;
 import org.modelio.api.module.lifecycle.DefaultModuleLifeCycleHandler;
 import org.modelio.api.module.lifecycle.ModuleException;
 import org.modelio.vbasic.version.Version;
 
 @objid ("ed835c6b-d88a-46ed-8356-c0842a7baaa9")
 public class AttackTreeDesignerLifeCycleHandler extends DefaultModuleLifeCycleHandler {
+    @objid ("4cce6195-5d96-4495-a588-5b9fc018a6c6")
+    private AttackTreeModelChangeHandler modelChangeHandler = null;
+
     @objid ("af1eeeb9-239f-4a66-8712-ebb8024f3689")
     public AttackTreeDesignerLifeCycleHandler(final AttackTreeDesignerModule module) {
         super(module);
@@ -16,6 +20,9 @@ public class AttackTreeDesignerLifeCycleHandler extends DefaultModuleLifeCycleHa
     @objid ("73618154-80a6-45ea-ba00-b620c7e597fc")
     @Override
     public boolean start() throws ModuleException {
+        IModelingSession session = this.module.getModuleContext().getModelingSession();
+        this.modelChangeHandler = new AttackTreeModelChangeHandler();
+        session.addModelHandler(this.modelChangeHandler);
         return super.start();
     }
 
