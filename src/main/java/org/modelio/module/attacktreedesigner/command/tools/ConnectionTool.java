@@ -16,27 +16,33 @@ import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.module.attacktreedesigner.utils.ElementCreationManager;
+import org.modelio.module.attacktreedesigner.utils.ElementNavigationManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("2a0856e5-abef-4f86-ae8a-6609fa50c760")
 public class ConnectionTool extends DefaultLinkTool {
-// TODO Do not allow connection between two consecutive attacks,
-// TODO target must not have parent
     @objid ("51dd6bb6-90ef-4d03-8c37-c8c7c2a41a34")
     @Override
     public boolean acceptFirstElement(IDiagramHandle diagramHandle, IDiagramGraphic targetNode) {
-        MObject element = targetNode.getElement();
-        return (element instanceof Class 
-                && (((Class) element).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.NODEWITHREPRESENTEDDESCENDANTS))) ;
+        MObject firstElement = targetNode.getElement();
+        return (firstElement instanceof Class 
+                && (((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR)
+                        || (((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ABSTRACTATTACK)
+                                && ((ModelElement) firstElement).getDependsOnDependency().size() == 0))) ;
     }
 
     @objid ("29f80b38-9ce1-482b-980b-2ed98b5f2730")
     @Override
     public boolean acceptSecondElement(IDiagramHandle diagramHandle, IDiagramGraphic sourceNode, IDiagramGraphic targetNode) {
-        MObject element = targetNode.getElement();
-        return (element instanceof Class 
-                && (((Class) element).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.NODE))
-                && !((Class) element).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT) ) ;
+        MObject firstElement = sourceNode.getElement();
+        MObject secondElement = targetNode.getElement();
+        return (secondElement instanceof Class 
+                && (((Class) secondElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.NODE))
+                && !(((Class) secondElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT))
+                && ((ModelElement) secondElement).getImpactedDependency().size()==0  
+                && (((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR) 
+                        || ((Class) secondElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR))
+                && ! ElementNavigationManager.haveSameSecondLevelAncestor(sourceNode, targetNode)) ;
     }
 
     @objid ("e019777d-2d6c-4712-bec4-d46af7e96675")
@@ -57,13 +63,13 @@ public class ConnectionTool extends DefaultLinkTool {
                     AttackTreeStereotypes.CONNECTION); 
             diagramHandle.unmask(connection, 0, 0);
         
-            
+        
             diagramHandle.save();
             diagramHandle.close();
         
         
             ElementCreationManager.renameElement(session, secondElement); 
-            
+        
             transaction.commit ();
         }
     }

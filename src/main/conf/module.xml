@@ -29,7 +29,7 @@
                 <Icon path="res/icon/gui/Connection.png"/>
                 <Image path="res/icon/gui/Connection (1).png"/>
             </Stereotype>
-            <Stereotype name="Operator" metaclass="Standard.Class" owner-stereotype="mref#'' {c5b20e19-650c-4954-99a4-2f8c11473688} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.Operator.label" uid="661729c8-31ab-40bb-a3fc-7a065dbae0c2" is-abstract="true">
+            <Stereotype name="Operator" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.Operator.label" uid="661729c8-31ab-40bb-a3fc-7a065dbae0c2" is-abstract="true">
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
@@ -37,11 +37,7 @@
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
-            <Stereotype name="AbstractAttack" metaclass="Standard.Class" owner-stereotype="mref#'' {c5b20e19-650c-4954-99a4-2f8c11473688} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.AbstractAttack.label" uid="a7444bc1-7b28-4e4f-a6f7-535e01528c04" is-abstract="true">
-                <Icon path=""/>
-                <Image path=""/>
-            </Stereotype>
-            <Stereotype name="NodeWithRepresentedDescendants" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.NodeWithRepresentedDescendants.label" uid="c5b20e19-650c-4954-99a4-2f8c11473688" is-abstract="true">
+            <Stereotype name="AbstractAttack" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.AbstractAttack.label" uid="a7444bc1-7b28-4e4f-a6f7-535e01528c04" is-abstract="true">
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
@@ -55,7 +51,7 @@
     </Profiles>
     <Gui>
         <Commands>
-            <Command id="AttackTreeDiagramExplorerCommand" label="%command.AttackTreeDiagramExplorerCommand.label" tooltip="%command.AttackTreeDiagramExplorerCommand.tooltip" image="res/icon/gui/diag_24.png" modify-model="false">
+            <Command id="AttackTreeDiagramExplorerCommand" label="%command.AttackTreeDiagramExplorerCommand.label" tooltip="%command.AttackTreeDiagramExplorerCommand.tooltip" image="res/icon/gui/diag_bis_24.png" modify-model="false">
                 <Scope metaclass="Standard.Package" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.AttackTreeDiagramCommand">
                     <HParameter name="name" value=""/>
@@ -71,17 +67,6 @@
             </Command>
         </Commands>
         <Tools>
-            <Tool id="ConnectionOLD" label="%tool.ConnectionOLD.label" tooltip="%tool.ConnectionOLD.tooltip" image="res/icon/gui/Connection.png">
-                <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#NodeWithRepresentedDescendants"/>
-                <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#Attack"/>
-                <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#Operator"/>
-                <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#SubTree"/>
-                <Handler class="Link">
-                    <HParameter name="stereotype" value="AttackTreeDesigner#Connection"/>
-                    <HParameter name="metaclass" value="Infrastructure.Dependency"/>
-                    <HParameter name="name" value=""/>
-                </Handler>
-            </Tool>
             <Tool id="AND" label="%tool.AND.label" tooltip="%tool.AND.tooltip" image="res/icon/gui/AndGate_24.png">
                 <Scope-source metaclass="Infrastructure.ModelElement" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.tools.AndMultiLinkTool">
@@ -105,7 +90,7 @@
                 </Handler>
             </Tool>
             <Tool id="Connection" label="%tool.Connection.label" tooltip="%tool.Connection.tooltip" image="res/icon/gui/Connection_24.png">
-                <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#NodeWithRepresentedDescendants"/>
+                <Scope-source metaclass="Standard.Class" stereotype=""/>
                 <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#Attack"/>
                 <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#Operator"/>
                 <Scope-target metaclass="Standard.Class" stereotype="AttackTreeDesigner#SubTree"/>
