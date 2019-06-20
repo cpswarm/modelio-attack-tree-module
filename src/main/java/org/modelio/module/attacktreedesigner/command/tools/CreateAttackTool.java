@@ -15,7 +15,7 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
-import org.modelio.module.attacktreedesigner.property.PropertyLabel;
+import org.modelio.module.attacktreedesigner.utils.Labels;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("65f215dc-552b-42fb-b461-cbc086de074b")
@@ -38,7 +38,7 @@ public class CreateAttackTool extends DefaultBoxTool {
             MObject rootElement = diagramHandle.getDiagram().getOrigin().getCompositionOwner();
         
             Class attackElement = session.getModel().createClass(
-                    PropertyLabel.DEFAULT_NAME.toString(), 
+                    Labels.DEFAULT_NAME.toString(), 
                     (NameSpace) rootElement, 
                     IAttackTreeDesignerPeerModule.MODULE_NAME, 
                     AttackTreeStereotypes.ATTACK);

@@ -15,8 +15,8 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
-import org.modelio.module.attacktreedesigner.utils.ElementCreationManager;
-import org.modelio.module.attacktreedesigner.utils.ElementNavigationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementCreationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementNavigationManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("2a0856e5-abef-4f86-ae8a-6609fa50c760")
@@ -26,9 +26,11 @@ public class ConnectionTool extends DefaultLinkTool {
     public boolean acceptFirstElement(IDiagramHandle diagramHandle, IDiagramGraphic targetNode) {
         MObject firstElement = targetNode.getElement();
         return (firstElement instanceof Class 
-                && (((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR)
-                        || (((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ABSTRACTATTACK)
-                                && ((ModelElement) firstElement).getDependsOnDependency().size() == 0))) ;
+                && ((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.NODE)
+                && ! ((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)
+                && ! ((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE)
+                && ( ((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR)
+                        || ((ModelElement) firstElement).getDependsOnDependency().size() == 0)      );
     }
 
     @objid ("29f80b38-9ce1-482b-980b-2ed98b5f2730")

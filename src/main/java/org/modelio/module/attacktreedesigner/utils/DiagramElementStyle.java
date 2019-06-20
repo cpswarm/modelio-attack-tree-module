@@ -4,7 +4,8 @@ import com.modeliosoft.modelio.javadesigner.annotations.objid;
 
 @objid ("3e8931b9-f960-4114-9cc5-f7f89fb94884")
 public enum DiagramElementStyle {
-    OPERATOR ("NONE", "IMAGE");
+    OPERATOR ("NONE", "IMAGE"),
+    ATTACK ("SIMPLE", "SIMPLE");
 
     @objid ("94a929ff-c998-4705-b409-0a0d70ac3828")
     private String showNameProperty;

@@ -23,8 +23,8 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
-import org.modelio.module.attacktreedesigner.property.PropertyLabel;
 import org.modelio.module.attacktreedesigner.utils.DiagramElementBounds;
+import org.modelio.module.attacktreedesigner.utils.Labels;
 import org.modelio.vcore.smkernel.mapi.MClass;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
@@ -44,15 +44,8 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
         
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.Create", "AttackTree Diagram"))){
         
-            /*
-             * Create default Root node in the Attack Tree
-             */
-            ModelElement rootElement = session.getModel().createClass(PropertyLabel.DEFAULT_NAME.toString(), (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
+            ModelElement rootElement = session.getModel().createClass(Labels.DEFAULT_NAME.toString(), (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
         
-        
-            /*
-             * Create attack tree diagram
-             */
             MClass mclass = moduleContext.getModelioServices().getMetamodelService().getMetamodel().getMClass(ClassDiagram.class);
             Stereotype ster = session.getMetamodelExtensions().getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACKTREEDIAGRAM, mclass);
             ClassDiagram diagram = session.getModel().createClassDiagram(name, rootElement, ster);
@@ -61,7 +54,6 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
             /*
              * Unmask default Root node in the diagram
              */
-        
             IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();
             try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
         
@@ -86,10 +78,6 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
         
             session.getModel().getDefaultNameService().setDefaultName(rootElement, AttackTreeStereotypes.ROOT);
             moduleContext.getModelioServices().getEditionService().openEditor(diagram);
-        
-            /*
-             * Add change handler for delete events
-             */
             
             transaction.commit ();
         }

@@ -19,9 +19,8 @@ public interface AttackTreeStereotypes {
     @objid ("6d01b8a6-7e7d-4dd7-9f2e-3ed1609bff3c")
     public static final String OR = "OR";
 
-    @objid ("756f9e99-259e-4626-8dee-fed9de59b869")
-    public static final String ABSTRACTATTACK = "AbstractAttack";
-
+//    @objid ("756f9e99-259e-4626-8dee-fed9de59b869")
+//    public static final String ABSTRACTATTACK = "AbstractAttack";
     @objid ("54ff413b-d4e0-4417-ab93-32952ef79a85")
     public static final String ATTACK = "Attack";
 
@@ -37,7 +36,7 @@ public interface AttackTreeStereotypes {
     @objid ("61d17d69-3dec-4f33-878d-e8f37655ff63")
     public static final String OPERATOR = "Operator";
 
+    @objid ("3f8b3fbd-1006-419c-8815-d055e3f833f1")
+    public static final String ROOTSUBTREE = "RootSubTree";
 
-//    @objid ("1d412940-e0f7-4fdf-91cc-2ea45bca17b3")
-//    public static final String NODEWITHREPRESENTEDDESCENDANTS = "NodeWithRepresentedDescendants";
 }
