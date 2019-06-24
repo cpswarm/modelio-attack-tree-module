@@ -2,7 +2,10 @@ package org.modelio.module.attacktreedesigner.command.explorer;
 
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.api.modelio.diagram.IDiagramHandle;
+import org.modelio.api.modelio.diagram.IDiagramNode;
 import org.modelio.api.modelio.diagram.IDiagramService;
 import org.modelio.api.modelio.model.IModelingSession;
 import org.modelio.api.modelio.model.ITransaction;
@@ -31,21 +34,29 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.UpdateModel"))){
         
         
-            if(((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)){
-                ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE);
-                ((Class) selectedElement).addStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK);
-            } else if (((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE)){
-                ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE);
-                ((Class) selectedElement).addStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
-            }
+        //            if(((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)){
+        //                ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE);
+        //                ((Class) selectedElement).addStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK);
+        //            } else if (((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE)){
+        //                ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE);
+        //                ((Class) selectedElement).addStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
+        //            }
         
+            
+            ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE);
+            
             // Mask children of newly modified attack to subtree
             IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();
         
             List<AbstractDiagram> diagrams = ((Element) selectedElement).getDiagramElement(AbstractDiagram.class);
             for(AbstractDiagram diagram: diagrams) {
                 try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
-                    ElementRepresentationManager.unmaskChildren(moduleContext, diagramService, diagramHandle , selectedElement);
+                    
+                    List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
+                    IDiagramGraphic diagramGraphic = diagramGraphics.get(0);
+                    
+                    Rectangle elementBounds = ((IDiagramNode) diagramGraphic).getBounds();
+                    ElementRepresentationManager.unmaskChildren(moduleContext, diagramService, diagramHandle , selectedElement, elementBounds.x, elementBounds.y);
                     diagramHandle.save();
                     diagramHandle.close();
                 }
@@ -63,7 +74,8 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
             return ((selectedElement != null) 
                     && (selectedElement instanceof Class)
                     && (((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)
-                            || ((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE))
+                            //|| ((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE)
+                            )
                     && selectedElement.getStatus().isModifiable());
         }
         return false;

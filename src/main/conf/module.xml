@@ -16,26 +16,24 @@
             <Stereotype name="Attack" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.Attack.label" uid="02703c05-0dd1-4698-b017-b46d57d79e0e" is-abstract="false">
                 <Icon path="res/icon/gui/Attack_24.png"/>
                 <Image path="res/icon/gui/Attack_48.png"/>
-                <PropertyTable id="AttackProperties" label="%propertytable.AttackProperties.label" uid="00e37707-a787-4288-8b5e-385124b7939a">
-                    <PropertyDefinition id="Severity" label="%propertydefinition.AttackProperties.Severity.label" default-value="Medium" is-editable="true" uid="1148a55a-b86b-4530-bac7-1bb2059dcbd5">
-                        <TypeRef id="mref#'' {fb434f0f-275d-47cd-b0bb-2f9d663b1199} Infrastructure.PropertyType"/>
-                        <Description>%propertydefinition.AttackProperties.Severity.description</Description>
-                    </PropertyDefinition>
-                    <PropertyDefinition id="Probability" label="%propertydefinition.AttackProperties.Probability.label" default-value="Medium" is-editable="true" uid="3f0832be-75b1-4aa8-8c06-f703ee607aa2">
-                        <TypeRef id="mref#'' {0fc5642b-0557-4d4e-b7e7-1c891722989a} Infrastructure.PropertyType"/>
-                        <Description>%propertydefinition.AttackProperties.Probability.description</Description>
-                    </PropertyDefinition>
-                    <PropertyDefinition id="RiskLevel" label="%propertydefinition.AttackProperties.RiskLevel.label" default-value="Medium" is-editable="false" uid="34f7ab8e-cd2c-40a4-8c79-2c1942d66b8c">
-                        <TypeRef id="mref#'' {18343b26-0228-46c1-a8ad-556ba70576df} Infrastructure.PropertyType"/>
-                        <Description>%propertydefinition.AttackProperties.RiskLevel.description</Description>
-                    </PropertyDefinition>
-                </PropertyTable>
+                <TagTypes>
+                    <TagType name="Severity" uid="d8fb88fd-74a5-49a4-808c-750ab6e76b3f" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
+                    <TagType name="Probability" uid="035608cc-09d8-450e-a160-8889204ad6de" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
+                    <TagType name="RiskLevel" uid="78846b15-2d05-43c7-8ae4-e60cc34a2866" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
+                    <TagType name="Security related" uid="923a8a26-c1af-4c8d-b627-c75164e8ba61" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
+                    <TagType name="Safety related" uid="e6005ad7-e8fe-45bd-ad76-6c2e195de688" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
+                    <TagType name="Out of scope" uid="6cdb9550-932c-4872-bd5b-47dac059f337" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
+                    <TagType name="Custom field" uid="65adbe17-0416-4b30-a996-40e7f9a96860" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
+                </TagTypes>
+                <NoteTypes>
+                    <NoteType name="CounterMeasure" label="%notetype.CounterMeasure.label" is-hidden="false" uid="8b0986b3-4622-4ba5-86b8-193ea3589f36" mime-type="text/plain"/>
+                </NoteTypes>
             </Stereotype>
             <Stereotype name="Root" metaclass="Standard.Class" owner-stereotype="mref#'' {02703c05-0dd1-4698-b017-b46d57d79e0e} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.Root.label" uid="d05ac5e1-3789-443f-8fb9-d7be2ce89edc" is-abstract="false">
                 <Icon path="res/icon/gui/Root_24.png"/>
                 <Image path="res/icon/gui/Root_48.png"/>
             </Stereotype>
-            <Stereotype name="SubTree" metaclass="Standard.Class" owner-stereotype="mref#'' {02703c05-0dd1-4698-b017-b46d57d79e0e} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.SubTree.label" uid="eb03144b-ffdf-4643-9eea-d9008800a617" is-abstract="false">
+            <Stereotype name="SubTree" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.SubTree.label" uid="eb03144b-ffdf-4643-9eea-d9008800a617" is-abstract="false">
                 <Icon path="res/icon/gui/SubTree_24.png"/>
                 <Image path="res/icon/gui/SubTree_48.png"/>
             </Stereotype>
@@ -51,10 +49,6 @@
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
-            <Stereotype name="RootSubTree" metaclass="Standard.Class" owner-stereotype="mref#'' {d05ac5e1-3789-443f-8fb9-d7be2ce89edc} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.RootSubTree.label" uid="57d90847-aea4-4018-90fd-e95016e45d78" is-abstract="false">
-                <Icon path="res/icon/gui/RootSubTree_24.png"/>
-                <Image path="res/icon/gui/RootSubTree_48.png"/>
-            </Stereotype>
         </Profile>
         <Profile uid="6f44d2e9-1fa5-46cd-9763-62c01694f4e1" id="attacktree.diagrams">
             <Stereotype name="AttackTreeDiagram" metaclass="Standard.ClassDiagram" owner-stereotype="" is-hidden="false" label="%stereotype.AttackTreeDiagram.label" uid="17c8cb6f-3fd4-4187-91a7-02752ca2c4a6" is-abstract="false">
@@ -63,35 +57,6 @@
             </Stereotype>
         </Profile>
     </Profiles>
-    <PropertyTypes>
-        <PropertyType id="Severity" type="Enumerate" uid="fb434f0f-275d-47cd-b0bb-2f9d663b1199">
-            <Enumeration>
-                <Literal value="Low" label="%propertytypeSeverity.Low.label"/>
-                <Literal value="Medium" label="%propertytypeSeverity.Medium.label"/>
-                <Literal value="High" label="%propertytypeSeverity.High.label"/>
-            </Enumeration>
-            <Description>%propertytypeSeverity.description</Description>
-        </PropertyType>
-        <PropertyType id="Probability" type="Enumerate" uid="0fc5642b-0557-4d4e-b7e7-1c891722989a">
-            <Enumeration>
-                <Literal value="Low" label="%propertytypeProbability.Low.label"/>
-                <Literal value="Medium" label="%propertytypeProbability.Medium.label"/>
-                <Literal value="High" label="%propertytypeProbability.High.label"/>
-            </Enumeration>
-            <Description>%propertytypeProbability.description</Description>
-        </PropertyType>
-        <PropertyType id="RiskLevel" type="Enumerate" uid="18343b26-0228-46c1-a8ad-556ba70576df">
-            <Enumeration>
-                <Literal value="Very Low" label="%propertytypeRiskLevel.Very Low.label"/>
-                <Literal value="Low" label="%propertytypeRiskLevel.Low.label"/>
-                <Literal value="Medium" label="%propertytypeRiskLevel.Medium.label"/>
-                <Literal value="High" label="%propertytypeRiskLevel.High.label"/>
-                <Literal value="Very High" label="%propertytypeRiskLevel.Very High.label"/>
-                <Literal value="Catastrophic" label="%propertytypeRiskLevel.Catastrophic.label"/>
-            </Enumeration>
-            <Description>%propertytypeRiskLevel.description</Description>
-        </PropertyType>
-    </PropertyTypes>
     <Gui>
         <Commands>
             <Command id="CreateAttackTreeDiagram" label="%command.CreateAttackTreeDiagram.label" tooltip="%command.CreateAttackTreeDiagram.tooltip" image="res/icon/gui/diag_bis_24.png" modify-model="false">
@@ -118,7 +83,7 @@
             </Command>
             <Command id="Unmask_SubTree" label="%command.Unmask_SubTree.label" tooltip="%command.Unmask_SubTree.tooltip" image="res/icon/gui/UnMask_24.png" modify-model="false">
                 <Scope metaclass="Standard.Class" stereotype="AttackTreeDesigner#SubTree"/>
-                <Scope metaclass="Standard.Class" stereotype="AttackTreeDesigner#RootSubTree"/>
+                <Scope metaclass="Standard.Class" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.UnmaskSubTreeCommand"/>
             </Command>
             <Command id="Auto_Layout" label="%command.Auto_Layout.label" tooltip="%command.Auto_Layout.tooltip" image="res/icon/gui/AutoLayout_24.png" modify-model="true">
@@ -158,6 +123,13 @@
                     <HParameter name="stereotype" value="AttackTreeDesigner#Connection"/>
                     <HParameter name="metaclass" value="Infrastructure.Dependency"/>
                     <HParameter name="name" value=""/>
+                </Handler>
+            </Tool>
+            <Tool id="CounterMeasure" label="%tool.CounterMeasure.label" tooltip="%tool.CounterMeasure.tooltip" image="res/icon/gui/CounterMeasure_24.png">
+                <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#Attack"/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.tools.CounterMeasureTool">
+                    <HParameter name="metaclass" value="Infrastructure.Note"/>
+                    <HParameter name="name" value="CounterMeasure"/>
                 </Handler>
             </Tool>
         </Tools>

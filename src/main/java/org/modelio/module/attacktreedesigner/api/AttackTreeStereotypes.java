@@ -36,7 +36,7 @@ public interface AttackTreeStereotypes {
     @objid ("61d17d69-3dec-4f33-878d-e8f37655ff63")
     public static final String OPERATOR = "Operator";
 
-    @objid ("3f8b3fbd-1006-419c-8815-d055e3f833f1")
-    public static final String ROOTSUBTREE = "RootSubTree";
 
+//@objid ("3f8b3fbd-1006-419c-8815-d055e3f833f1")
+//public static final String ROOTSUBTREE = "RootSubTree";
 }

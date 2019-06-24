@@ -13,10 +13,10 @@ import org.modelio.vcore.smkernel.mapi.MObject;
 @objid ("d5db8112-c267-4c13-8caf-155044ac5883")
 public class AutoLayoutManager {
     @objid ("6ff0e552-b437-4437-8c65-38c5b1b8a97e")
-    private static final int VERTICAL_AUTOSPACING = 160;
+    public static final int VERTICAL_AUTOSPACING = 160;
 
     @objid ("72f31cc0-6a29-48af-ba01-951baf54a63e")
-    private static final int HORIZONTAL_AUTOSPACING = 320;
+    public static final int HORIZONTAL_AUTOSPACING = 320;
 
     @objid ("0e85846e-1532-46f6-8c7f-0bd53ff0d6b4")
     public static void autolayoutChildren(IDiagramHandle diagramHandle, MObject element, IDiagramNode nodeGraphic, Rectangle bounds) {
@@ -41,7 +41,9 @@ public class AutoLayoutManager {
         
                 Rectangle newBounds = childNodeGraphic.getBounds().getCopy();
                 newBounds.setY(bounds.y + VERTICAL_AUTOSPACING - (newBounds.height/2));
-                newBounds.setX(bounds.x + ((i-(numberOfChildren/2)) * HORIZONTAL_AUTOSPACING) - (newBounds.width/2) + (bounds.width/2));
+                newBounds.setX(bounds.x 
+                        + ((i-(numberOfChildren/2)) * HORIZONTAL_AUTOSPACING) - (newBounds.width/2) 
+                        + (bounds.width/2));
                 autolayoutChildren(diagramHandle, child, childNodeGraphic, newBounds) ;
         
             }

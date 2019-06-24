@@ -8,10 +8,13 @@ import org.modelio.api.modelio.diagram.IDiagramNode;
 import org.modelio.api.modelio.diagram.IDiagramService;
 import org.modelio.api.module.context.IModuleContext;
 import org.modelio.metamodel.diagrams.AbstractDiagram;
+import org.modelio.metamodel.uml.infrastructure.Dependency;
+import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
+import org.modelio.module.attacktreedesigner.utils.AutoLayoutManager;
 import org.modelio.module.attacktreedesigner.utils.DiagramElementStyle;
 import org.modelio.module.attacktreedesigner.utils.Labels;
 import org.modelio.vcore.smkernel.mapi.MObject;
@@ -45,24 +48,23 @@ public class ElementRepresentationManager {
     }
 
     @objid ("db7a92bf-6ae6-484a-97c1-9194c3462b7c")
-    public static void unmaskChildren(IModuleContext moduleContext, IDiagramService diagramService, IDiagramHandle diagramHandle, MObject element) {
-        // get only children of type Class
+    public static void unmaskChildren(IModuleContext moduleContext, IDiagramService diagramService, IDiagramHandle diagramHandle, MObject element, int x, int y) {
         List<Class> elementChildren = ((ModelTree) element).getOwnedElement(Class.class);
+        //        //        List<ModelTree> elementChildren = ((ModelTree) element).getOwnedElement();
+        //        List<? extends MObject> elementChildren = element.getCompositionChildren();
+        
+        int newX = x;
+        int newY = y + AutoLayoutManager.VERTICAL_AUTOSPACING;
+        
+        // unmask children
+        for(MObject child: elementChildren) {
+        
+            // recursively call maskChildren to children
+            unmaskChildren(moduleContext, diagramService, diagramHandle, child, newX, newY);
         
         
-        for(Class child: elementChildren) {
-        
-        
-        //            List<IDiagramGraphic> childDiagramGraphics = diagramHandle.getDiagramGraphics(element);
-        //
-        //            if(! childDiagramGraphics.isEmpty()) {
-        //
-        //                IDiagramNode childNodeGraphic = (IDiagramNode) childDiagramGraphics.get(0);
-        //
-        //                
-        //            }
-        
-            List<IDiagramGraphic> graph = diagramHandle.unmask(child, 0, 0);
+            // unmask current element
+            List<IDiagramGraphic> graph = diagramHandle.unmask(child, newX, newY);
             if((graph != null) &&  (graph.size() > 0) && (graph.get(0) instanceof IDiagramNode)) {
                 IDiagramNode graphNode = (IDiagramNode)graph.get(0);
                 if(((Class) graphNode.getElement()).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
@@ -74,9 +76,15 @@ public class ElementRepresentationManager {
                 }
         
             }
-            
-            // recursively call maskChildren to children
-            unmaskChildren(moduleContext, diagramService, diagramHandle, child);
+        
+            // increment x
+            newX += AutoLayoutManager.HORIZONTAL_AUTOSPACING;
+        }
+        
+        // unmask dependencies
+        List<Dependency> elementDependsOnDependencies = ((ModelElement) element).getDependsOnDependency();
+        for(Dependency dependency: elementDependsOnDependencies) {
+            diagramHandle.unmask(dependency, 0, 0);
         }
     }
 

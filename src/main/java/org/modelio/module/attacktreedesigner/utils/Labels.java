@@ -6,5 +6,6 @@ import com.modeliosoft.modelio.javadesigner.annotations.objid;
 public enum Labels {
     CLASS_SHOWNAME,
     CLASS_REPRES_MODE,
-    DEFAULT_NAME;
+    DEFAULT_NAME,
+    MEDIUM;
 }

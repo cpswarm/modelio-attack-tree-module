@@ -68,8 +68,7 @@ public class AttackTreePropertyPage extends AbstractModulePropertyPage {
         
             ModelElement element = ((ModelElement) selectedElements.get(0));
             
-            AttackTreePropertyManager sysMLPage = new AttackTreePropertyManager();
-            sysMLPage.update(element, table);
+            AttackTreePropertyManager.update(element, table);
         
         }
     }
@@ -86,8 +85,8 @@ public class AttackTreePropertyPage extends AbstractModulePropertyPage {
         
             ModelElement element = ((ModelElement) selectedElements.get (0));
         
-            AttackTreePropertyManager propPage = new AttackTreePropertyManager();
-            propPage.changeProperty(element, row, value);
+            //AttackTreePropertyManager propPage = new AttackTreePropertyManager();
+            AttackTreePropertyManager.changeProperty(element, row, value);
             
         }
     }

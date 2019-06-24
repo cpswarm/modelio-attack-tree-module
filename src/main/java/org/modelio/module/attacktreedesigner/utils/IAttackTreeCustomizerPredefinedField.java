@@ -19,4 +19,7 @@ public interface IAttackTreeCustomizerPredefinedField {
     @objid ("f60d625c-5161-4bb4-832d-c9cf24b9ade8")
     public static final String CONNECTION = "Connection";
 
+    @objid ("b8c07ebc-0c7d-4970-afda-f6bae3e8460e")
+    public static final String COUNTER_MEASURE = "CounterMeasure";
+
 }
