@@ -14,17 +14,21 @@ import org.modelio.api.module.command.DefaultModuleCommandHandler;
 import org.modelio.api.module.context.IModuleContext;
 import org.modelio.metamodel.diagrams.AbstractDiagram;
 import org.modelio.metamodel.uml.infrastructure.Element;
+import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
+import org.modelio.module.attacktreedesigner.utils.AutoLayoutManager;
+import org.modelio.module.attacktreedesigner.utils.DiagramElementStyle;
+import org.modelio.module.attacktreedesigner.utils.Labels;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementRepresentationManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
-@objid ("f925d662-ad25-4c96-8df5-69d5830d8632")
+@objid ("fc2698b1-fc2d-4a0c-99d8-c38b18503d7e")
 public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
-    @objid ("228d2831-9495-4878-a740-c54466142864")
+    @objid ("bf6048fb-b21c-4bb3-b690-0ef3fec6e9fe")
     @Override
     public void actionPerformed(final List<MObject> selectedElements, final IModule module) {
         IModuleContext moduleContext = AttackTreeDesignerModule.getInstance().getModuleContext();
@@ -34,29 +38,56 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.UpdateModel"))){
         
         
-        //            if(((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)){
-        //                ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE);
-        //                ((Class) selectedElement).addStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK);
-        //            } else if (((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE)){
-        //                ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE);
-        //                ((Class) selectedElement).addStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
-        //            }
+            //            if(((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)){
+            //                ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE);
+            //                ((Class) selectedElement).addStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK);
+            //            } else if (((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE)){
+            //                ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE);
+            //                ((Class) selectedElement).addStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
+            //            }
         
-            
+        
             ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE);
-            
+        
             // Mask children of newly modified attack to subtree
             IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();
         
             List<AbstractDiagram> diagrams = ((Element) selectedElement).getDiagramElement(AbstractDiagram.class);
             for(AbstractDiagram diagram: diagrams) {
                 try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
-                    
+        
                     List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
                     IDiagramGraphic diagramGraphic = diagramGraphics.get(0);
-                    
+        
                     Rectangle elementBounds = ((IDiagramNode) diagramGraphic).getBounds();
                     ElementRepresentationManager.unmaskChildren(moduleContext, diagramService, diagramHandle , selectedElement, elementBounds.x, elementBounds.y);
+        
+                    // Refresh owner of direct children (Operator AND or OR) to update representation
+                    MObject root = diagram.getOrigin().getCompositionOwner();
+                    List<Class> elementChildren = ((ModelTree) selectedElement).getOwnedElement(Class.class);
+                    for(Class child: elementChildren) {
+                        child.setOwner((ModelTree) root);
+                        
+        
+                        
+                        List<IDiagramGraphic> graph = diagramHandle.unmask(child, elementBounds.x, elementBounds.y + AutoLayoutManager.VERTICAL_AUTOSPACING);
+                        
+        
+                        
+                        if((graph != null) &&  (graph.size() > 0) && (graph.get(0) instanceof IDiagramNode)) {
+                            IDiagramNode graphNode = (IDiagramNode)graph.get(0);
+                            graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.OPERATOR.getShowNameProperty());
+                            graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.OPERATOR.getRepresentationMode());
+                            
+        
+        
+                        }
+                        
+                        // update owner
+                        child.setOwner((ModelTree) root);
+                    }
+        
+        
                     diagramHandle.save();
                     diagramHandle.close();
                 }
@@ -66,16 +97,14 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
         }
     }
 
-    @objid ("44fd367e-b90f-4d4d-80f0-14357d84a7fe")
+    @objid ("7d0beca4-ff4e-4484-9a27-c3d6aec6beca")
     @Override
     public boolean accept(final List<MObject> selectedElements, final IModule module) {
         if ((selectedElements != null) && (selectedElements.size() == 1)){
             MObject selectedElement = selectedElements.get(0);
             return ((selectedElement != null) 
                     && (selectedElement instanceof Class)
-                    && (((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)
-                            //|| ((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE)
-                            )
+                    && (((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE))
                     && selectedElement.getStatus().isModifiable());
         }
         return false;
