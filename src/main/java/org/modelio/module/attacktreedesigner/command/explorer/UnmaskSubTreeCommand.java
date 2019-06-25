@@ -38,15 +38,6 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.UpdateModel"))){
         
         
-            //            if(((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)){
-            //                ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE);
-            //                ((Class) selectedElement).addStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK);
-            //            } else if (((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE)){
-            //                ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOTSUBTREE);
-            //                ((Class) selectedElement).addStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
-            //            }
-        
-        
             ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE);
         
             // Mask children of newly modified attack to subtree
@@ -66,25 +57,24 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
                     MObject root = diagram.getOrigin().getCompositionOwner();
                     List<Class> elementChildren = ((ModelTree) selectedElement).getOwnedElement(Class.class);
                     for(Class child: elementChildren) {
-                        child.setOwner((ModelTree) root);
-                        
+        //                        child.setOwner((ModelTree) root);
         
-                        
+        
                         List<IDiagramGraphic> graph = diagramHandle.unmask(child, elementBounds.x, elementBounds.y + AutoLayoutManager.VERTICAL_AUTOSPACING);
-                        
         
-                        
+        
+        
                         if((graph != null) &&  (graph.size() > 0) && (graph.get(0) instanceof IDiagramNode)) {
                             IDiagramNode graphNode = (IDiagramNode)graph.get(0);
                             graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.OPERATOR.getShowNameProperty());
                             graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.OPERATOR.getRepresentationMode());
-                            
+        
         
         
                         }
-                        
+        
                         // update owner
-                        child.setOwner((ModelTree) root);
+                        //child.setOwner((ModelTree) selectedElement);
                     }
         
         
