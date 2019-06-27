@@ -1,8 +1,5 @@
 package org.modelio.module.attacktreedesigner.property;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.api.module.propertiesPage.IModulePropertyTable;
@@ -28,16 +25,6 @@ public class AttackTreePropertyManager {
      */
     @objid ("686020f8-7fb4-414c-8694-d7f3fe888320")
     public static int changeProperty(ModelElement element, int row, String value) {
-        //
-        try (FileWriter writer = new FileWriter("/home/kchaabouni/kais2/p07_cpswarm/debugging_out.txt", true);
-                BufferedWriter bw = new BufferedWriter(writer)) {
-            bw.write("getName: " + element.getName() + ", row ->" + row
-                    + ", value -> " + value);
-            bw.newLine();
-        } catch (IOException e) {
-            System.err.format("IOException: %s%n", e);
-        }
-        //
         return row;
     }
 
@@ -77,15 +64,7 @@ public class AttackTreePropertyManager {
                         //element.getTagValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY)
                         );
                 
-                //
-        //                try (FileWriter writer = new FileWriter("/home/kchaabouni/kais2/p07_cpswarm/debugging_out.txt", true);
-        //                        BufferedWriter bw = new BufferedWriter(writer)) {
-        //                    bw.write("tag: " + tag.getDefinition().getName());
-        //                    bw.newLine();
-        //                } catch (IOException e) {
-        //                    System.err.format("IOException: %s%n", e);
-        //                }
-                //
+        
             }
             
         
