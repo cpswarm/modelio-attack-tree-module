@@ -1,6 +1,5 @@
 package org.modelio.module.attacktreedesigner.command.explorer;
 
-import java.util.ArrayList;
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -41,15 +40,15 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
         IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();
         
         
-        List<Class> displacedChildren = new ArrayList<>();
+        //List<Class> displacedChildren = new ArrayList<>();
         
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.UpdateModel"))){
         
         
-            // Remove SubTree stereotype from "selectedElement"
+            /*
+             *  Remove SubTree stereotype from "selectedElement"
+             */
             ((Class) selectedElement).removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE);
-        
-        
         
         
         
@@ -64,145 +63,95 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
         
                     Rectangle elementBounds = ((IDiagramNode) diagramGraphic).getBounds();
         
+        
+                    /*
+                     * Unmask children of "Operator element" child of Selected element ("Operator element" not included)
+                     */
                     List<Class> elementChildren = ((ModelTree) selectedElement).getOwnedElement(Class.class);
-                    for(Class child:elementChildren) {
+                    for(Class operatorEltChildOfSelectedElt:elementChildren) {
         
-                        ElementRepresentationManager.unmaskChildren(moduleContext, diagramService, diagramHandle , child, elementBounds.x, elementBounds.y + AutoLayoutManager.VERTICAL_AUTOSPACING);
+                        ElementRepresentationManager.unmaskChildren(moduleContext, diagramService, diagramHandle , operatorEltChildOfSelectedElt, elementBounds.x, elementBounds.y + AutoLayoutManager.VERTICAL_AUTOSPACING);
         
-                        // Refresh owner of direct children (Operator AND or OR) to update representation
+        
+                        /* 
+                         * setOwner of Operator element child of Selected element to update representation
+                         */
                         MObject root = diagram.getOrigin().getCompositionOwner();
-                        //                    List<Class> elementChildren = ((ModelTree) selectedElement).getOwnedElement(Class.class);
-                        //                    for(Class child: elementChildren) {
-                        child.setOwner((ModelTree) root);
-        
-                        displacedChildren.add(child);
+                        operatorEltChildOfSelectedElt.setOwner((ModelTree) root);
         
         
-        
+                        //displacedChildren.add(operatorChild);
                     }
         
         
-                    // Why it didnt work
-        //                    try (FileWriter writer = new FileWriter("/home/kchaabouni/kais2/p07_cpswarm/debugging_out.txt", true);
-        //                            BufferedWriter bw = new BufferedWriter(writer)) {
-        //                        bw.write("displaced.size : " + displacedChildren.size()
-        //
-        //                                );
-        //                        bw.newLine();
-        //                    } catch (IOException e) {
-        //                        System.err.format("IOException: %s%n", e);
-        //                    }
-                    //
-        
-        
                     diagramHandle.save();
-                    diagramHandle.close();
-                }
-            }
+                    //diagramHandle.close();
+                    //}
+                    //}
         
-            transaction.commit ();
-        }
-        
-        
-        
-        try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.UpdateModel"))){
+                    //-->transaction.commit ();
+                    //-->}
         
         
         
-            List<AbstractDiagram> diagrams = ((Element) selectedElement).getDiagramElement(AbstractDiagram.class);
-            for(AbstractDiagram diagram: diagrams) {
-                try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
-        
-                    for(Class displacedChild: displacedChildren) {
-        
-                        List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
-                        IDiagramGraphic diagramGraphic = diagramGraphics.get(0);
-        
-                        Rectangle elementBounds = ((IDiagramNode) diagramGraphic).getBounds();
+                    //-->try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.UpdateModel"))){
         
         
-                        // Unmask child 
-                        List<IDiagramGraphic> graph = diagramHandle.unmask(displacedChild, elementBounds.x, elementBounds.y + AutoLayoutManager.VERTICAL_AUTOSPACING);
         
-                        // Why it didnt work
-        //                        try (FileWriter writer = new FileWriter("/home/kchaabouni/kais2/p07_cpswarm/debugging_out.txt", true);
-        //                                BufferedWriter bw = new BufferedWriter(writer)) {
-        //                            bw.write("graph != null: " + (graph != null)
-        //                                    + ", graph.size() " + graph.size()
-        //                                    + ", (graph.get(0) instanceof IDiagramNode)" 
-        //                                    );
-        //                            bw.newLine();
-        //                        } catch (IOException e) {
-        //                            System.err.format("IOException: %s%n", e);
-        //                        }
-                        //
+                    //-->List<AbstractDiagram> diagrams = ((Element) selectedElement).getDiagramElement(AbstractDiagram.class);
+                    //for(AbstractDiagram diagram: diagrams) {
+                    //try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
         
+                    for(Class displacedOperatorElement: elementChildren) {
+        
+                        //List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
+                        //IDiagramGraphic diagramGraphic = diagramGraphics.get(0);
+        
+                        //Rectangle elementBounds = ((IDiagramNode) diagramGraphic).getBounds();
+        
+        
+                        /*
+                         *  Unmask Operator element child of Selected element 
+                         */
+                        List<IDiagramGraphic> graph = diagramHandle.unmask(displacedOperatorElement, elementBounds.x, elementBounds.y + AutoLayoutManager.VERTICAL_AUTOSPACING);
+        
+        
+                        /*
+                         * Update Operator element child's style
+                         */
                         if((graph != null) &&  (graph.size() > 0) && (graph.get(0) instanceof IDiagramNode)) {
                             IDiagramNode graphNode = (IDiagramNode)graph.get(0);
-                            if(((Class) graphNode.getElement()).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
-                                graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.ATTACK.getShowNameProperty());
-                                graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.ATTACK.getRepresentationMode());
-                            } else {
-                                graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.OPERATOR.getShowNameProperty());
-                                graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.OPERATOR.getRepresentationMode());
-                            }
-        
+                            updateNodeStyle(graphNode);
                         }
         
-                        // unmask related dependencies
-                        List<Dependency> elementDependsOnDependencies = ((ModelElement) displacedChild).getDependsOnDependency();
+        
+                        /*
+                         *  unmask dependencies related to displaced operator element
+                         */
+                        List<Dependency> elementDependsOnDependencies = ((ModelElement) displacedOperatorElement).getDependsOnDependency();
                         for(Dependency dependency: elementDependsOnDependencies) {
                             diagramHandle.unmask(dependency, 0, 0);
                         }
-                        List<Dependency> elementImpactedDependency = ((ModelElement) displacedChild).getImpactedDependency();
+                        List<Dependency> elementImpactedDependency = ((ModelElement) displacedOperatorElement).getImpactedDependency();
                         for(Dependency dependency: elementImpactedDependency) {
                             diagramHandle.unmask(dependency, 0, 0);
                         }
         
-                        displacedChild.setOwner((ModelTree) selectedElement);
-        
-        
-                        //        
-                        //        
-                        //                        List<IDiagramGraphic> graph = diagramHandle.unmask(child, elementBounds.x, elementBounds.y + AutoLayoutManager.VERTICAL_AUTOSPACING);
-                        //        
-                        //        
-                        //        
-                        //                        if((graph != null) &&  (graph.size() > 0) && (graph.get(0) instanceof IDiagramNode)) {
-                        //                            IDiagramNode graphNode = (IDiagramNode)graph.get(0);
-                        //                            graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.OPERATOR.getShowNameProperty());
-                        //                            graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.OPERATOR.getRepresentationMode());
-                        //        
-                        //        
-                        //        
-                        //                        }
-                        //        
-                        //                        // update owner
-                        //                        child.setOwner((ModelTree) selectedElement);
-                        //        
-                        //                    }
-        
-        
-        
-        
-        
-        
+                        
+                        /*
+                         * update owner of displaced operator element Child of selected element
+                         */
+                        displacedOperatorElement.setOwner((ModelTree) selectedElement);
+                
                     }
         
                     diagramHandle.save();
                     diagramHandle.close();
                 }
         
-        
-        
             }
         
-        
-        
             transaction.commit ();
-        
-        
-        
         }
     }
 
@@ -217,6 +166,17 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
                     && selectedElement.getStatus().isModifiable());
         }
         return false;
+    }
+
+    @objid ("db62b280-a883-4dc4-8298-c90e40835b14")
+    public void updateNodeStyle(IDiagramNode graphNode) {
+        if(((Class) graphNode.getElement()).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
+            graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.ATTACK.getShowNameProperty());
+            graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.ATTACK.getRepresentationMode());
+        } else {
+            graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.OPERATOR.getShowNameProperty());
+            graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.OPERATOR.getRepresentationMode());
+        }
     }
 
 }
