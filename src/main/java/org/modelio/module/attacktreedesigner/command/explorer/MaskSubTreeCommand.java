@@ -11,6 +11,7 @@ import org.modelio.api.module.command.DefaultModuleCommandHandler;
 import org.modelio.api.module.context.IModuleContext;
 import org.modelio.metamodel.diagrams.AbstractDiagram;
 import org.modelio.metamodel.uml.infrastructure.Element;
+import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
@@ -61,7 +62,9 @@ public class MaskSubTreeCommand extends DefaultModuleCommandHandler {
                     && (selectedElement instanceof Class)
                     && ((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)
                     && !((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)
-                    && selectedElement.getStatus().isModifiable());
+                    && selectedElement.getStatus().isModifiable()
+                    && (((ModelTree) selectedElement).getOwnedElement(Class.class)).size()>0);
+        
         }
         return false;
     }
