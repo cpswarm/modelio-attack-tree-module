@@ -26,7 +26,7 @@
                     <TagType name="Custom field" uid="65adbe17-0416-4b30-a996-40e7f9a96860" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
                 </TagTypes>
                 <NoteTypes>
-                    <NoteType name="CounterMeasure" label="%notetype.CounterMeasure.label" is-hidden="false" uid="8b0986b3-4622-4ba5-86b8-193ea3589f36" mime-type="text/plain"/>
+                    <NoteType name="Counter-Measure" label="%notetype.Counter-Measure.label" is-hidden="false" uid="8b0986b3-4622-4ba5-86b8-193ea3589f36" mime-type="text/plain"/>
                 </NoteTypes>
             </Stereotype>
             <Stereotype name="Root" metaclass="Standard.Class" owner-stereotype="mref#'' {02703c05-0dd1-4698-b017-b46d57d79e0e} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.Root.label" uid="d05ac5e1-3789-443f-8fb9-d7be2ce89edc" is-abstract="false">

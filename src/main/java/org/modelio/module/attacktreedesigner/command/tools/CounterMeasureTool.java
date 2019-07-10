@@ -25,7 +25,7 @@ import org.modelio.vcore.smkernel.mapi.MObject;
 public class CounterMeasureTool extends DefaultAttachedBoxTool {
     @objid ("bbeee311-cb98-4a26-a18c-9ada8cd12713")
     @Override
-    public boolean acceptElement(final IDiagramHandle diagramHandle, final IDiagramGraphic targetNode) {
+    public boolean acceptElement(IDiagramHandle diagramHandle, IDiagramGraphic targetNode) {
         MObject targetElement = targetNode.getElement();
         return (targetElement instanceof Class 
                 && ((Class) targetElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)
@@ -35,18 +35,14 @@ public class CounterMeasureTool extends DefaultAttachedBoxTool {
 
     @objid ("c2df77ce-c32a-4e4c-8db8-0e4d3d849ae8")
     @Override
-    public void actionPerformed(final IDiagramHandle diagramHandle, final IDiagramGraphic originNode, final LinkRouterKind routerType, final ILinkPath path, final Point point) {
+    public void actionPerformed(IDiagramHandle diagramHandle, IDiagramGraphic originNode, LinkRouterKind routerType, ILinkPath path, Point point) {
         IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession();
         IUmlModel model = session.getModel();                
         try( ITransaction transaction = session.createTransaction (Messages.getString("Info.Session.Create", "Counter Measure"))){
             ModelElement owner = (ModelElement) originNode.getElement();
             
-            
-            
-            //owner.getNote(noteType)
-            
-            
-            Note note = model.createNote(IAttackTreeDesignerPeerModule.MODULE_NAME,AttackTreeNoteTypes.COUNTER_MEASURE, owner, "Problem Note");   
+            Note note = model.createNote(IAttackTreeDesignerPeerModule.MODULE_NAME,AttackTreeNoteTypes.COUNTER_MEASURE, owner, AttackTreeNoteTypes.COUNTER_MEASURE);   
+        
             diagramHandle.unmask(note, point.x, point.y );
             
             diagramHandle.save();
@@ -58,18 +54,6 @@ public class CounterMeasureTool extends DefaultAttachedBoxTool {
     @objid ("b8da66a5-09f8-40f9-8a6f-5e654955d597")
     @Override
     public void actionPerformedInDiagram(final IDiagramHandle diagramHandle, final Rectangle rect) {
-        //        Class operatorElement = session.getModel().createClass(
-        //                Labels.DEFAULT_NAME.toString(), 
-        //                (NameSpace) rootElement, 
-        //                IAttackTreeDesignerPeerModule.MODULE_NAME, 
-        //                stereotypeName);
-        //        List<IDiagramGraphic> graph = diagramHandle.unmask(operatorElement, rectangle.x, rectangle.y);
-        //        if((graph != null) &&  (graph.size() > 0) && (graph.get(0) instanceof IDiagramNode)) {
-        //            IDiagramNode graphNode = (IDiagramNode)graph.get(0);
-        //            graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.OPERATOR.getShowNameProperty());
-        //            graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.OPERATOR.getRepresentationMode());
-        //        }
-        //        operatorElement.setOwner(parentElement);
     }
 
 }
