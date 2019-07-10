@@ -17,6 +17,7 @@ import org.modelio.metamodel.diagrams.ClassDiagram;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.Profile;
 import org.modelio.metamodel.uml.infrastructure.Stereotype;
+import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.NameSpace;
 import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
@@ -25,12 +26,10 @@ import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.module.attacktreedesigner.utils.DiagramElementBounds;
 import org.modelio.module.attacktreedesigner.utils.Labels;
+import org.modelio.module.attacktreedesigner.utils.TagsManager;
 import org.modelio.vcore.smkernel.mapi.MClass;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
-/**
- * @author ebrosse
- */
 @objid ("1bdbb2e0-7f1a-46d7-ab20-04f90652f854")
 public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
     @objid ("289b34c8-b854-4b43-ba33-6c907c5e23b7")
@@ -44,8 +43,12 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
         
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.Create", "AttackTree Diagram"))){
         
+            // create Root Class
             ModelElement rootElement = session.getModel().createClass(Labels.DEFAULT_NAME.toString(), (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
         
+            // create Default tags
+            TagsManager.createAttackDefaultTags(session, (Class) rootElement);
+            
             MClass mclass = moduleContext.getModelioServices().getMetamodelService().getMetamodel().getMClass(ClassDiagram.class);
             Stereotype ster = session.getMetamodelExtensions().getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACKTREEDIAGRAM, mclass);
             ClassDiagram diagram = session.getModel().createClassDiagram(name, rootElement, ster);

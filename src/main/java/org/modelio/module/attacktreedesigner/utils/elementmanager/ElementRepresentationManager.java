@@ -50,12 +50,15 @@ public class ElementRepresentationManager {
             // recursively call maskChildren to children
             unmaskChildren(moduleContext, diagramService, diagramHandle, child, newX, newY);
         
-            // increment x
-            newX += AutoLayoutManager.HORIZONTAL_AUTOSPACING;
+        
         
             // unmask current child
             List<IDiagramGraphic> graph = diagramHandle.unmask(child, newX, newY);
         
+            // increment x
+            newX += AutoLayoutManager.HORIZONTAL_AUTOSPACING;
+            
+            // update node style
             if((graph != null) &&  (graph.size() > 0) && (graph.get(0) instanceof IDiagramNode)) {
                 IDiagramNode graphNode = (IDiagramNode)graph.get(0);
                 updateNodeStyle(graphNode);

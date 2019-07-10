@@ -9,11 +9,9 @@ import org.modelio.api.modelio.model.IModelingSession;
 import org.modelio.api.modelio.model.ITransaction;
 import org.modelio.metamodel.diagrams.AbstractDiagram;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
-import org.modelio.metamodel.uml.infrastructure.TaggedValue;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.NameSpace;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
-import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
@@ -40,7 +38,7 @@ public class CreateAttackTool extends DefaultBoxTool {
         
             MObject rootElement = diagramHandle.getDiagram().getOrigin().getCompositionOwner();
         
-            // create sterotyped Class
+            // create sterotyped Attack Class
             Class attackElement = session.getModel().createClass(
                     Labels.DEFAULT_NAME.toString(), 
                     (NameSpace) rootElement, 
@@ -48,17 +46,7 @@ public class CreateAttackTool extends DefaultBoxTool {
                     AttackTreeStereotypes.ATTACK);
             
             // create Default tags
-            TaggedValue severityTaggedValue = TagsManager.createTag(session, AttackTreeTagTypes.SEVERITY, attackElement);
-            TagsManager.addParameter(session, attackElement, severityTaggedValue, Labels.MEDIUM.toString());
-            attackElement.getTag().add(severityTaggedValue);
-        
-            TaggedValue probabilityTaggedValue = TagsManager.createTag(session,  AttackTreeTagTypes.PROBABILITY, attackElement);
-            TagsManager.addParameter(session, attackElement, probabilityTaggedValue, Labels.MEDIUM.toString());
-            attackElement.getTag().add(probabilityTaggedValue);
-            
-            TaggedValue riskLevelTaggedValue = TagsManager.createTag(session, AttackTreeTagTypes.RISK_LEVEL, attackElement);
-            TagsManager.addParameter(session, attackElement, riskLevelTaggedValue, Labels.MEDIUM.toString());
-            attackElement.getTag().add(riskLevelTaggedValue);
+            TagsManager.createAttackDefaultTags(session, attackElement);
         
             
             // unmask Attack and save diagram
