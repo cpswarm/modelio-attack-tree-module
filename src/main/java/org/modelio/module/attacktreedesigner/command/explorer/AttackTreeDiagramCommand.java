@@ -50,7 +50,7 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
             TagsManager.createAttackDefaultTags(session, (Class) rootElement);
             
             MClass mclass = moduleContext.getModelioServices().getMetamodelService().getMetamodel().getMClass(ClassDiagram.class);
-            Stereotype ster = session.getMetamodelExtensions().getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACKTREEDIAGRAM, mclass);
+            Stereotype ster = session.getMetamodelExtensions().getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK_TREE_DIAGRAM, mclass);
             ClassDiagram diagram = session.getModel().createClassDiagram(name, rootElement, ster);
         
         

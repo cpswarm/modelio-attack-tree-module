@@ -21,26 +21,30 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
     @Override
     public void handleModelChange(IModelingSession session, IModelChangeEvent event) {
         //DeletedEvents
+        
         List<IElementDeletedEvent> deleteEvents = event.getDeleteEvents();
-        for (IElementDeletedEvent deleteEvent : deleteEvents){
-            MObject deletedElement = deleteEvent.getDeletedElement();
-            if (deletedElement instanceof Dependency 
-                    && ((Dependency) deletedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)){
+        if(! deleteEvents.isEmpty()) {
+            try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", "Synchronize Attack Tree Model"))){
         
-                Dependency deletedDependency = (Dependency) deletedElement;
-                try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", "Synchronize Attack Tree Model"))){
+                for (IElementDeletedEvent deleteEvent : deleteEvents){
+                    MObject deletedElement = deleteEvent.getDeletedElement();
+                    if (deletedElement instanceof Dependency 
+                            && ((Dependency) deletedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)){
         
-                    MObject rootElement = deletedDependency.getDiagramElement().get(0).getOrigin(); 
-                    ModelTree targetElement = (ModelTree) deletedDependency.getDependsOn();
+                        Dependency deletedDependency = (Dependency) deletedElement;
         
-                    targetElement.setOwner((ModelTree) rootElement);
+                        MObject rootElement = deletedDependency.getDiagramElement().get(0).getOrigin(); 
+                        ModelTree targetElement = (ModelTree) deletedDependency.getDependsOn();
+                        if(targetElement != null) {
+                            targetElement.setOwner((ModelTree) rootElement);
         
-                    ElementCreationManager.renameElement(session, targetElement); 
-        
-                    transaction.commit();
+                            ElementCreationManager.renameElement(session, targetElement); 
+                        }
+                    }
                 }
-            }
         
+                transaction.commit();
+            }
         }
     }
 

@@ -91,11 +91,15 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
                       */
                      List<Dependency> elementDependsOnDependencies = ((ModelElement) elementChild).getDependsOnDependency();
                      for(Dependency dependency: elementDependsOnDependencies) {
-                         diagramHandle.unmask(dependency, 0, 0);
+                         if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                             diagramHandle.unmask(dependency, 0, 0);
+                         }
                      }
                      List<Dependency> elementImpactedDependency = ((ModelElement) elementChild).getImpactedDependency();
                      for(Dependency dependency: elementImpactedDependency) {
-                         diagramHandle.unmask(dependency, 0, 0);
+                         if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                             diagramHandle.unmask(dependency, 0, 0);
+                         }
                      }
         
         

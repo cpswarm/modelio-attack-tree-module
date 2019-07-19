@@ -67,7 +67,9 @@ public class ElementRepresentationManager {
             // unmask dependencies
             List<Dependency> elementDependsOnDependencies = ((ModelElement) child).getDependsOnDependency();
             for(Dependency dependency: elementDependsOnDependencies) {
-                diagramHandle.unmask(dependency, 0, 0);
+                if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                    diagramHandle.unmask(dependency, 0, 0);
+                }
             }
         }
     }

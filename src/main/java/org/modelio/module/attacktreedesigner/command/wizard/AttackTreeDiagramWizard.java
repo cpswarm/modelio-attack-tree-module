@@ -46,7 +46,7 @@ public class AttackTreeDiagramWizard extends AbstractWizardContributor implement
         
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.Create", "AttackTree Diagram"))){
           
-            diagram = session.getModel().createStaticDiagram(name, owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACKTREEDIAGRAM);
+            diagram = session.getModel().createStaticDiagram(name, owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK_TREE_DIAGRAM);
             
             IUmlModel model = session.getModel();                   
             
@@ -124,7 +124,7 @@ public class AttackTreeDiagramWizard extends AbstractWizardContributor implement
         MMetamodel metamodel = moduleContext.getModelioServices().getMetamodelService().getMetamodel();
         MClass mClass = metamodel.getMClass(StaticDiagram.class);
         IMetamodelExtensions extensions = moduleContext.getModelingSession().getMetamodelExtensions();
-        Stereotype stereotype = extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACKTREEDIAGRAM, mClass);
+        Stereotype stereotype = extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK_TREE_DIAGRAM, mClass);
         return stereotype != null ? new ElementDescriptor(mClass, stereotype) : null;
     }
 

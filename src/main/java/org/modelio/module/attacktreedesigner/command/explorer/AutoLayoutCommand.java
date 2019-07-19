@@ -64,7 +64,7 @@ public class AutoLayoutCommand extends DefaultModuleCommandHandler {
             MObject selectedElement = selectedElements.get(0);
             return ((selectedElement != null) 
                     && (selectedElement instanceof ClassDiagram)
-                    && ((ClassDiagram) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACKTREEDIAGRAM)
+                    && ((ClassDiagram) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK_TREE_DIAGRAM)
                     && selectedElement.getStatus().isModifiable());
         }
         return false;

@@ -8,7 +8,7 @@ import com.modeliosoft.modelio.javadesigner.annotations.objid;
 @objid ("aa25de17-6718-4ec6-9d23-ae1ce1473250")
 public interface AttackTreeStereotypes {
     @objid ("8b0ed670-d6fe-4425-9cf9-d081d93fee4d")
-    public static final String ATTACKTREEDIAGRAM = "AttackTreeDiagram";
+    public static final String ATTACK_TREE_DIAGRAM = "AttackTreeDiagram";
 
     @objid ("9ed47491-0e71-4898-b628-a07583d88201")
     public static final String ROOT = "Root";
@@ -19,8 +19,6 @@ public interface AttackTreeStereotypes {
     @objid ("6d01b8a6-7e7d-4dd7-9f2e-3ed1609bff3c")
     public static final String OR = "OR";
 
-//    @objid ("756f9e99-259e-4626-8dee-fed9de59b869")
-//    public static final String ABSTRACTATTACK = "AbstractAttack";
     @objid ("54ff413b-d4e0-4417-ab93-32952ef79a85")
     public static final String ATTACK = "Attack";
 
@@ -36,7 +34,10 @@ public interface AttackTreeStereotypes {
     @objid ("61d17d69-3dec-4f33-878d-e8f37655ff63")
     public static final String OPERATOR = "Operator";
 
+    @objid ("d23a5afb-bfda-498f-9d0d-9b57b2e29985")
+    public static final String TREE_REFERENCE_DECORATION = "TreeReferenceDecoration";
 
-//@objid ("3f8b3fbd-1006-419c-8815-d055e3f833f1")
-//public static final String ROOTSUBTREE = "RootSubTree";
+    @objid ("a00554f8-52df-43c0-9de7-1a68263f9400")
+    public static final String TREE_REFERENCE_DEPENDENCY = "TreeReferenceDependency";
+
 }

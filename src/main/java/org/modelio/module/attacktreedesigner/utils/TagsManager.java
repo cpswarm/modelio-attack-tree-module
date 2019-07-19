@@ -28,6 +28,15 @@ public class TagsManager {
     @objid ("899fe4bf-78f3-4c04-bebb-46b9ee47c858")
     public static final String[] PROBABILITY_VALUES = {"LOW", "MEDIUM", "HIGH"};
 
+    @objid ("93f21aba-0018-45b9-b179-2763e6c5bcf7")
+    public static final String DEFAULT_SECURITY_RELATED = "false";
+
+    @objid ("ca8f2286-e9ed-475a-b613-03c15936f7fd")
+    public static final String DEFAULT_SAFETY_RELATED = "false";
+
+    @objid ("dca79667-0662-4104-b5e4-e556b10abe03")
+    public static final String DEFAULT_OUT_OF_SCOPE = "false";
+
     @objid ("d13e0d68-aa70-4e35-a70b-5974920861dc")
     public static void addParameter(IModelingSession session, TaggedValue severityTaggedValue, String value) {
         TagParameter tagParameter= session.getModel().createTagParameter(value, severityTaggedValue);
@@ -81,6 +90,18 @@ public class TagsManager {
         TaggedValue riskLevelTaggedValue = TagsManager.createTag(session, AttackTreeTagTypes.RISK_LEVEL, attackElement);
         TagsManager.addParameter(session, riskLevelTaggedValue, TagsManager.DEFAULT_RISK_LEVEL_VALUE);
         attackElement.getTag().add(riskLevelTaggedValue);
+        
+        TaggedValue securityRelated = TagsManager.createTag(session, AttackTreeTagTypes.SECURITY_RELATED, attackElement);
+        TagsManager.addParameter(session, securityRelated, TagsManager.DEFAULT_SECURITY_RELATED);
+        attackElement.getTag().add(securityRelated);
+        
+        TaggedValue safetyRelated = TagsManager.createTag(session, AttackTreeTagTypes.SAFETY_RELATED, attackElement);
+        TagsManager.addParameter(session, safetyRelated, TagsManager.DEFAULT_SAFETY_RELATED);
+        attackElement.getTag().add(safetyRelated);
+        
+        TaggedValue outOfScope = TagsManager.createTag(session, AttackTreeTagTypes.OUT_OF_SCOPE, attackElement);
+        TagsManager.addParameter(session, outOfScope, TagsManager.DEFAULT_OUT_OF_SCOPE);
+        attackElement.getTag().add(outOfScope);
     }
 
     @objid ("265d86ab-a08e-4447-b11d-9b74afdbd53c")

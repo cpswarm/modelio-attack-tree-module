@@ -19,10 +19,10 @@
                 <TagTypes>
                     <TagType name="Severity" uid="d8fb88fd-74a5-49a4-808c-750ab6e76b3f" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
                     <TagType name="Probability" uid="035608cc-09d8-450e-a160-8889204ad6de" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
-                    <TagType name="RiskLevel" uid="78846b15-2d05-43c7-8ae4-e60cc34a2866" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
-                    <TagType name="Security related" uid="923a8a26-c1af-4c8d-b627-c75164e8ba61" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
-                    <TagType name="Safety related" uid="e6005ad7-e8fe-45bd-ad76-6c2e195de688" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
-                    <TagType name="Out of scope" uid="6cdb9550-932c-4872-bd5b-47dac059f337" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
+                    <TagType name="Risk level" uid="78846b15-2d05-43c7-8ae4-e60cc34a2866" label="%tagtype.Risk level.label" parameter-card="1" is-hidden="false" is-signed="false"/>
+                    <TagType name="Security related" uid="923a8a26-c1af-4c8d-b627-c75164e8ba61" label="%tagtype.Security related.label" parameter-card="1" is-hidden="false" is-signed="false"/>
+                    <TagType name="Safety related" uid="e6005ad7-e8fe-45bd-ad76-6c2e195de688" label="%tagtype.Safety related.label" parameter-card="1" is-hidden="false" is-signed="false"/>
+                    <TagType name="Out of scope" uid="6cdb9550-932c-4872-bd5b-47dac059f337" label="%tagtype.Out of scope.label" parameter-card="1" is-hidden="false" is-signed="false"/>
                     <TagType name="Custom field" uid="65adbe17-0416-4b30-a996-40e7f9a96860" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
                 </TagTypes>
                 <NoteTypes>
@@ -48,6 +48,14 @@
             <Stereotype name="Node" metaclass="Standard.Class" owner-stereotype="" is-hidden="false" label="%stereotype.Node.label" uid="9c3f6aa5-547c-4558-87db-d64dca132d75" is-abstract="true">
                 <Icon path=""/>
                 <Image path=""/>
+            </Stereotype>
+            <Stereotype name="TreeReferenceDependency" metaclass="Infrastructure.Dependency" owner-stereotype="" is-hidden="false" label="%stereotype.TreeReferenceDependency.label" uid="72f09417-53ae-4138-a717-25af2cd63688" is-abstract="false">
+                <Icon path=""/>
+                <Image path=""/>
+            </Stereotype>
+            <Stereotype name="TreeReferenceDecoration" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.TreeReferenceDecoration.label" uid="c85b8741-354e-43f5-be03-a53c72961da3" is-abstract="false">
+                <Icon path="res/icon/gui/ReferenceTreeDecoration_24.png"/>
+                <Image path="res/icon/gui/ReferenceTreeDecoration_48.png"/>
             </Stereotype>
         </Profile>
         <Profile uid="6f44d2e9-1fa5-46cd-9763-62c01694f4e1" id="attacktree.diagrams">

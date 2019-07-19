@@ -11,7 +11,7 @@ public interface AttackTreeTagTypes {
     public static final String PROBABILITY = "Probability";
 
     @objid ("b8e82735-64ce-40be-9243-3fae2d12fbf9")
-    public static final String RISK_LEVEL = "RiskLevel";
+    public static final String RISK_LEVEL = "Risk level";
 
     @objid ("c946fca0-fe9b-4fd5-8b85-27ca7db97752")
     public static final String SECURITY_RELATED = "Security related";
