@@ -21,6 +21,7 @@ import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.module.attacktreedesigner.utils.AttackTreeResourcesManager;
 import org.modelio.module.attacktreedesigner.utils.TagsManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementNavigationManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("23bf4eaa-6db6-4138-8664-6b16f27ded1e")
@@ -238,7 +239,7 @@ public class AttackTreePropertyPage extends AbstractModulePropertyPage {
 
     @objid ("8c950848-bd0c-4ee6-a014-35235ca64ab5")
     private List<String> getAvailableTreesNames(Class selectedElement) {
-        ModelTree rootElement = getRootElement(selectedElement);
+        ModelTree rootElement = ElementNavigationManager.getRootElement(selectedElement);
         
         ModelTree modelPackage = rootElement.getOwner();
         
@@ -250,15 +251,6 @@ public class AttackTreePropertyPage extends AbstractModulePropertyPage {
             }
         }
         return availableTreesNames;
-    }
-
-    @objid ("6940ec3b-bc05-4b57-8980-e6694f5f47c2")
-    private ModelTree getRootElement(ModelTree selectedElement) {
-        if(selectedElement.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) {
-            return selectedElement;
-        } else {
-            return getRootElement(selectedElement.getOwner());
-        }
     }
 
     @objid ("2a83035a-1000-4112-afc8-4e951cf95f38")
@@ -326,7 +318,7 @@ public class AttackTreePropertyPage extends AbstractModulePropertyPage {
      */
     @objid ("48b036b1-28fe-40a9-b07d-38651a3d33bd")
     private List<Class> getAvailableTrees(Class selectedElement) {
-        ModelTree rootElement = getRootElement(selectedElement);
+        ModelTree rootElement = ElementNavigationManager.getRootElement(selectedElement);
         
         ModelTree modelPackage = rootElement.getOwner();
         

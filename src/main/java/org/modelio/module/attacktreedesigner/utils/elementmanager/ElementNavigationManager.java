@@ -44,4 +44,13 @@ public class ElementNavigationManager {
         return false;
     }
 
+    @objid ("166e11d5-28dc-4346-8e43-675df34b0137")
+    public static ModelTree getRootElement(ModelTree selectedElement) {
+        if(selectedElement.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) {
+            return selectedElement;
+        } else {
+            return getRootElement(selectedElement.getOwner());
+        }
+    }
+
 }

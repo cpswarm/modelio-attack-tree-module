@@ -5,7 +5,7 @@
   <!-- definition -->
   <groupId>org.modelio.module</groupId>
   <artifactId>attacktreedesigner</artifactId>
-  <version>0.01.00</version>
+  <version>0.01.01</version>
   <name>AttackTreeDesigner</name>
   <repositories>
       <repository>
@@ -205,6 +205,5 @@
         </build>
     <description>Added features:
 - Reference other trees
-- Detect un-countered attacks
 - Add default tags</description>
     </project>
