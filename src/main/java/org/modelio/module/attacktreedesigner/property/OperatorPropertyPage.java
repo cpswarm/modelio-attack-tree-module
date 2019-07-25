@@ -8,7 +8,7 @@ import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerPeerModule;
 
 @objid ("16f35395-b210-4759-8df8-daff2c306980")
-public class ConditionPropertyPage implements IPropertyContent {
+public class OperatorPropertyPage implements IPropertyContent {
     @objid ("3a5f1795-2279-4c0f-ae22-192981b72ede")
     @Override
     public void changeProperty(ModelElement element, int row, String value) {
