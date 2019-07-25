@@ -31,6 +31,15 @@ import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("1bdbb2e0-7f1a-46d7-ab20-04f90652f854")
 public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
+    @objid ("5f6ab922-1258-4f74-a63b-49ff3e9b6988")
+    private static final String DIAGRAM_DEFAULT_NAME = "Diagram";
+
+    @objid ("58a5f190-c903-4ec2-aea0-41aaddb30e74")
+    private static final String TREE = "Tree";
+
+    @objid ("dfab0bf7-9d32-4d00-88ff-2a1653f7b0ee")
+    private static final String ATTACKTREE_STYLE_NAME = "attacktree";
+
     @objid ("289b34c8-b854-4b43-ba33-6c907c5e23b7")
     @Override
     public void actionPerformed(List<MObject> selectedElements, IModule module) {
@@ -50,7 +59,7 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
             
             MClass mclass = moduleContext.getModelioServices().getMetamodelService().getMetamodel().getMClass(ClassDiagram.class);
             Stereotype ster = session.getMetamodelExtensions().getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK_TREE_DIAGRAM, mclass);
-            ClassDiagram diagram = session.getModel().createClassDiagram(name, rootElement, ster);
+            ClassDiagram diagram = session.getModel().createClassDiagram(Labels.DEFAULT_NAME.toString(), rootElement, ster);
         
         
             /*
@@ -62,7 +71,7 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
                 IDiagramDG dg = diagramHandle.getDiagramNode();
         
                 for (IStyleHandle style : diagramService.listStyles()){
-                    if (style.getName().equals("attacktree")){
+                    if (style.getName().equals(ATTACKTREE_STYLE_NAME)){
                         dg.setStyle(style);
                         break;
                     }
@@ -78,7 +87,8 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
                 diagramHandle.close();
             }
         
-            session.getModel().getDefaultNameService().setDefaultName(rootElement, AttackTreeStereotypes.ROOT);
+            session.getModel().getDefaultNameService().setDefaultName(rootElement, TREE);
+            session.getModel().getDefaultNameService().setDefaultName(diagram, rootElement.getName() + " " + DIAGRAM_DEFAULT_NAME);
             moduleContext.getModelioServices().getEditionService().openEditor(diagram);
             
             transaction.commit ();

@@ -8,8 +8,8 @@ import org.modelio.api.module.IModule;
 import org.modelio.api.module.command.DefaultModuleCommandHandler;
 import org.modelio.api.module.context.IModuleContext;
 import org.modelio.metamodel.diagrams.AbstractDiagram;
-import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
+import org.modelio.metamodel.uml.statik.Attribute;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
@@ -49,9 +49,9 @@ public class OpenReferencedTreeDiagram extends DefaultModuleCommandHandler {
     public AbstractDiagram getReferencedTreeDiagram(MObject selectedElement) {
         AbstractDiagram referencedTreeDiagram = null;
         
-        List<Dependency> selectedElementDependencies = ((Class) selectedElement).getDependsOnDependency();
-        if(! selectedElementDependencies.isEmpty()) {
-            ModelElement referencedTreeRoot = selectedElementDependencies.get(0).getDependsOn();
+        List<Attribute> attributes = ((Class) selectedElement).getOwnedAttribute();
+        if(!attributes.isEmpty()) {
+            ModelElement referencedTreeRoot = attributes.get(0).getType();
             List<? extends MObject> referencedTreeRootChildren = referencedTreeRoot.getCompositionChildren();
             for(MObject child : referencedTreeRootChildren) {
                 if(child instanceof AbstractDiagram) {
