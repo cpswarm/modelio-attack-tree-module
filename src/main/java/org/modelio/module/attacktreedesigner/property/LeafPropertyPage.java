@@ -4,7 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
+import org.modelio.api.modelio.diagram.IDiagramGraphic;
+import org.modelio.api.modelio.diagram.IDiagramHandle;
+import org.modelio.api.modelio.diagram.IDiagramNode;
+import org.modelio.api.modelio.diagram.IDiagramService;
+import org.modelio.api.module.context.IModuleContext;
 import org.modelio.api.module.propertiesPage.IModulePropertyTable;
+import org.modelio.metamodel.diagrams.AbstractDiagram;
+import org.modelio.metamodel.uml.infrastructure.Element;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Attribute;
@@ -15,10 +22,16 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
+import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerPeerModule;
+import org.modelio.module.attacktreedesigner.utils.DiagramElementStyle;
+import org.modelio.module.attacktreedesigner.utils.Labels;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementNavigationManager;
 
 @objid ("c07b6144-87dc-44fc-ab74-b757ac83385b")
 public class LeafPropertyPage implements IPropertyContent {
+    @objid ("84816d5d-f184-41cc-b99b-60734a124dea")
+    private static final String REF_DEFAULT_NAME = "ref";
+
     @objid ("2f6d2394-45bb-46cd-ab6d-2320b7627afa")
     private static List<Class> _roots = null;
 
@@ -76,6 +89,8 @@ public class LeafPropertyPage implements IPropertyContent {
 
     @objid ("d365e25a-81ea-4302-a0ed-dbe99059bc52")
     private void addReference(Classifier selectedElement, String referencedTreeName) {
+        IModuleContext moduleContext = AttackTreeDesignerModule.getInstance().getModuleContext();
+        
         //Get Referenced Tree
         GeneralClass root = null;       
         if (!(referencedTreeName.equals("")))
@@ -87,13 +102,19 @@ public class LeafPropertyPage implements IPropertyContent {
             Attribute ref = getRefAttribute(selectedElement);
             if (ref == null) {
         
-                AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession().getModel().createAttribute(
-                        "ref",
+                Attribute referenceTreeAttribute = moduleContext.getModelingSession().getModel().createAttribute(
+                        REF_DEFAULT_NAME,
                         root, 
                         selectedElement,                      
                         IAttackTreeDesignerPeerModule.MODULE_NAME, 
                         AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE); 
         
+                
+                selectedElement.addStereotype(AttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_DECORATION);
+                
+                
+                changeStyleToReferencedTree(selectedElement, moduleContext, referenceTreeAttribute);
+             
             }else { 
                 ref.setType(root);
             }
@@ -110,6 +131,10 @@ public class LeafPropertyPage implements IPropertyContent {
                     att.delete();
                 }
             }
+            
+            selectedElement.removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_DECORATION);
+            
+            changeStyleToAttack(selectedElement, moduleContext);
         }
     }
 
@@ -149,6 +174,56 @@ public class LeafPropertyPage implements IPropertyContent {
         String[] availableTrees = trees.toArray(new String[0]);
         String value = getReferencedTreeName(leaf);
         table.addProperty (Messages.getString("Ui.Property.Reference.Name"), value, availableTrees);
+    }
+
+    @objid ("094160c1-5f18-444b-a31f-bb22040bba8d")
+    private void changeStyleToAttack(Classifier selectedElement, IModuleContext moduleContext) {
+        IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();            
+        
+        List<AbstractDiagram> diagrams = ((Element) selectedElement).getDiagramElement(AbstractDiagram.class);
+        
+        for(AbstractDiagram diagram:diagrams) {
+            try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+                
+                List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
+                if( diagramGraphics.size()>0 && diagramGraphics.get(0) instanceof IDiagramNode) {
+                    
+                    IDiagramNode diagramNode = (IDiagramNode )diagramGraphics.get(0);
+                    diagramNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.ATTACK.getRepresentationMode());
+                    
+                }                        
+                
+                diagramHandle.save();
+                diagramHandle.close();
+            }
+        
+        }
+    }
+
+    @objid ("5f02bade-e59b-4196-8e9d-9734fa78a00a")
+    public void changeStyleToReferencedTree(Classifier selectedElement, IModuleContext moduleContext, Attribute referenceTreeAttribute) {
+        IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();            
+        
+        List<AbstractDiagram> diagrams = ((Element) selectedElement).getDiagramElement(AbstractDiagram.class);
+        
+        for(AbstractDiagram diagram:diagrams) {
+            try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+                
+                List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
+                if( diagramGraphics.size()>0 && diagramGraphics.get(0) instanceof IDiagramNode) {
+                    
+                    IDiagramNode diagramNode = (IDiagramNode )diagramGraphics.get(0);
+                    diagramNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.REFERENCED_TREE.getRepresentationMode());
+                    
+                }                        
+                
+                diagramHandle.unmask(referenceTreeAttribute,0,0);
+        
+                diagramHandle.save();
+                diagramHandle.close();
+            }
+        
+        }
     }
 
 }
