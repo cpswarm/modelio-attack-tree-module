@@ -27,19 +27,19 @@ public class AttackTreePropertyManager {
     public int changeProperty(ModelElement element, int row, String value) {
         IPropertyContent propertypage = null;
         IMetamodelExtensions extensions = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession().getMetamodelExtensions();
-
+        
         int currentRow = row;
         MMetamodel metamodel = AttackTreeDesignerModule.getInstance().getModuleContext().getModelioServices().getMetamodelService().getMetamodel();
-
+        
         for (Stereotype ster : element.getExtension()) {
-
+        
             // Attack property page
             if (ster.equals(extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK,
                     metamodel.getMClass(Class.class)))) {
                 propertypage = new AttackPropertyPage();
                 propertypage.changeProperty(element, currentRow, value);
                 currentRow = currentRow - ster.getDefinedTagType().size();
-
+        
                 //Leaf property page
                 if (element.getDependsOnDependency().size() == 0){ 
                     propertypage = new LeafPropertyPage();
@@ -47,7 +47,7 @@ public class AttackTreePropertyManager {
                     currentRow = currentRow - 1;
                 }
             }
-
+        
             // Condition property page
             if ((ster.equals(extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR, metamodel.getMClass(Class.class))))
                     ||(ster.equals(extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND, metamodel.getMClass(Class.class))))) {
@@ -55,8 +55,8 @@ public class AttackTreePropertyManager {
                 propertypage.changeProperty(element, currentRow, value);
                 currentRow = currentRow - 1;
             }
-
-
+        
+        
         }
         return currentRow;
     }
@@ -72,24 +72,24 @@ public class AttackTreePropertyManager {
         IMetamodelExtensions extensions = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession().getMetamodelExtensions();
         IPropertyContent propertypage = null;
         MMetamodel metamodel = AttackTreeDesignerModule.getInstance().getModuleContext().getModelioServices().getMetamodelService().getMetamodel();
-
+        
         for (Stereotype ster : element.getExtension()) {
-
+        
             // Attack property page
             if (ster.equals(extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK,
                     metamodel.getMClass(Class.class)))) {
-
+        
                 propertypage = new AttackPropertyPage();
                 propertypage.update(element, table);
-
+        
                 //Leaf property page
                 if (element.getDependsOnDependency().size() == 0){ 
                     propertypage = new LeafPropertyPage();
                     propertypage.update(element, table);
                 }
             }
-
-
+        
+        
             // Condition property page
                         if ((ster.equals(extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR, metamodel.getMClass(Class.class))))
                                 ||(ster.equals(extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND, metamodel.getMClass(Class.class))))) {
