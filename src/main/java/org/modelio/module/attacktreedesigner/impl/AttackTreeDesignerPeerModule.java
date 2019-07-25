@@ -7,11 +7,11 @@ import org.modelio.vbasic.version.Version;
 
 @objid ("b9938b7d-5f07-445a-ba5a-251f256f4742")
 public class AttackTreeDesignerPeerModule implements IAttackTreeDesignerPeerModule {
+    @objid ("73c4d441-2e48-4307-9885-315d7f1a0280")
+    private IModuleAPIConfiguration peerConfiguration;
+
     @objid ("a61990f2-9ae9-4083-bf13-cb78b3f1a1e6")
     private AttackTreeDesignerModule module = null;
-
-    @objid ("d425f714-6690-40ee-b43c-faa3a65b10bf")
-    private IModuleAPIConfiguration peerConfiguration;
 
     @objid ("426f03e0-8608-47eb-8750-08b0a479fbb2")
     public AttackTreeDesignerPeerModule(final AttackTreeDesignerModule module, final IModuleAPIConfiguration peerConfiguration) {

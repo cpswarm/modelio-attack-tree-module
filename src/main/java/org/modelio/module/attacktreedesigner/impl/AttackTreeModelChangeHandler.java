@@ -8,6 +8,7 @@ import org.modelio.api.modelio.model.event.IElementDeletedEvent;
 import org.modelio.api.modelio.model.event.IModelChangeEvent;
 import org.modelio.api.modelio.model.event.IModelChangeHandler;
 import org.modelio.metamodel.uml.infrastructure.Dependency;
+import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
@@ -31,15 +32,19 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                     if (deletedElement instanceof Dependency 
                             && ((Dependency) deletedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)){
         
-                        Dependency deletedDependency = (Dependency) deletedElement;
-        
+                        Dependency deletedDependency = (Dependency) deletedElement;        
                         MObject rootElement = deletedDependency.getDiagramElement().get(0).getOrigin(); 
-                        ModelTree targetElement = (ModelTree) deletedDependency.getDependsOn();
-                        if(targetElement != null) {
-                            targetElement.setOwner((ModelTree) rootElement);
+                        ModelElement depElement = deletedDependency.getDependsOn();
         
-                            ElementCreationManager.renameElement(session, targetElement); 
-                        }
+                        if ((depElement != null) 
+                            && (!(depElement.isDeleted()))
+                            && (rootElement instanceof ModelTree)
+                            && (depElement instanceof ModelTree)) {
+                            
+                                ModelTree targetElement = (ModelTree) depElement;
+                                targetElement.setOwner((ModelTree) rootElement);
+                                ElementCreationManager.renameElement(session, targetElement); 
+                            }              
                     }
                 }
         

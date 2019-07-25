@@ -57,6 +57,10 @@
                 <Icon path="res/icon/gui/ReferenceTreeDecoration_24.png"/>
                 <Image path="res/icon/gui/ReferenceTreeDecoration_48.png"/>
             </Stereotype>
+            <Stereotype name="TreeReferenceAttribute" metaclass="Standard.Attribute" owner-stereotype="" is-hidden="false" label="%stereotype.TreeReferenceAttribute.label" uid="4f155d1d-2a98-43b0-be60-57d26b75b56f" is-abstract="false">
+                <Icon path=""/>
+                <Image path=""/>
+            </Stereotype>
         </Profile>
         <Profile uid="6f44d2e9-1fa5-46cd-9763-62c01694f4e1" id="attacktree.diagrams">
             <Stereotype name="AttackTreeDiagram" metaclass="Standard.ClassDiagram" owner-stereotype="" is-hidden="false" label="%stereotype.AttackTreeDiagram.label" uid="17c8cb6f-3fd4-4187-91a7-02752ca2c4a6" is-abstract="false">

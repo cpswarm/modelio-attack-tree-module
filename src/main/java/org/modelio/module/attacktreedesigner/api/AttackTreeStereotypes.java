@@ -40,4 +40,7 @@ public interface AttackTreeStereotypes {
     @objid ("a00554f8-52df-43c0-9de7-1a68263f9400")
     public static final String TREE_REFERENCE_DEPENDENCY = "TreeReferenceDependency";
 
+    @objid ("1220a502-fe6e-4e3c-9a61-a5c600a26614")
+    public static final String TREE_REFERENCE_ATTRIBUTE = "TreeReferenceAttribute";
+
 }

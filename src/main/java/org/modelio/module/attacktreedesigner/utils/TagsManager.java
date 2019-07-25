@@ -44,7 +44,7 @@ public class TagsManager {
     }
 
     @objid ("8fcc44b6-4c6b-4c39-b517-e5ab4f0ea68c")
-    public static TaggedValue createTag(IModelingSession session, String tagName, Class attackElement) {
+    public static TaggedValue createTag(IModelingSession session, String tagName, ModelElement attackElement) {
         TaggedValue severityTaggedValue = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, tagName, attackElement);
         return severityTaggedValue;
     }
@@ -65,7 +65,7 @@ public class TagsManager {
     }
 
     @objid ("5aa945a4-a68e-44a7-ab4e-b65b0df60a86")
-    public static void setTagValue(Class element, String tagDefinitionName, String value) {
+    public static void setTagValue(ModelElement element, String tagDefinitionName, String value) {
         List<TaggedValue> listTags = element.getTag();
         for(TaggedValue tag:listTags) {
             if(tag.getDefinition().getName().equals(tagDefinitionName)) {
@@ -78,7 +78,7 @@ public class TagsManager {
     }
 
     @objid ("09b4c542-eda9-444e-83ac-2440e15d1c5b")
-    public static void createAttackDefaultTags(IModelingSession session, Class attackElement) {
+    public static void createAttackDefaultTags(IModelingSession session, ModelElement attackElement) {
         TaggedValue severityTaggedValue = TagsManager.createTag(session, AttackTreeTagTypes.SEVERITY, attackElement);
         TagsManager.addParameter(session, severityTaggedValue, TagsManager.DEFAULT_SEVERITY_VALUE);
         attackElement.getTag().add(severityTaggedValue);
