@@ -10,7 +10,6 @@ import org.modelio.api.modelio.diagram.style.IStyleHandle;
 import org.modelio.api.modelio.model.IMetamodelExtensions;
 import org.modelio.api.modelio.model.IModelingSession;
 import org.modelio.api.modelio.model.ITransaction;
-import org.modelio.api.modelio.model.IUmlModel;
 import org.modelio.api.module.context.IModuleContext;
 import org.modelio.api.module.contributor.AbstractWizardContributor;
 import org.modelio.api.module.contributor.ElementDescriptor;
@@ -43,37 +42,33 @@ public class AttackTreeDiagramWizard extends AbstractWizardContributor implement
         IModelingSession session = moduleContext.getModelingSession();
         String name = Messages.getString ("Ui.Command.AttackTreeDiagramExplorerCommand.Label");
         StaticDiagram diagram = null;
-        
+
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.Create", "AttackTree Diagram"))){
-          
+
             diagram = session.getModel().createStaticDiagram(name, owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK_TREE_DIAGRAM);
-            
-            IUmlModel model = session.getModel();                   
-            
-        //            model.createNote(IModelerModulePeerModule.MODULE_NAME, IModelerModuleNoteTypes.MODELELEMENT_DESCRIPTION, diagram, description);
-        
+
             if (diagram != null) {
                 IDiagramService ds = moduleContext.getModelioServices().getDiagramService();
                 try(  IDiagramHandle handler = ds.getDiagramHandle(diagram);){
                     IDiagramDG dg = handler.getDiagramNode();
-        
+
                     for (IStyleHandle style : ds.listStyles()){
                         if (style.getName().equals("sysml")){
                             dg.setStyle(style);
                             break;
                         }
                     }
-        
+
                     handler.save();
                     handler.close();
                 }
-        
+
                 moduleContext.getModelioServices().getEditionService().openEditor(diagram);
             }
-        
+
             transaction.commit ();
         } catch (ExtensionNotFoundException e) {
-        //            AttackTreeDesignerModule.logService.error(e);
+            moduleContext.getLogService().error(e);
         }
         return diagram;
     }
