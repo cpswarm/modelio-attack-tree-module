@@ -201,7 +201,7 @@ public class LeafPropertyPage implements IPropertyContent {
     }
 
     @objid ("5f02bade-e59b-4196-8e9d-9734fa78a00a")
-    public void changeStyleToReferencedTree(Classifier selectedElement, IModuleContext moduleContext, Attribute referenceTreeAttribute) {
+    private void changeStyleToReferencedTree(Classifier selectedElement, IModuleContext moduleContext, Attribute referenceTreeAttribute) {
         IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();            
         
         List<AbstractDiagram> diagrams = ((Element) selectedElement).getDiagramElement(AbstractDiagram.class);

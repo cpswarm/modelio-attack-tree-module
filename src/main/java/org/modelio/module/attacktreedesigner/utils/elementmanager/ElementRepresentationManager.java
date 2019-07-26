@@ -10,7 +10,10 @@ import org.modelio.api.module.context.IModuleContext;
 import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
+import org.modelio.metamodel.uml.infrastructure.Note;
+import org.modelio.metamodel.uml.statik.Attribute;
 import org.modelio.metamodel.uml.statik.Class;
+import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.utils.AutoLayoutManager;
@@ -55,8 +58,7 @@ public class ElementRepresentationManager {
             // unmask current child
             List<IDiagramGraphic> graph = diagramHandle.unmask(child, newX, newY);
         
-            // increment x
-            newX += AutoLayoutManager.HORIZONTAL_AUTOSPACING;
+        
             
             // update node style
             if((graph != null) &&  (graph.size() > 0) && (graph.get(0) instanceof IDiagramNode)) {
@@ -71,6 +73,29 @@ public class ElementRepresentationManager {
                     diagramHandle.unmask(dependency, 0, 0);
                 }
             }
+            
+            // unmask counter measure
+            List<Note> elementNotes = ((ModelElement) child).getDescriptor();
+            int noteSpacingX = newX;
+            int noteSpacingY = newY;
+            for(Note note:elementNotes) {
+                if(note.getModel().getName().equals(AttackTreeNoteTypes.COUNTER_MEASURE)) {
+                    diagramHandle.unmask(note, noteSpacingX += (AutoLayoutManager.HORIZONTAL_AUTOSPACING / 4), noteSpacingY += AutoLayoutManager.VERTICAL_AUTOSPACING / 4);
+                }
+            }
+            
+            // unmask attribute Referenced tree
+            List<Attribute> elementAttributes = ((Class) child).getOwnedAttribute();
+            for(Attribute attribute:elementAttributes) {
+                if(attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE)) {
+                    diagramHandle.unmask(attribute,0,0);
+                }
+            }            
+            
+            
+            // increment x
+            newX += AutoLayoutManager.HORIZONTAL_AUTOSPACING;
+            
         }
     }
 
