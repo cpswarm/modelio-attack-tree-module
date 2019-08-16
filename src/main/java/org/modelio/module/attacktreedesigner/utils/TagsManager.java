@@ -23,7 +23,7 @@ public class TagsManager {
     public static final String DEFAULT_PROBABILITY_VALUE = "MEDIUM";
 
     @objid ("00583923-1051-408e-85c1-113defa75543")
-    public static final String DEFAULT_RISK_LEVEL_VALUE = "MEDIUM";
+    public static final String DEFAULT_RISK_LEVEL_VALUE = "HIGH";
 
     @objid ("899fe4bf-78f3-4c04-bebb-46b9ee47c858")
     public static final String[] PROBABILITY_VALUES = {"LOW", "MEDIUM", "HIGH"};

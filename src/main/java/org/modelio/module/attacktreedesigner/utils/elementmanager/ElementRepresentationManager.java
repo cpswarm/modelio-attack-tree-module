@@ -7,12 +7,15 @@ import org.modelio.api.modelio.diagram.IDiagramHandle;
 import org.modelio.api.modelio.diagram.IDiagramNode;
 import org.modelio.api.modelio.diagram.IDiagramService;
 import org.modelio.api.module.context.IModuleContext;
+import org.modelio.metamodel.diagrams.AbstractDiagram;
 import org.modelio.metamodel.uml.infrastructure.Dependency;
+import org.modelio.metamodel.uml.infrastructure.Element;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.infrastructure.Note;
 import org.modelio.metamodel.uml.statik.Attribute;
 import org.modelio.metamodel.uml.statik.Class;
+import org.modelio.metamodel.uml.statik.Classifier;
 import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
@@ -107,6 +110,56 @@ public class ElementRepresentationManager {
         } else {
             graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.OPERATOR.getShowNameProperty());
             graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.OPERATOR.getRepresentationMode());
+        }
+    }
+
+    @objid ("d5083d2c-65cb-4248-a425-df0b7cc54587")
+    public static void changeStyleToAttack(Classifier selectedElement, IModuleContext moduleContext) {
+        IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();            
+        
+        List<AbstractDiagram> diagrams = ((Element) selectedElement).getDiagramElement(AbstractDiagram.class);
+        
+        for(AbstractDiagram diagram:diagrams) {
+            try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+                
+                List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
+                if( diagramGraphics.size()>0 && diagramGraphics.get(0) instanceof IDiagramNode) {
+                    
+                    IDiagramNode diagramNode = (IDiagramNode )diagramGraphics.get(0);
+                    diagramNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.ATTACK.getRepresentationMode());
+                    
+                }                        
+                
+                diagramHandle.save();
+                diagramHandle.close();
+            }
+        
+        }
+    }
+
+    @objid ("3646fb9f-78e3-4d7e-9281-c539785c7140")
+    public static void changeStyleToReferencedTree(Classifier selectedElement, IModuleContext moduleContext, Attribute referenceTreeAttribute) {
+        IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();            
+        
+        List<AbstractDiagram> diagrams = ((Element) selectedElement).getDiagramElement(AbstractDiagram.class);
+        
+        for(AbstractDiagram diagram:diagrams) {
+            try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+                
+                List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
+                if( diagramGraphics.size()>0 && diagramGraphics.get(0) instanceof IDiagramNode) {
+                    
+                    IDiagramNode diagramNode = (IDiagramNode )diagramGraphics.get(0);
+                    diagramNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.REFERENCED_TREE.getRepresentationMode());
+                    
+                }                        
+                
+                diagramHandle.unmask(referenceTreeAttribute,0,0);
+        
+                diagramHandle.save();
+                diagramHandle.close();
+            }
+        
         }
     }
 

@@ -28,7 +28,7 @@ public class AutoLayoutCommand extends DefaultModuleCommandHandler {
         IModelingSession session = moduleContext.getModelingSession();
         
         ClassDiagram selectedDiagram = (ClassDiagram) selectedElements.get(0);
-        //ModelTree haha = ((ModelTree)selectedDiagram).getOwner();
+        
         MObject rootElement = selectedDiagram.getCompositionOwner();
         
         

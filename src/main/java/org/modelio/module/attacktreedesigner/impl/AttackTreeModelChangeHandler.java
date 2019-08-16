@@ -10,10 +10,14 @@ import org.modelio.api.modelio.model.event.IModelChangeHandler;
 import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
+import org.modelio.metamodel.uml.statik.Attribute;
+import org.modelio.metamodel.uml.statik.Class;
+import org.modelio.metamodel.uml.statik.Classifier;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementCreationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementRepresentationManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("11497816-612d-40c7-9892-b8edaac4d924")
@@ -45,6 +49,24 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                                 targetElement.setOwner((ModelTree) rootElement);
                                 ElementCreationManager.renameElement(session, targetElement); 
                             }              
+                    } else if (deletedElement instanceof Class
+                            && ((Class) deletedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)){
+                        Class deletedRoot = (Class) deletedElement;
+                        List<Attribute> referenceAttributesList = deletedRoot.getObject();
+                        for(Attribute referenceAttribute:referenceAttributesList) {
+                            Classifier attributeOwner = referenceAttribute.getOwner();
+                            referenceAttribute.delete();
+                            
+                            if(attributeOwner.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, 
+                                    AttackTreeStereotypes.TREE_REFERENCE_DECORATION)) {
+                                attributeOwner.removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, 
+                                        AttackTreeStereotypes.TREE_REFERENCE_DECORATION);
+        
+                                ElementRepresentationManager.changeStyleToAttack(attributeOwner,
+                                        AttackTreeDesignerModule.getInstance().getModuleContext());
+                            }
+        
+                        }
                     }
                 }
         

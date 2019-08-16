@@ -4,14 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
-import org.modelio.api.modelio.diagram.IDiagramGraphic;
-import org.modelio.api.modelio.diagram.IDiagramHandle;
-import org.modelio.api.modelio.diagram.IDiagramNode;
-import org.modelio.api.modelio.diagram.IDiagramService;
 import org.modelio.api.module.context.IModuleContext;
 import org.modelio.api.module.propertiesPage.IModulePropertyTable;
-import org.modelio.metamodel.diagrams.AbstractDiagram;
-import org.modelio.metamodel.uml.infrastructure.Element;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Attribute;
@@ -23,9 +17,8 @@ import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerPeerModule;
-import org.modelio.module.attacktreedesigner.utils.DiagramElementStyle;
-import org.modelio.module.attacktreedesigner.utils.Labels;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementNavigationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementRepresentationManager;
 
 @objid ("c07b6144-87dc-44fc-ab74-b757ac83385b")
 public class LeafPropertyPage implements IPropertyContent {
@@ -113,28 +106,28 @@ public class LeafPropertyPage implements IPropertyContent {
                 selectedElement.addStereotype(AttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_DECORATION);
                 
                 
-                changeStyleToReferencedTree(selectedElement, moduleContext, referenceTreeAttribute);
+                ElementRepresentationManager.changeStyleToReferencedTree(selectedElement, moduleContext, referenceTreeAttribute);
              
             }else { 
                 ref.setType(root);
             }
         }else {
-            List<Attribute> atts = selectedElement.getOwnedAttribute();
+            List<Attribute> attributes = selectedElement.getOwnedAttribute();
         
-            Iterator<Attribute> iterator = atts.iterator();
+            Iterator<Attribute> iterator = attributes.iterator();
         
             while ( iterator.hasNext() ) {
-                Attribute att = iterator.next();
-                if (att.isStereotyped( IAttackTreeDesignerPeerModule.MODULE_NAME, 
+                Attribute attribute = iterator.next();
+                if (attribute.isStereotyped( IAttackTreeDesignerPeerModule.MODULE_NAME, 
                         AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE)) {
                     iterator.remove();
-                    att.delete();
+                    attribute.delete();
                 }
             }
             
             selectedElement.removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_DECORATION);
             
-            changeStyleToAttack(selectedElement, moduleContext);
+            ElementRepresentationManager.changeStyleToAttack(selectedElement, moduleContext);
         }
     }
 
@@ -174,56 +167,6 @@ public class LeafPropertyPage implements IPropertyContent {
         String[] availableTrees = trees.toArray(new String[0]);
         String value = getReferencedTreeName(leaf);
         table.addProperty (Messages.getString("Ui.Property.Reference.Name"), value, availableTrees);
-    }
-
-    @objid ("094160c1-5f18-444b-a31f-bb22040bba8d")
-    private void changeStyleToAttack(Classifier selectedElement, IModuleContext moduleContext) {
-        IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();            
-        
-        List<AbstractDiagram> diagrams = ((Element) selectedElement).getDiagramElement(AbstractDiagram.class);
-        
-        for(AbstractDiagram diagram:diagrams) {
-            try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
-                
-                List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
-                if( diagramGraphics.size()>0 && diagramGraphics.get(0) instanceof IDiagramNode) {
-                    
-                    IDiagramNode diagramNode = (IDiagramNode )diagramGraphics.get(0);
-                    diagramNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.ATTACK.getRepresentationMode());
-                    
-                }                        
-                
-                diagramHandle.save();
-                diagramHandle.close();
-            }
-        
-        }
-    }
-
-    @objid ("5f02bade-e59b-4196-8e9d-9734fa78a00a")
-    private void changeStyleToReferencedTree(Classifier selectedElement, IModuleContext moduleContext, Attribute referenceTreeAttribute) {
-        IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();            
-        
-        List<AbstractDiagram> diagrams = ((Element) selectedElement).getDiagramElement(AbstractDiagram.class);
-        
-        for(AbstractDiagram diagram:diagrams) {
-            try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
-                
-                List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
-                if( diagramGraphics.size()>0 && diagramGraphics.get(0) instanceof IDiagramNode) {
-                    
-                    IDiagramNode diagramNode = (IDiagramNode )diagramGraphics.get(0);
-                    diagramNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.REFERENCED_TREE.getRepresentationMode());
-                    
-                }                        
-                
-                diagramHandle.unmask(referenceTreeAttribute,0,0);
-        
-                diagramHandle.save();
-                diagramHandle.close();
-            }
-        
-        }
     }
 
 }
