@@ -25,14 +25,19 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
     @objid ("f32a0b6f-acc3-43ad-8283-47e50175e432")
     @Override
     public void handleModelChange(IModelingSession session, IModelChangeEvent event) {
-        //DeletedEvents
-        
         List<IElementDeletedEvent> deleteEvents = event.getDeleteEvents();
         if(! deleteEvents.isEmpty()) {
             try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", "Synchronize Attack Tree Model"))){
         
+                /*
+                 * Go through deleted elements
+                 */
                 for (IElementDeletedEvent deleteEvent : deleteEvents){
                     MObject deletedElement = deleteEvent.getDeletedElement();
+        
+                    /*
+                     * If the deleted element is a dependency
+                     */
                     if (deletedElement instanceof Dependency 
                             && ((Dependency) deletedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)){
         
@@ -41,31 +46,42 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                         ModelElement depElement = deletedDependency.getDependsOn();
         
                         if ((depElement != null) 
-                            && (!(depElement.isDeleted()))
-                            && (rootElement instanceof ModelTree)
-                            && (depElement instanceof ModelTree)) {
-                            
-                                ModelTree targetElement = (ModelTree) depElement;
-                                targetElement.setOwner((ModelTree) rootElement);
-                                ElementCreationManager.renameElement(session, targetElement); 
-                            }              
-                    } else if (deletedElement instanceof Class
+                                && (!(depElement.isDeleted()))
+                                && (rootElement instanceof ModelTree)
+                                && (depElement instanceof ModelTree)) {
+        
+                            ModelTree targetElement = (ModelTree) depElement;
+                            targetElement.setOwner((ModelTree) rootElement);
+                            ElementCreationManager.renameElement(session, targetElement); 
+                        }              
+                    } 
+                    /*
+                     * If the deleted element is a class
+                     */
+                    else if (deletedElement instanceof Class
                             && ((Class) deletedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)){
                         Class deletedRoot = (Class) deletedElement;
+        
+                        /*
+                         * If the deleted class is a type for the attribute referenced tree
+                         */
                         List<Attribute> referenceAttributesList = deletedRoot.getObject();
                         for(Attribute referenceAttribute:referenceAttributesList) {
-                            Classifier attributeOwner = referenceAttribute.getOwner();
-                            referenceAttribute.delete();
-                            
-                            if(attributeOwner.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, 
-                                    AttackTreeStereotypes.TREE_REFERENCE_DECORATION)) {
-                                attributeOwner.removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, 
-                                        AttackTreeStereotypes.TREE_REFERENCE_DECORATION);
         
-                                ElementRepresentationManager.changeStyleToAttack(attributeOwner,
-                                        AttackTreeDesignerModule.getInstance().getModuleContext());
+                            if(! referenceAttribute.isDeleted()) {
+                                Classifier attributeOwner = referenceAttribute.getOwner();
+        
+                                referenceAttribute.delete();
+        
+                                if(! attributeOwner.isDeleted() && attributeOwner.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, 
+                                        AttackTreeStereotypes.TREE_REFERENCE_DECORATION)) {
+                                    attributeOwner.removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, 
+                                            AttackTreeStereotypes.TREE_REFERENCE_DECORATION);
+        
+                                    ElementRepresentationManager.changeStyleToAttack(attributeOwner,
+                                            AttackTreeDesignerModule.getInstance().getModuleContext());
+                                }
                             }
-        
                         }
                     }
                 }
