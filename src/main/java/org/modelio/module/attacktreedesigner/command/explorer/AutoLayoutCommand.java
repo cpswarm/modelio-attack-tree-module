@@ -1,7 +1,9 @@
 package org.modelio.module.attacktreedesigner.command.explorer;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.api.modelio.diagram.IDiagramHandle;
 import org.modelio.api.modelio.diagram.IDiagramNode;
@@ -16,7 +18,7 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
-import org.modelio.module.attacktreedesigner.utils.AutoLayoutManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.AutoLayoutManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("2b416d6a-09f7-4f10-a756-f1bd7f901d69")
@@ -45,7 +47,14 @@ public class AutoLayoutCommand extends DefaultModuleCommandHandler {
                 if(! diagramGraphics.isEmpty()) {
         
                     IDiagramNode nodeGraphic = (IDiagramNode) diagramGraphics.get(0);
-                    AutoLayoutManager.autolayoutChildren(diagramHandle, rootElement, nodeGraphic, nodeGraphic.getBounds().getCopy());
+                    //AutoLayoutManager.autolayoutChildrenOLD(diagramHandle, rootElement, nodeGraphic, nodeGraphic.getBounds().getCopy());
+                    
+                    Rectangle rootBounds = nodeGraphic.getBounds();
+                    
+                    List<Integer> levelsLeftLimitX = new ArrayList<>();
+                    levelsLeftLimitX.add(rootBounds.x);
+                    
+                    AutoLayoutManager.autolayoutChildren(diagramHandle, rootElement, rootBounds, levelsLeftLimitX, 1);
                     
                     diagramHandle.save();
                     diagramHandle.close();

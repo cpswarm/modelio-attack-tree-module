@@ -18,7 +18,7 @@ import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementNavigationManager;
-import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementRepresentationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
 
 @objid ("c07b6144-87dc-44fc-ab74-b757ac83385b")
 public class LeafPropertyPage implements IPropertyContent {

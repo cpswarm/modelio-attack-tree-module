@@ -22,8 +22,8 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
-import org.modelio.module.attacktreedesigner.utils.AutoLayoutManager;
-import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementRepresentationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.AutoLayoutManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("fc2698b1-fc2d-4a0c-99d8-c38b18503d7e")

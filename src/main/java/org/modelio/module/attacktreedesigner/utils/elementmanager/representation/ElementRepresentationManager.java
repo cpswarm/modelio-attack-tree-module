@@ -1,4 +1,4 @@
-package org.modelio.module.attacktreedesigner.utils.elementmanager;
+package org.modelio.module.attacktreedesigner.utils.elementmanager.representation;
 
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
@@ -19,14 +19,13 @@ import org.modelio.metamodel.uml.statik.Classifier;
 import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
-import org.modelio.module.attacktreedesigner.utils.AutoLayoutManager;
 import org.modelio.module.attacktreedesigner.utils.DiagramElementStyle;
 import org.modelio.module.attacktreedesigner.utils.Labels;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
-@objid ("a35d8148-0ecb-46bd-bda1-1becf9977ed0")
+@objid ("8d87749a-8242-406b-a1a8-9a84f227ed71")
 public class ElementRepresentationManager {
-    @objid ("c986fd17-ec42-4bdc-b3b6-543351e412cd")
+    @objid ("2e7eb0d3-339a-499b-8833-1cca9c83d496")
     public static void maskChildren(IModuleContext moduleContext, IDiagramService diagramService, MObject element, IDiagramHandle diagramHandle) {
         // get only children of type Class
         List<Class> elementChildren = ((ModelTree) element).getOwnedElement(Class.class);
@@ -43,7 +42,7 @@ public class ElementRepresentationManager {
         }
     }
 
-    @objid ("db7a92bf-6ae6-484a-97c1-9194c3462b7c")
+    @objid ("dd2174dd-2428-4ea3-8971-66ddd6475428")
     public static void unmaskChildren(IModuleContext moduleContext, IDiagramService diagramService, IDiagramHandle diagramHandle, MObject element, int x, int y) {
         List<Class> elementChildren = ((ModelTree) element).getOwnedElement(Class.class);
         
@@ -102,7 +101,7 @@ public class ElementRepresentationManager {
         }
     }
 
-    @objid ("c92855b5-200f-4330-82e1-020eaa1b005d")
+    @objid ("4e91463c-0100-4339-84bb-41c1ae661e26")
     public static void updateNodeStyle(IDiagramNode graphNode) {
         if(((Class) graphNode.getElement()).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
             graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.ATTACK.getShowNameProperty());
@@ -113,7 +112,7 @@ public class ElementRepresentationManager {
         }
     }
 
-    @objid ("d5083d2c-65cb-4248-a425-df0b7cc54587")
+    @objid ("e2bd70a7-67c9-4128-8f5f-ea72e758faed")
     public static void changeStyleToAttack(Classifier selectedElement, IModuleContext moduleContext) {
         IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();            
         
@@ -137,7 +136,7 @@ public class ElementRepresentationManager {
         }
     }
 
-    @objid ("3646fb9f-78e3-4d7e-9281-c539785c7140")
+    @objid ("da98e348-8b04-4e90-b16b-452838052146")
     public static void changeStyleToReferencedTree(Classifier selectedElement, IModuleContext moduleContext, Attribute referenceTreeAttribute) {
         IDiagramService diagramService = moduleContext.getModelioServices().getDiagramService();            
         
