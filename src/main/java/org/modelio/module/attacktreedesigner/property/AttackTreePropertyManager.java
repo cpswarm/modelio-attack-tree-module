@@ -5,6 +5,7 @@ import org.modelio.api.modelio.model.IMetamodelExtensions;
 import org.modelio.api.module.propertiesPage.IModulePropertyTable;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.Stereotype;
+import org.modelio.metamodel.uml.statik.Attribute;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
@@ -57,11 +58,11 @@ public class AttackTreePropertyManager {
             }
         
             // Reference tree attribute property page
-        //           if(stereotype.equals(extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE, metamodel.getMClass(Attribute.class)))){
-        //               propertyPage = new ReferenceAttributePropertyPage();
-        //               propertyPage.changeProperty(element, currentRow, value);
-        //               currentRow = currentRow - 1;
-        //           }
+            if(stereotype.equals(extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE, metamodel.getMClass(Attribute.class)))){
+                propertyPage = new LeafPropertyPage();
+                propertyPage.changeProperty(((Attribute)element).getOwner(), currentRow, value);
+                currentRow = currentRow - 1;
+            }
         
         }
         return currentRow;
@@ -103,13 +104,13 @@ public class AttackTreePropertyManager {
                 propertyPage = new OperatorPropertyPage();
                 propertyPage.update(element, table);
             }
-            
+        
             // Reference tree attribute property page
-        //           if(stereotype.equals(extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE, metamodel.getMClass(Attribute.class)))){
-        //               propertyPage = new ReferenceAttributePropertyPage();
-        //               propertyPage.update(element, table);
-        //        
-        //           }
+            if(stereotype.equals(extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE, metamodel.getMClass(Attribute.class)))){
+                propertyPage = new LeafPropertyPage();
+                propertyPage.update(((Attribute)element).getOwner(), table);
+        
+            }
         
         }
     }

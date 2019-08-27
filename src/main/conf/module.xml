@@ -98,9 +98,12 @@
                 <Scope metaclass="Standard.ClassDiagram" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.AutoLayoutCommand"/>
             </Command>
-            <Command id="Open_referenced_tree_diagram" label="%command.Open_referenced_tree_diagram.label" tooltip="%command.Open_referenced_tree_diagram.tooltip" image="res/icon/gui/OpenRefTreeDiagCommand_24.png" modify-model="true">
+            <Command id="Open_referenced_tree_diagram" label="%command.Open_referenced_tree_diagram.label" tooltip="%command.Open_referenced_tree_diagram.tooltip" image="res/icon/gui/OpenRefTreeDiagCommand_24.png" modify-model="false">
                 <Scope metaclass="Standard.Class" stereotype="AttackTreeDesigner#TreeReferenceDecoration"/>
-                <Handler class="org.modelio.module.attacktreedesigner.command.explorer.OpenReferencedTreeDiagram"/>
+                <Scope metaclass="Standard.Attribute" stereotype="AttackTreeDesigner#TreeReferenceAttribute"/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.explorer.OpenReferencedTreeDiagram">
+                    <HParameter name="name" value=""/>
+                </Handler>
             </Command>
         </Commands>
         <Tools>
