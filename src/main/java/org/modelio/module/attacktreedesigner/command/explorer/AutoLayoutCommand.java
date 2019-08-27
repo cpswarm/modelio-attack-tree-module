@@ -14,6 +14,7 @@ import org.modelio.api.module.IModule;
 import org.modelio.api.module.command.DefaultModuleCommandHandler;
 import org.modelio.api.module.context.IModuleContext;
 import org.modelio.metamodel.diagrams.ClassDiagram;
+import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
@@ -47,15 +48,15 @@ public class AutoLayoutCommand extends DefaultModuleCommandHandler {
                 if(! diagramGraphics.isEmpty()) {
         
                     IDiagramNode nodeGraphic = (IDiagramNode) diagramGraphics.get(0);
-                    //AutoLayoutManager.autolayoutChildrenOLD(diagramHandle, rootElement, nodeGraphic, nodeGraphic.getBounds().getCopy());
-                    
+        
                     Rectangle rootBounds = nodeGraphic.getBounds();
-                    
+        
                     List<Integer> levelsLeftLimitX = new ArrayList<>();
                     levelsLeftLimitX.add(rootBounds.x);
-                    
-                    AutoLayoutManager.autolayoutChildren(diagramHandle, rootElement, rootBounds, levelsLeftLimitX, 1);
-                    
+        
+        
+                    AutoLayoutManager.autolayoutSubTree(diagramHandle, (Class) rootElement, nodeGraphic, rootBounds, levelsLeftLimitX, 0);
+        
                     diagramHandle.save();
                     diagramHandle.close();
         

@@ -8,91 +8,120 @@ import org.modelio.api.modelio.diagram.IDiagramHandle;
 import org.modelio.api.modelio.diagram.IDiagramNode;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Class;
-import org.modelio.vcore.smkernel.mapi.MObject;
+import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
+import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 
-@objid ("d5db8112-c267-4c13-8caf-155044ac5883")
+@objid ("5e8afa52-c9aa-4a15-aaea-58d24a7df45b")
 public class AutoLayoutManager {
-    @objid ("6ff0e552-b437-4437-8c65-38c5b1b8a97e")
+    @objid ("48ab984d-acde-4187-beee-1a1a8212870a")
     public static final int VERTICAL_AUTOSPACING = 120;
 
-    @objid ("72f31cc0-6a29-48af-ba01-951baf54a63e")
-    public static final int HORIZONTAL_AUTOSPACING = 240;
+    @objid ("40e45c6d-d487-449a-b733-3753d3102bf3")
+    public static final int HORIZONTAL_AUTOSPACING = 120;
 
-    @objid ("0e85846e-1532-46f6-8c7f-0bd53ff0d6b4")
-    public static void autolayoutChildrenOLD(IDiagramHandle diagramHandle, MObject element, IDiagramNode nodeGraphic, Rectangle bounds) {
-        nodeGraphic.setBounds(bounds);
-        
-        
-        
-        
-        
-        //        List<? extends MObject> elementChildren = element.getCompositionChildren();
-        List<Class> elementChildren = ((ModelTree)element).getOwnedElement(Class.class);
-        //        int numberOfChildren = elementChildren.size();
-        int numberOfChildren = elementChildren.size();
-        for(int i=0; i<numberOfChildren ; i++) {
-            MObject child = elementChildren.get(i);
-            List<IDiagramGraphic> childDiagramGraphics = diagramHandle.getDiagramGraphics(child);
-        
-            if(! childDiagramGraphics.isEmpty()) {
-        
-                IDiagramNode childNodeGraphic = (IDiagramNode) childDiagramGraphics.get(0);
-        
-        
-                Rectangle newBounds = childNodeGraphic.getBounds().getCopy();
-                newBounds.setY(bounds.y + VERTICAL_AUTOSPACING - (newBounds.height/2));
-                newBounds.setX(bounds.x 
-                        + ((i-(numberOfChildren/2)) * HORIZONTAL_AUTOSPACING) - (newBounds.width/2) 
-                        + (bounds.width/2));
-                autolayoutChildrenOLD(diagramHandle, child, childNodeGraphic, newBounds) ;
-        
-            }
-        
-        
-        }
+    @objid ("37a5e19b-9765-45a9-a037-0b90df94706a")
+    private static int max(int n1, int n2) {
+        if( n1 > n2)
+            return n1;
+        else 
+            return n2;
     }
 
-    /**
-     * @param diagramHandle
-     * @param element
-     * @param elementBounds
-     * @param leftLimitX : can be null
-     * @return allDescendnantsEndX : all descendants right X
-     */
-    @objid ("ae173d80-2dbb-4f7a-a1c5-1f9188853cfa")
-    public static void autolayoutChildren(IDiagramHandle diagramHandle, MObject element, Rectangle elementBounds, List<Integer> levelsLeftLimitX, int level) {
+    @objid ("d66e46be-48c2-4eb6-a3de-798c27e69a40")
+    public static Rectangle autolayoutSubTree(IDiagramHandle diagramHandle, Class element, IDiagramNode elementNodeGraphic, Rectangle elementBounds, List<Integer> levelsLeftLimitX, int level) {
+        int childrenWidth = elementBounds.width;
+        int firstChildrenX = elementBounds.x;
+        
         List<Class> elementChildren = ((ModelTree)element).getOwnedElement(Class.class);
         int numberOfChildren = elementChildren.size();
         
-        for(Class child:elementChildren) {
+        /*
+         * loop children
+         */
+        if(! elementChildren.isEmpty()) {
+            Class child = elementChildren.get(0);
         
             List<IDiagramGraphic> childDiagramGraphics = diagramHandle.getDiagramGraphics(child);
             if(! childDiagramGraphics.isEmpty()) {
                 IDiagramNode childNodeGraphic = (IDiagramNode) childDiagramGraphics.get(0);
+                
                 Rectangle childNodeBounds = childNodeGraphic.getBounds();
                 
-                // child setY
-                childNodeBounds.setY(elementBounds.y + VERTICAL_AUTOSPACING - (childNodeBounds.height/2));
+                updateChildBounds(elementBounds, levelsLeftLimitX, level, numberOfChildren, childNodeBounds);
         
-                // child setX
-                if (levelsLeftLimitX.size() <= level) {
-                    childNodeBounds.setX(elementBounds.x + (elementBounds.width / 2) - 
-                            (HORIZONTAL_AUTOSPACING * (((int)Math.ceil(numberOfChildren / 2.0)) - 1))
-                                    - (childNodeBounds.width/2));
-                    levelsLeftLimitX.add(level, childNodeBounds.x + childNodeBounds.width + HORIZONTAL_AUTOSPACING);
-                } else {
-                    childNodeBounds.setX(levelsLeftLimitX.get(level));
-                    levelsLeftLimitX.set(level, childNodeBounds.x + childNodeBounds.width + HORIZONTAL_AUTOSPACING);
-                }
-        
-                childNodeGraphic.setBounds(childNodeBounds);
-        
-                autolayoutChildren(diagramHandle, child, childNodeBounds , levelsLeftLimitX, level + 1);
-        
+                firstChildrenX = childNodeBounds.x;
+                Rectangle newBounds = autolayoutSubTree(diagramHandle, child, childNodeGraphic, childNodeBounds, levelsLeftLimitX, level + 1);
+                childrenWidth = newBounds.width;
             }
+            
+            for(int i = 1; i < numberOfChildren; i++) {
+        
+                child = elementChildren.get(i);
+                childDiagramGraphics = diagramHandle.getDiagramGraphics(child);
+                
+                if(! childDiagramGraphics.isEmpty()) {
+                    IDiagramNode childNodeGraphic = (IDiagramNode) childDiagramGraphics.get(0);
+                    
+                    Rectangle childNodeBounds = childNodeGraphic.getBounds();
+                    
+                    
+                    updateChildBounds(elementBounds, levelsLeftLimitX, level, numberOfChildren, childNodeBounds);
+                    
+                    
+                    
+                    Rectangle newBounds = autolayoutSubTree(diagramHandle, child, childNodeGraphic, childNodeBounds, levelsLeftLimitX, level + 1);
+                    
+                    childrenWidth = childrenWidth + HORIZONTAL_AUTOSPACING + newBounds.width ;
+                    
+                }
+            }
+            
+        }
         
         
+        if(! element.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) {
+            elementBounds.setX( firstChildrenX + ((childrenWidth - elementBounds.width)/2) );
+        }
         
+        
+        elementNodeGraphic.setBounds(elementBounds);
+        return elementBounds;
+    }
+
+    @objid ("992247c3-8d3b-4b49-9833-9c63a0e81506")
+    public static void updateChildBounds(Rectangle elementBounds, List<Integer> levelsLeftLimitX, int level, int numberOfChildren, Rectangle childNodeBounds) {
+        // Child SetY
+        childNodeBounds.setY(elementBounds.y + VERTICAL_AUTOSPACING - (childNodeBounds.height/2));
+              
+        
+        // child setX
+        if (levelsLeftLimitX.size() <= level) {
+            
+            // leftLimitX has not been set yet in this level
+            childNodeBounds.setX(elementBounds.x + (elementBounds.width / 2) - 
+                    ((
+                            HORIZONTAL_AUTOSPACING * (numberOfChildren - 1) 
+                            + 
+                            childNodeBounds.width 
+                            * numberOfChildren 
+                            ) / 2));
+              
+            levelsLeftLimitX.add(level, childNodeBounds.x + childNodeBounds.width + HORIZONTAL_AUTOSPACING);
+        } else {
+            
+            // leftLimitX has been set in this level
+            childNodeBounds.setX(
+                    max(
+                            levelsLeftLimitX.get(level)
+                            , 
+                            elementBounds.x + (elementBounds.width / 2) - 
+                            ((
+                                    HORIZONTAL_AUTOSPACING * (numberOfChildren - 1) + 
+                                    childNodeBounds.width 
+                                    * numberOfChildren 
+                                    ) / 2))
+                    );
+            levelsLeftLimitX.set(level, childNodeBounds.x + childNodeBounds.width + HORIZONTAL_AUTOSPACING);
         }
     }
 
