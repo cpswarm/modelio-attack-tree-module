@@ -38,7 +38,7 @@ public class CreateAttackTool extends DefaultBoxTool {
         
             MObject rootElement = diagramHandle.getDiagram().getOrigin().getCompositionOwner();
         
-            // create sterotyped Attack Class
+            // create stereotyped Attack Class
             Class attackElement = session.getModel().createClass(
                     Labels.DEFAULT_NAME.toString(), 
                     (NameSpace) rootElement, 
@@ -50,7 +50,12 @@ public class CreateAttackTool extends DefaultBoxTool {
         
             
             // unmask Attack and save diagram
+            //List<IDiagramGraphic> diagramGraphics = 
             diagramHandle.unmask(attackElement, rect.x, rect.y);
+            //IDiagramNode attackNode = (IDiagramNode) diagramGraphics.get(0);
+            
+            //attackNode.setBounds(rect);
+            
             diagramHandle.save();
             diagramHandle.close();
             

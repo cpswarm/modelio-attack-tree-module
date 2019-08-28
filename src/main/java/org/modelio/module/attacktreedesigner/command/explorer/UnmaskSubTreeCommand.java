@@ -51,6 +51,8 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
                 try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
         
         
+                    MObject root = diagram.getCompositionOwner();
+                    
                     List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
                     IDiagramGraphic diagramGraphic = diagramGraphics.get(0);
         
@@ -67,8 +69,8 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
                         /*
                          * setOwner of Operator element child of Selected element to update representation
                          */
-                        MObject root = diagram.getOrigin().getCompositionOwner();
-                        elementChild.setOwner((ModelTree) root);
+                        MObject packageOwner = diagram.getOrigin().getCompositionOwner();
+                        elementChild.setOwner((ModelTree) packageOwner);
         
         
                         /*
@@ -110,6 +112,13 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
                     }
                 
         
+                    /*
+                     * Autolayout Tree
+                     */
+                    AutoLayoutManager.autolayoutTree(root, diagramHandle);
+                    
+                    
+                    
                     diagramHandle.save();
                     diagramHandle.close();
                 }

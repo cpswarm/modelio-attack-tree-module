@@ -1,12 +1,8 @@
 package org.modelio.module.attacktreedesigner.command.explorer;
 
-import java.util.ArrayList;
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.api.modelio.diagram.IDiagramHandle;
-import org.modelio.api.modelio.diagram.IDiagramNode;
 import org.modelio.api.modelio.diagram.IDiagramService;
 import org.modelio.api.modelio.model.IModelingSession;
 import org.modelio.api.modelio.model.ITransaction;
@@ -14,7 +10,6 @@ import org.modelio.api.module.IModule;
 import org.modelio.api.module.command.DefaultModuleCommandHandler;
 import org.modelio.api.module.context.IModuleContext;
 import org.modelio.metamodel.diagrams.ClassDiagram;
-import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
@@ -43,24 +38,11 @@ public class AutoLayoutCommand extends DefaultModuleCommandHandler {
         
             try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(selectedDiagram);){
         
-                List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(rootElement);
+                AutoLayoutManager.autolayoutTree(rootElement, diagramHandle);
         
-                if(! diagramGraphics.isEmpty()) {
-        
-                    IDiagramNode nodeGraphic = (IDiagramNode) diagramGraphics.get(0);
-        
-                    Rectangle rootBounds = nodeGraphic.getBounds();
-        
-                    List<Integer> levelsLeftLimitX = new ArrayList<>();
-                    levelsLeftLimitX.add(rootBounds.x);
-        
-        
-                    AutoLayoutManager.autolayoutSubTree(diagramHandle, (Class) rootElement, nodeGraphic, rootBounds, levelsLeftLimitX, 0);
-        
-                    diagramHandle.save();
-                    diagramHandle.close();
-        
-                }
+                
+                diagramHandle.save();
+                diagramHandle.close();
             }
         
             transaction.commit ();

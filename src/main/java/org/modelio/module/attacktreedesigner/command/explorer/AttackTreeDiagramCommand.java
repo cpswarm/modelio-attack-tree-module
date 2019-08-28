@@ -47,7 +47,7 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
         IModelingSession session = moduleContext.getModelingSession();
         ModelElement owner = (ModelElement) selectedElements.get(0);    
         
-        String name = Messages.getString ("Ui.Command.AttackTreeDiagramExplorerCommand.Name", owner.getName());
+        Messages.getString ("Ui.Command.AttackTreeDiagramExplorerCommand.Name", owner.getName());
         
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.Create", "AttackTree Diagram"))){
         
