@@ -47,14 +47,9 @@ public class CreateAttackTool extends DefaultBoxTool {
             
             // create Default tags
             TagsManager.createAttackDefaultTags(session, attackElement);
-        
             
             // unmask Attack and save diagram
-            //List<IDiagramGraphic> diagramGraphics = 
-            diagramHandle.unmask(attackElement, rect.x, rect.y);
-            //IDiagramNode attackNode = (IDiagramNode) diagramGraphics.get(0);
-            
-            //attackNode.setBounds(rect);
+            diagramHandle.unmask(attackElement, rect.x, rect.y);            
             
             diagramHandle.save();
             diagramHandle.close();

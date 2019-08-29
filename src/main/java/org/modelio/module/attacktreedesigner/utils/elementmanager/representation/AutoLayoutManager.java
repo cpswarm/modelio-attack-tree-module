@@ -16,10 +16,10 @@ import org.modelio.vcore.smkernel.mapi.MObject;
 @objid ("5e8afa52-c9aa-4a15-aaea-58d24a7df45b")
 public class AutoLayoutManager {
     @objid ("48ab984d-acde-4187-beee-1a1a8212870a")
-    public static final int VERTICAL_AUTOSPACING = 120;
+    public static final int VERTICAL_AUTOSPACING = 160;
 
     @objid ("40e45c6d-d487-449a-b733-3753d3102bf3")
-    public static final int HORIZONTAL_AUTOSPACING = 40;
+    public static final int HORIZONTAL_AUTOSPACING = 80;
 
     @objid ("37a5e19b-9765-45a9-a037-0b90df94706a")
     private static int max(int n1, int n2) {
