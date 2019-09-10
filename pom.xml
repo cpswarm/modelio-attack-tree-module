@@ -5,7 +5,7 @@
   <!-- definition -->
   <groupId>org.modelio.module</groupId>
   <artifactId>attacktreedesigner</artifactId>
-  <version>0.01.07</version>
+  <version>0.01.08</version>
   <name>AttackTreeDesigner</name>
   <repositories>
       <repository>
@@ -203,5 +203,5 @@
                 </plugins>
             </pluginManagement>
         </build>
-    <description></description>
+    <description>Attack Tree Designer offers an easy and practical environment for users to design attack trees, add AND/OR connections between attacks, add tags and counter measures to attacks, detect countered attacks, etc</description>
     </project>

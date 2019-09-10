@@ -77,7 +77,7 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                     (createdEvent instanceof Dependency && 
                             ((Dependency) createdEvent).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, 
                                     AttackTreeStereotypes.CONNECTION))) {
-                
+        
                 // add diagrams to setOfDiagramsToUpdateColorsOfAttacks
                 List<AbstractDiagram> diagrams = ((Element) createdEvent).getDiagramElement(AbstractDiagram.class);
                 setOfDiagramsToUpdateColorsOfAttacks.addAll(diagrams);
@@ -93,7 +93,7 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
         for ( MObject updatedEvent : updatedEvents){
             if( updatedEvent instanceof Class
                     && ((Class)updatedEvent).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.NODE)) {
-                
+        
                 // add diagrams to setOfDiagramsToUpdateColorsOfAttacks
                 List<AbstractDiagram> diagrams = ((Element) updatedEvent).getDiagramElement(AbstractDiagram.class);
                 setOfDiagramsToUpdateColorsOfAttacks.addAll(diagrams);
@@ -179,15 +179,15 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
             if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
         
                 ModelElement child = dependency.getDependsOn();
-                if(child instanceof Class) {
-                    hasChildren = true;
-                    boolean counteredChild = updateCounteredAttackColors((Class)child, diagramHandle); // boolean local variable at beginning
-                    if(counteredChild ) {
-                        atLeastOneChildIsCountered = true;
-                    } else {
-                        allChildrenAreCountered = false;
-                    }
+                //if(child instanceof Class) {
+                hasChildren = true;
+                boolean counteredChild = updateCounteredAttackColors((Class)child, diagramHandle); // boolean local variable at beginning
+                if(counteredChild ) {
+                    atLeastOneChildIsCountered = true;
+                } else {
+                    allChildrenAreCountered = false;
                 }
+                //}
             }
         }
         
@@ -235,27 +235,27 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
     @objid ("0f37b455-4380-480d-9909-5c630a100844")
     public void handleDeletedElement(IModelingSession session, Set<AbstractDiagram> diagramSet, IElementDeletedEvent deleteEvent) {
         MObject deletedElement = deleteEvent.getDeletedElement();
-              
+        
         /*
          * If the deleted element is a dependency
          */
         if (deletedElement instanceof Dependency 
                 && ((Dependency) deletedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)){
-            
+        
             List<AbstractDiagram> diagrams = ((Element) deletedElement).getDiagramElement(AbstractDiagram.class);
             for(AbstractDiagram diagram:diagrams) {
                 diagramSet.add(diagram);
             }
-              
+        
             Dependency deletedDependency = (Dependency) deletedElement;        
             MObject rootElement = deletedDependency.getDiagramElement().get(0).getOrigin(); 
             ModelElement depElement = deletedDependency.getDependsOn();
-              
+        
             if ((depElement != null) 
                     && (!(depElement.isDeleted()))
                     && (rootElement instanceof ModelTree)
                     && (depElement instanceof ModelTree)) {
-              
+        
                 ModelTree targetElement = (ModelTree) depElement;
                 targetElement.setOwner((ModelTree) rootElement);
                 ElementCreationManager.renameElement(session, targetElement); 
@@ -266,35 +266,35 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
          * If the deleted element is a class
          */
         else if (deletedElement instanceof Class) {
-            
+        
             List<AbstractDiagram> diagrams = ((Element) deletedElement).getDiagramElement(AbstractDiagram.class);
             for(AbstractDiagram diagram:diagrams) {
                 diagramSet.add(diagram);
             }
-              
-              
+        
+        
             /*
              * If the deleted Element is a Root, verify if it is referenced by other trees
              */
             if (((Class) deletedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)){
                 Class deletedRoot = (Class) deletedElement;
-              
+        
                 /*
                  * If the deleted class is a type for the attribute referenced tree
                  */
                 List<Attribute> referenceAttributesList = deletedRoot.getObject();
                 for(Attribute referenceAttribute:referenceAttributesList) {
-              
+        
                     if(! referenceAttribute.isDeleted()) {
                         Classifier attributeOwner = referenceAttribute.getOwner();
-              
+        
                         referenceAttribute.delete();
-              
+        
                         if(! attributeOwner.isDeleted() && attributeOwner.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, 
                                 AttackTreeStereotypes.TREE_REFERENCE_DECORATION)) {
                             attributeOwner.removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, 
                                     AttackTreeStereotypes.TREE_REFERENCE_DECORATION);
-              
+        
                             ElementRepresentationManager.changeStyleToAttack(attributeOwner,
                                     AttackTreeDesignerModule.getInstance().getModuleContext());
                         }
@@ -302,14 +302,14 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                 }
             } 
         }
-              
-              
-              
+        
+        
+        
         /*
          * If the deleted element is a note
          */
         else if (deletedElement instanceof Note) {
-            
+        
             List<AbstractDiagram> diagrams = ((Element) deletedElement).getDiagramElement(AbstractDiagram.class);
             for(AbstractDiagram diagram:diagrams) {
                 diagramSet.add(diagram);

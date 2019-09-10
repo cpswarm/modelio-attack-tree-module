@@ -52,7 +52,7 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
         
         
                     MObject root = diagram.getCompositionOwner();
-                    
+        
                     List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(selectedElement);
                     IDiagramGraphic diagramGraphic = diagramGraphics.get(0);
         
@@ -60,65 +60,69 @@ public class UnmaskSubTreeCommand extends DefaultModuleCommandHandler {
                     Rectangle elementBounds = ((IDiagramNode) diagramGraphic).getBounds();
         
         
-                    List<Class> elementChildren = ((ModelTree) selectedElement).getOwnedElement(Class.class);
-                    for(Class elementChild:elementChildren) {
+                    List<Dependency> elementDependencies = ((ModelTree) selectedElement).getDependsOnDependency();
+                    for(Dependency elementDependency:elementDependencies) {
+                        if(elementDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
         
-                        ElementRepresentationManager.unmaskChildren(moduleContext, diagramService, diagramHandle , elementChild, elementBounds.x, elementBounds.y + AutoLayoutManager.VERTICAL_AUTOSPACING);
-        
-        
-                        /*
-                         * setOwner of Operator element child of Selected element to update representation
-                         */
-                        MObject packageOwner = diagram.getOrigin().getCompositionOwner();
-                        elementChild.setOwner((ModelTree) packageOwner);
+                            Class elementChild = (Class) elementDependency.getDependsOn();
+                            
+                            ElementRepresentationManager.unmaskChildren(moduleContext, diagramService, diagramHandle , elementChild, elementBounds.x, elementBounds.y + AutoLayoutManager.VERTICAL_AUTOSPACING);
         
         
-                        /*
-                         *  Unmask Operator element child of Selected element
-                         */
-                        List<IDiagramGraphic> graph = diagramHandle.unmask(elementChild, elementBounds.x, elementBounds.y + AutoLayoutManager.VERTICAL_AUTOSPACING);
+                            /*
+                             * setOwner of Operator element child of Selected element to update representation
+                             */
+                            MObject packageOwner = diagram.getOrigin().getCompositionOwner();
+                            elementChild.setOwner((ModelTree) packageOwner);
         
         
-                        /*
-                         * Update Operator element child's style
-                         */
-                        if((graph != null) &&  (graph.size() > 0) && (graph.get(0) instanceof IDiagramNode)) {
-                            IDiagramNode graphNode = (IDiagramNode)graph.get(0);
-                            ElementRepresentationManager.updateNodeStyle(graphNode);
+                            /*
+                             *  Unmask Operator element child of Selected element
+                             */
+                            List<IDiagramGraphic> graph = diagramHandle.unmask(elementChild, elementBounds.x, elementBounds.y + AutoLayoutManager.VERTICAL_AUTOSPACING);
+        
+        
+                            /*
+                             * Update Operator element child's style
+                             */
+                            if((graph != null) &&  (graph.size() > 0) && (graph.get(0) instanceof IDiagramNode)) {
+                                IDiagramNode graphNode = (IDiagramNode)graph.get(0);
+                                ElementRepresentationManager.updateNodeStyle(graphNode);
+                            }
+        
+        
+                            /*
+                             *  unmask dependencies related to displaced operator element
+                             */
+                            List<Dependency> elementDependsOnDependencies = ((ModelElement) elementChild).getDependsOnDependency();
+                            for(Dependency dependency: elementDependsOnDependencies) {
+                                if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                                    diagramHandle.unmask(dependency, 0, 0);
+                                }
+                            }
+        //                            List<Dependency> elementImpactedDependency = ((ModelElement) elementChild).getImpactedDependency();
+        //                            for(Dependency dependency: elementImpactedDependency) {
+        //                                if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+        //                                    diagramHandle.unmask(dependency, 0, 0);
+        //                                }
+        //                            }
+                            diagramHandle.unmask(elementDependency, 0, 0);
+        
+                            /*
+                             * update owner of displaced operator element Child of selected element
+                             */
+                            elementChild.setOwner((ModelTree) selectedElement);
                         }
-        
-        
-                      /*
-                      *  unmask dependencies related to displaced operator element
-                      */
-                     List<Dependency> elementDependsOnDependencies = ((ModelElement) elementChild).getDependsOnDependency();
-                     for(Dependency dependency: elementDependsOnDependencies) {
-                         if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
-                             diagramHandle.unmask(dependency, 0, 0);
-                         }
-                     }
-                     List<Dependency> elementImpactedDependency = ((ModelElement) elementChild).getImpactedDependency();
-                     for(Dependency dependency: elementImpactedDependency) {
-                         if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
-                             diagramHandle.unmask(dependency, 0, 0);
-                         }
-                     }
-        
-        
-                     /*
-                      * update owner of displaced operator element Child of selected element
-                      */
-                     elementChild.setOwner((ModelTree) selectedElement);
                     }
-                
+        
         
                     /*
                      * Autolayout Tree
                      */
                     AutoLayoutManager.autolayoutTree(root, diagramHandle);
-                    
-                    
-                    
+        
+        
+        
                     diagramHandle.save();
                     diagramHandle.close();
                 }

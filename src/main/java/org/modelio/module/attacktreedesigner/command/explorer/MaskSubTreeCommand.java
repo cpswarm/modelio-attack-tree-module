@@ -10,6 +10,7 @@ import org.modelio.api.module.IModule;
 import org.modelio.api.module.command.DefaultModuleCommandHandler;
 import org.modelio.api.module.context.IModuleContext;
 import org.modelio.metamodel.diagrams.AbstractDiagram;
+import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.Element;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Class;
@@ -58,12 +59,23 @@ public class MaskSubTreeCommand extends DefaultModuleCommandHandler {
     public boolean accept(final List<MObject> selectedElements, final IModule module) {
         if ((selectedElements != null) && (selectedElements.size() == 1)){
             MObject selectedElement = selectedElements.get(0);
+            if((selectedElement instanceof Class)
+                    && ((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)
+                    && !((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)
+                    && selectedElement.getStatus().isModifiable()
+                    && (((ModelTree) selectedElement)).getDependsOnDependency().size()>0) {
+                for(Dependency dependency:(((ModelTree) selectedElement)).getDependsOnDependency()) {
+                    if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                        return true;
+                    }
+                }
+            }
             return ((selectedElement != null) 
                     && (selectedElement instanceof Class)
                     && ((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)
                     && !((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)
                     && selectedElement.getStatus().isModifiable()
-                    && (((ModelTree) selectedElement).getOwnedElement(Class.class)).size()>0);
+                    && (((ModelTree) selectedElement)).getDependsOnDependency().size()>0);
         
         }
         return false;
