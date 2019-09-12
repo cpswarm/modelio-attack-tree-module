@@ -51,7 +51,6 @@ public class TagsManager {
 
     @objid ("350bdc99-632e-4ad6-8431-41eca7841703")
     public static String getParameter(TaggedValue tag, String tagType) {
-        
         // Added this comment just to test github mirroring -- V3
         
         String tagName = tag.getDefinition().getName();
