@@ -23,11 +23,11 @@ import org.modelio.metamodel.uml.infrastructure.Note;
 import org.modelio.metamodel.uml.statik.Attribute;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.Classifier;
-import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementCreationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementNavigationManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
@@ -197,7 +197,7 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
          */
         if (subTree.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
             if( (hasChildren && allChildrenAreCountered) 
-                    || attackHasCounterMeasure(subTree)) {
+                    || ElementNavigationManager.attackHasCounterMeasure(subTree)) {
                 setClassColor(subTree, diagramHandle,COUNTERED_ATTACK_COLOR);
                 return true;
             } else { 
@@ -210,17 +210,6 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
             return (hasChildren && allChildrenAreCountered);
         }
         return null;
-    }
-
-    @objid ("16d98f10-b4d5-440d-bd88-ded2d63278ff")
-    private static boolean attackHasCounterMeasure(Class attack) {
-        List<Note> attackNotes = attack.getDescriptor();
-        for(Note note:attackNotes) {
-            if(note.getModel().getName().equals(AttackTreeNoteTypes.COUNTER_MEASURE)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @objid ("87d18e22-1bd0-4ca6-8c9d-5434e3159e88")

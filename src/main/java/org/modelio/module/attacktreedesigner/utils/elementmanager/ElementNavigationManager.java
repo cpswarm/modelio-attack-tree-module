@@ -4,7 +4,9 @@ import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
+import org.modelio.metamodel.uml.infrastructure.Note;
 import org.modelio.metamodel.uml.statik.Class;
+import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 
@@ -51,6 +53,17 @@ public class ElementNavigationManager {
         } else {
             return getRootElement(selectedElement.getOwner());
         }
+    }
+
+    @objid ("33e0c6a5-0fbc-4592-8eaf-21482782bcae")
+    public static boolean attackHasCounterMeasure(Class attack) {
+        List<Note> attackNotes = attack.getDescriptor();
+        for(Note note:attackNotes) {
+            if(note.getModel().getName().equals(AttackTreeNoteTypes.COUNTER_MEASURE)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

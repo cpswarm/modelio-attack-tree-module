@@ -52,10 +52,15 @@ public class AttackPropertyPage implements IPropertyContent {
     @objid ("bc6ed339-b45d-4786-b049-966c4f598c2f")
     @Override
     public void update(ModelElement element, IModulePropertyTable table) {
-        // add Name property
+        /*
+         *  add Name property
+         */
         table.addProperty(Messages.getString("Ui.Property.Name.Name"), element.getName());
         
-        // add tags properties
+        
+        /*
+         *  add tags properties
+         */
         List<TaggedValue> listTags = element.getTag();
         
         for(TaggedValue tag : listTags) {
@@ -87,8 +92,24 @@ public class AttackPropertyPage implements IPropertyContent {
                 table.addProperty(tag.getDefinition().getName(), 
                         TagsManager.getParameter(tag, tag.getDefinition().getName()).equals("true"));
             }
-        
+            
+            // custom tags
+        //            else {
+        //                table.addConsultProperty (tag.getDefinition().getName(), 
+        //                        TagsManager.getParameter(tag, tag.getDefinition().getName()));
+        //            }
         }
+        
+        
+        /*
+         * add counter measures
+         */
+        //        List<Note> attackNotes = element.getDescriptor();
+        //        for(Note attackNote:attackNotes) {
+        //            if(attackNote.getModel().getName().equals(AttackTreeNoteTypes.COUNTER_MEASURE)) {
+        //                table.addConsultProperty(AttackTreeNoteTypes.COUNTER_MEASURE, attackNote.getContent());
+        //            }
+        //        }
     }
 
 }
