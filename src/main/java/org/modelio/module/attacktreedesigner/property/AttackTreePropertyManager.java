@@ -45,7 +45,8 @@ public class AttackTreePropertyManager {
                         || stereotype.equals(extensions.getStereotype(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT, metamodel.getMClass(Class.class)))) {
                     propertyPage = new AttackPropertyPage();
                     propertyPage.changeProperty(element, currentRow, value);
-                    currentRow = currentRow - stereotype.getDefinedTagType().size();
+                    currentRow= currentRow - AttackPropertyPage.PROPERTIES_SIZE;
+        //                    currentRow = currentRow - stereotype.getDefinedTagType().size();
             
                     // change Counter attack note
                     List<Note> attackNotes = element.getDescriptor();

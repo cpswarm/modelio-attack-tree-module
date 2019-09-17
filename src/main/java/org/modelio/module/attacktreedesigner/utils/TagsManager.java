@@ -43,25 +43,16 @@ public class TagsManager {
         severityTaggedValue.getActual().add(tagParameter);
     }
 
-    @objid ("8fcc44b6-4c6b-4c39-b517-e5ab4f0ea68c")
-    public static TaggedValue createTag(IModelingSession session, String tagName, ModelElement attackElement) {
-        TaggedValue severityTaggedValue = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, tagName, attackElement);
-        return severityTaggedValue;
-    }
-
+//    @objid ("8fcc44b6-4c6b-4c39-b517-e5ab4f0ea68c")
+//    public static TaggedValue createTag(IModelingSession session, String tagName, ModelElement attackElement) {
+//        TaggedValue taggedValue = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, tagName, attackElement);
+//        return taggedValue;
+//    }
     @objid ("350bdc99-632e-4ad6-8431-41eca7841703")
-    public static String getParameter(TaggedValue tag, String tagType) {
-        // Added this comment just to test github mirroring -- V3
-        
-        String tagName = tag.getDefinition().getName();
-        if (tagName.equals(tagType)) {
-        
-            List<TagParameter> actuals = tag.getActual();
-            if ((actuals != null) && (actuals.size() > 0)) {
-                return actuals.get(0).getValue();
-            } else
-                return "";
-        
+    public static String getParameter(TaggedValue tag) {
+        List<TagParameter> actuals = tag.getActual();
+        if ((actuals != null) && (actuals.size() > 0)) {
+            return actuals.get(0).getValue();
         }
         return "";
     }
@@ -81,27 +72,33 @@ public class TagsManager {
 
     @objid ("09b4c542-eda9-444e-83ac-2440e15d1c5b")
     public static void createAttackDefaultTags(IModelingSession session, ModelElement attackElement) {
-        TaggedValue severityTaggedValue = TagsManager.createTag(session, AttackTreeTagTypes.SEVERITY, attackElement);
+        TaggedValue severityTaggedValue = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SEVERITY, attackElement);
+        //TagsManager.createTag(session, AttackTreeTagTypes.SEVERITY, attackElement);
         TagsManager.addParameter(session, severityTaggedValue, TagsManager.DEFAULT_SEVERITY_VALUE);
         attackElement.getTag().add(severityTaggedValue);
-              
-        TaggedValue probabilityTaggedValue = TagsManager.createTag(session,  AttackTreeTagTypes.PROBABILITY, attackElement);
+        
+        TaggedValue probabilityTaggedValue = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.PROBABILITY, attackElement);
+        //TagsManager.createTag(session,  AttackTreeTagTypes.PROBABILITY, attackElement);
         TagsManager.addParameter(session, probabilityTaggedValue, TagsManager.DEFAULT_PROBABILITY_VALUE);
         attackElement.getTag().add(probabilityTaggedValue);
         
-        TaggedValue riskLevelTaggedValue = TagsManager.createTag(session, AttackTreeTagTypes.RISK_LEVEL, attackElement);
+        TaggedValue riskLevelTaggedValue = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.RISK_LEVEL, attackElement);
+        //TagsManager.createTag(session, AttackTreeTagTypes.RISK_LEVEL, attackElement);
         TagsManager.addParameter(session, riskLevelTaggedValue, TagsManager.DEFAULT_RISK_LEVEL_VALUE);
         attackElement.getTag().add(riskLevelTaggedValue);
         
-        TaggedValue securityRelated = TagsManager.createTag(session, AttackTreeTagTypes.SECURITY_RELATED, attackElement);
+        TaggedValue securityRelated = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SECURITY_RELATED, attackElement);
+        //TagsManager.createTag(session, AttackTreeTagTypes.SECURITY_RELATED, attackElement);
         TagsManager.addParameter(session, securityRelated, TagsManager.DEFAULT_SECURITY_RELATED);
         attackElement.getTag().add(securityRelated);
         
-        TaggedValue safetyRelated = TagsManager.createTag(session, AttackTreeTagTypes.SAFETY_RELATED, attackElement);
+        TaggedValue safetyRelated = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SAFETY_RELATED, attackElement);
+        //TagsManager.createTag(session, AttackTreeTagTypes.SAFETY_RELATED, attackElement);
         TagsManager.addParameter(session, safetyRelated, TagsManager.DEFAULT_SAFETY_RELATED);
         attackElement.getTag().add(safetyRelated);
         
-        TaggedValue outOfScope = TagsManager.createTag(session, AttackTreeTagTypes.OUT_OF_SCOPE, attackElement);
+        TaggedValue outOfScope = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.OUT_OF_SCOPE, attackElement);
+        //TagsManager.createTag(session, AttackTreeTagTypes.OUT_OF_SCOPE, attackElement);
         TagsManager.addParameter(session, outOfScope, TagsManager.DEFAULT_OUT_OF_SCOPE);
         attackElement.getTag().add(outOfScope);
     }
@@ -114,14 +111,18 @@ public class TagsManager {
         for(TaggedValue tag:listTags) {
         
             if(tag.getDefinition().getName().equals(AttackTreeTagTypes.SEVERITY)) {
-                
         
-                severityValue = TagsManager.getParameter(tag, AttackTreeTagTypes.SEVERITY);
+        
+                severityValue = TagsManager.getParameter(tag
+                        //, AttackTreeTagTypes.SEVERITY
+                        );
         
             } else if (tag.getDefinition().getName().equals(AttackTreeTagTypes.PROBABILITY)) {
-                
         
-                probabilityValue = TagsManager.getParameter(tag, AttackTreeTagTypes.PROBABILITY);
+        
+                probabilityValue = TagsManager.getParameter(tag
+                        //, AttackTreeTagTypes.PROBABILITY
+                        );
         
         
             }

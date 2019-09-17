@@ -1,10 +1,12 @@
 package org.modelio.module.attacktreedesigner.property;
 
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
+import org.modelio.api.modelio.model.IModelingSession;
 import org.modelio.api.module.propertiesPage.IModulePropertyTable;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
+import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerPeerModule;
 
 @objid ("16f35395-b210-4759-8df8-daff2c306980")
@@ -14,13 +16,17 @@ public class OperatorPropertyPage implements IPropertyContent {
     public void changeProperty(ModelElement element, int row, String value) {
         if( row == 1 ) {
         
+            IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession ();
+        
             element.removeStereotypes(AttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND);
             element.removeStereotypes(AttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR);
         
-            if (value.equals("AND")) {
+            if (value.equals(AttackTreeStereotypes.AND)) {
                 element.addStereotype(AttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND);
-            }else if (value.equals("OR")) {
+                session.getModel().getDefaultNameService().setDefaultName(element, AttackTreeStereotypes.AND);
+            }else if (value.equals(AttackTreeStereotypes.OR)) {
                 element.addStereotype(AttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR);
+                session.getModel().getDefaultNameService().setDefaultName(element, AttackTreeStereotypes.OR);
             }
         }
     }
@@ -28,13 +34,13 @@ public class OperatorPropertyPage implements IPropertyContent {
     @objid ("c881fa9a-0f63-432a-a89b-b3b534dd5dc8")
     @Override
     public void update(ModelElement element, IModulePropertyTable table) {
-        String[] values = {"AND", "OR"  };                                             
+        String[] values = {AttackTreeStereotypes.AND, AttackTreeStereotypes.OR  };                                             
         
         String value = "";
         if (element.isStereotyped(AttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND)) {
-            value = "AND";  
+            value = AttackTreeStereotypes.AND;  
         }else if (element.isStereotyped(AttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR)) {
-            value = "OR";
+            value = AttackTreeStereotypes.OR;
         }
         
         table.addProperty (Messages.getString("Ui.Property.TypeCondition.Name"),

@@ -23,7 +23,8 @@
                     <TagType name="Security related" uid="923a8a26-c1af-4c8d-b627-c75164e8ba61" label="%tagtype.Security related.label" parameter-card="1" is-hidden="false" is-signed="false"/>
                     <TagType name="Safety related" uid="e6005ad7-e8fe-45bd-ad76-6c2e195de688" label="%tagtype.Safety related.label" parameter-card="1" is-hidden="false" is-signed="false"/>
                     <TagType name="Out of scope" uid="6cdb9550-932c-4872-bd5b-47dac059f337" label="%tagtype.Out of scope.label" parameter-card="1" is-hidden="false" is-signed="false"/>
-                    <TagType name="Custom field" uid="65adbe17-0416-4b30-a996-40e7f9a96860" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
+                    <TagType name="Custom tag" uid="65adbe17-0416-4b30-a996-40e7f9a96860" label="%tagtype.Custom tag.label" parameter-card="1" is-hidden="false" is-signed="false"/>
+                    <TagType name="Countered attack" uid="3268b8f4-f4e7-4899-9341-f1e561a69117" label="%tagtype.Countered attack.label" parameter-card="1" is-hidden="false" is-signed="false"/>
                 </TagTypes>
                 <NoteTypes>
                     <NoteType name="Counter-Measure" label="%notetype.Counter-Measure.label" is-hidden="false" uid="8b0986b3-4622-4ba5-86b8-193ea3589f36" mime-type="text/plain"/>
