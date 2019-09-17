@@ -8,6 +8,9 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
+import org.modelio.module.attacktreedesigner.utils.Probability;
+import org.modelio.module.attacktreedesigner.utils.RiskLevel;
+import org.modelio.module.attacktreedesigner.utils.Severity;
 import org.modelio.module.attacktreedesigner.utils.TagsManager;
 
 @objid ("224ee252-26f1-4b33-9ecc-84279671ca6c")
@@ -24,32 +27,32 @@ public class AttackPropertyPage implements IPropertyContent {
         
         } else if (row == 2) {
             // row=2 -> Severity property
-            TagsManager.setTagValue(element, AttackTreeTagTypes.SEVERITY, value);
+            TagsManager.setElementTagValue(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY, value);
         
             // calculate Risk Level
-            TagsManager.updateRiskLevelTagValue(element);
+            updateRiskLevelTagValue(element);
         
         
         } else if (row == 3) {
             // row=3 -> Probability property
-            TagsManager.setTagValue(element, AttackTreeTagTypes.PROBABILITY, value);
+            TagsManager.setElementTagValue(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY, value);
         
             // calculate Risk Level
-            TagsManager.updateRiskLevelTagValue(element);
+            updateRiskLevelTagValue(element);
         
         } else if (row == 5) {
             // row=5 -> Security related
-            TagsManager.setTagValue(element, AttackTreeTagTypes.SECURITY_RELATED, value);
+            TagsManager.setElementTagValue(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SECURITY_RELATED, value);
         
         
         } else if (row == 6) {
             // row=6 -> Safety related
-            TagsManager.setTagValue(element, AttackTreeTagTypes.SAFETY_RELATED, value);
+            TagsManager.setElementTagValue(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SAFETY_RELATED, value);
         
         
         } else if (row == 7) {
             // row=7 -> Out of scope
-            TagsManager.setTagValue(element, AttackTreeTagTypes.OUT_OF_SCOPE, value);
+            TagsManager.setElementTagValue(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.OUT_OF_SCOPE, value);
         }
     }
 
@@ -68,27 +71,27 @@ public class AttackPropertyPage implements IPropertyContent {
         
         // row=2 -> Severity property
         TaggedValue severityTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
-        table.addProperty (AttackTreeTagTypes.SEVERITY, TagsManager.getParameter(severityTag), TagsManager.SEVERITY_VALUES); 
+        table.addProperty (AttackTreeTagTypes.SEVERITY, TagsManager.getTagParameter(severityTag), TagsManager.SEVERITY_VALUES); 
         
         // row=3 -> Probability property
         TaggedValue probabilityTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
-        table.addProperty (AttackTreeTagTypes.PROBABILITY, TagsManager.getParameter(probabilityTag), TagsManager.PROBABILITY_VALUES); 
+        table.addProperty (AttackTreeTagTypes.PROBABILITY, TagsManager.getTagParameter(probabilityTag), TagsManager.PROBABILITY_VALUES); 
         
         // row=4 -> Risk Level Consult property (Read only, because it is calculated automatically based on severity and probability property)
         TaggedValue riskLevelTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.RISK_LEVEL);
-        table.addConsultProperty (AttackTreeTagTypes.RISK_LEVEL, TagsManager.getParameter(riskLevelTag));
+        table.addConsultProperty (AttackTreeTagTypes.RISK_LEVEL, TagsManager.getTagParameter(riskLevelTag));
         
         // row=5 -> Security related
         TaggedValue securityRelatedTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SECURITY_RELATED);
-        table.addProperty(AttackTreeTagTypes.SECURITY_RELATED, TagsManager.getParameter(securityRelatedTag).equals("true"));
+        table.addProperty(AttackTreeTagTypes.SECURITY_RELATED, TagsManager.getTagParameter(securityRelatedTag).equals("true"));
                 
         // row=6 -> Safety related
         TaggedValue safetyRelatedTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SAFETY_RELATED);
-        table.addProperty(AttackTreeTagTypes.SAFETY_RELATED, TagsManager.getParameter(safetyRelatedTag).equals("true"));
+        table.addProperty(AttackTreeTagTypes.SAFETY_RELATED, TagsManager.getTagParameter(safetyRelatedTag).equals("true"));
         
         // row=7 -> Out of scope
         TaggedValue outOfScopeTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.OUT_OF_SCOPE);
-        table.addProperty(AttackTreeTagTypes.OUT_OF_SCOPE, TagsManager.getParameter(outOfScopeTag).equals("true"));
+        table.addProperty(AttackTreeTagTypes.OUT_OF_SCOPE, TagsManager.getTagParameter(outOfScopeTag).equals("true"));
         
         
         
@@ -157,6 +160,22 @@ public class AttackPropertyPage implements IPropertyContent {
         //                table.addConsultProperty(AttackTreeNoteTypes.COUNTER_MEASURE, attackNote.getContent());
         //            }
         //        }
+    }
+
+    @objid ("c3d68873-7052-4395-ae47-9d981f51afd8")
+    private static void updateRiskLevelTagValue(ModelElement element) {
+        String severityValue = TagsManager.getElementTagParameter(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
+        String probabilityValue = TagsManager.getElementTagParameter(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
+        
+        if(severityValue != null && probabilityValue != null) {
+            int newRiskLevelOrder = Severity.valueOf(severityValue).ordinal() + Probability.valueOf(probabilityValue).ordinal();
+            
+            if(Severity.valueOf(severityValue).ordinal() > 0 &&  Probability.valueOf(probabilityValue).ordinal() > 0) 
+                newRiskLevelOrder++;
+            
+            String newRiskLevelValue = RiskLevel.values()[newRiskLevelOrder].toString();
+            TagsManager.setElementTagValue(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.RISK_LEVEL, newRiskLevelValue);
+        }
     }
 
 }

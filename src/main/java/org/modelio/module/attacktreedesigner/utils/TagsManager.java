@@ -6,10 +6,8 @@ import org.modelio.api.modelio.model.IModelingSession;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.TagParameter;
 import org.modelio.metamodel.uml.infrastructure.TaggedValue;
-import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
-import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("0fc43a57-6fcd-465c-ab28-da9a11a0a1d6")
 public class TagsManager {
@@ -37,10 +35,68 @@ public class TagsManager {
     @objid ("dca79667-0662-4104-b5e4-e556b10abe03")
     public static final String DEFAULT_OUT_OF_SCOPE = "false";
 
-    @objid ("d13e0d68-aa70-4e35-a70b-5974920861dc")
-    public static void addParameter(IModelingSession session, TaggedValue severityTaggedValue, String value) {
+    @objid ("350bdc99-632e-4ad6-8431-41eca7841703")
+    public static String getTagParameter(TaggedValue tag) {
+        List<TagParameter> actuals = tag.getActual();
+        if ((actuals != null) && (actuals.size() > 0)) {
+            return actuals.get(0).getValue();
+        }
+        return null;
+    }
+
+    @objid ("5aa945a4-a68e-44a7-ab4e-b65b0df60a86")
+    public static void setElementTagValue(ModelElement element, String sterotypeName, String tagDefinitionName, String value) {
+        TaggedValue tag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, sterotypeName, tagDefinitionName);
+        if(tag != null) {
+            for(TagParameter actual:tag.getActual()) {
+                actual.setValue(value);
+            }
+        }
+    }
+
+    @objid ("09b4c542-eda9-444e-83ac-2440e15d1c5b")
+    public static void createAttackDefaultTags(IModelingSession session, ModelElement attackElement) {
+        TaggedValue severityTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SEVERITY, attackElement);
+        //TagsManager.createTag(session, AttackTreeTagTypes.SEVERITY, attackElement);
+        TagsManager.createTagParameter(session, severityTag, TagsManager.DEFAULT_SEVERITY_VALUE);
+        attackElement.getTag().add(severityTag);
+        
+        TaggedValue probabilityTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.PROBABILITY, attackElement);
+        //TagsManager.createTag(session,  AttackTreeTagTypes.PROBABILITY, attackElement);
+        TagsManager.createTagParameter(session, probabilityTag, TagsManager.DEFAULT_PROBABILITY_VALUE);
+        attackElement.getTag().add(probabilityTag);
+        
+        TaggedValue riskLevelTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.RISK_LEVEL, attackElement);
+        //TagsManager.createTag(session, AttackTreeTagTypes.RISK_LEVEL, attackElement);
+        TagsManager.createTagParameter(session, riskLevelTag, TagsManager.DEFAULT_RISK_LEVEL_VALUE);
+        attackElement.getTag().add(riskLevelTag);
+        
+        TaggedValue securityRelatedTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SECURITY_RELATED, attackElement);
+        //TagsManager.createTag(session, AttackTreeTagTypes.SECURITY_RELATED, attackElement);
+        TagsManager.createTagParameter(session, securityRelatedTag, TagsManager.DEFAULT_SECURITY_RELATED);
+        attackElement.getTag().add(securityRelatedTag);
+        
+        TaggedValue safetyRelatedTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SAFETY_RELATED, attackElement);
+        //TagsManager.createTag(session, AttackTreeTagTypes.SAFETY_RELATED, attackElement);
+        TagsManager.createTagParameter(session, safetyRelatedTag, TagsManager.DEFAULT_SAFETY_RELATED);
+        attackElement.getTag().add(safetyRelatedTag);
+        
+        TaggedValue outOfScopeTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.OUT_OF_SCOPE, attackElement);
+        //TagsManager.createTag(session, AttackTreeTagTypes.OUT_OF_SCOPE, attackElement);
+        TagsManager.createTagParameter(session, outOfScopeTag, TagsManager.DEFAULT_OUT_OF_SCOPE);
+        attackElement.getTag().add(outOfScopeTag);
+        
+        
+        /*
+         * Create Countered Attack Default Tag
+         */
+        //TaggedValue counteredAttackTag;
+    }
+
+    @objid ("4810aaa4-fd61-433f-9c3f-8b9cb6cebb7c")
+    public static void createTagParameter(IModelingSession session, TaggedValue severityTaggedValue, String value) {
         TagParameter tagParameter= session.getModel().createTagParameter(value, severityTaggedValue);
-        severityTaggedValue.getActual().add(tagParameter);
+        severityTaggedValue.getActual().add(0,tagParameter);
     }
 
 //    @objid ("8fcc44b6-4c6b-4c39-b517-e5ab4f0ea68c")
@@ -48,95 +104,54 @@ public class TagsManager {
 //        TaggedValue taggedValue = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, tagName, attackElement);
 //        return taggedValue;
 //    }
-    @objid ("350bdc99-632e-4ad6-8431-41eca7841703")
-    public static String getParameter(TaggedValue tag) {
-        List<TagParameter> actuals = tag.getActual();
-        if ((actuals != null) && (actuals.size() > 0)) {
-            return actuals.get(0).getValue();
-        }
-        return "";
-    }
-
-    @objid ("5aa945a4-a68e-44a7-ab4e-b65b0df60a86")
-    public static void setTagValue(ModelElement element, String tagDefinitionName, String value) {
-        List<TaggedValue> listTags = element.getTag();
-        for(TaggedValue tag:listTags) {
-            if(tag.getDefinition().getName().equals(tagDefinitionName)) {
-                List<TagParameter> actuals = tag.getActual();
-                for(TagParameter actual:actuals) {
-                    actual.setValue(value);
-                }
-            }
+    @objid ("20bae7fd-cbc6-4f63-98d7-5c4ee875dfc0")
+    public static String getElementTagParameter(ModelElement element, String sterotypeName, String tagDefinitionName) {
+        TaggedValue tag =  element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, sterotypeName, tagDefinitionName);
+        if(tag != null) {
+            return getTagParameter(tag);
+        } else {
+            return null;
         }
     }
 
-    @objid ("09b4c542-eda9-444e-83ac-2440e15d1c5b")
-    public static void createAttackDefaultTags(IModelingSession session, ModelElement attackElement) {
-        TaggedValue severityTaggedValue = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SEVERITY, attackElement);
-        //TagsManager.createTag(session, AttackTreeTagTypes.SEVERITY, attackElement);
-        TagsManager.addParameter(session, severityTaggedValue, TagsManager.DEFAULT_SEVERITY_VALUE);
-        attackElement.getTag().add(severityTaggedValue);
-        
-        TaggedValue probabilityTaggedValue = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.PROBABILITY, attackElement);
-        //TagsManager.createTag(session,  AttackTreeTagTypes.PROBABILITY, attackElement);
-        TagsManager.addParameter(session, probabilityTaggedValue, TagsManager.DEFAULT_PROBABILITY_VALUE);
-        attackElement.getTag().add(probabilityTaggedValue);
-        
-        TaggedValue riskLevelTaggedValue = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.RISK_LEVEL, attackElement);
-        //TagsManager.createTag(session, AttackTreeTagTypes.RISK_LEVEL, attackElement);
-        TagsManager.addParameter(session, riskLevelTaggedValue, TagsManager.DEFAULT_RISK_LEVEL_VALUE);
-        attackElement.getTag().add(riskLevelTaggedValue);
-        
-        TaggedValue securityRelated = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SECURITY_RELATED, attackElement);
-        //TagsManager.createTag(session, AttackTreeTagTypes.SECURITY_RELATED, attackElement);
-        TagsManager.addParameter(session, securityRelated, TagsManager.DEFAULT_SECURITY_RELATED);
-        attackElement.getTag().add(securityRelated);
-        
-        TaggedValue safetyRelated = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SAFETY_RELATED, attackElement);
-        //TagsManager.createTag(session, AttackTreeTagTypes.SAFETY_RELATED, attackElement);
-        TagsManager.addParameter(session, safetyRelated, TagsManager.DEFAULT_SAFETY_RELATED);
-        attackElement.getTag().add(safetyRelated);
-        
-        TaggedValue outOfScope = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.OUT_OF_SCOPE, attackElement);
-        //TagsManager.createTag(session, AttackTreeTagTypes.OUT_OF_SCOPE, attackElement);
-        TagsManager.addParameter(session, outOfScope, TagsManager.DEFAULT_OUT_OF_SCOPE);
-        attackElement.getTag().add(outOfScope);
-    }
 
-    @objid ("265d86ab-a08e-4447-b11d-9b74afdbd53c")
-    public static void updateRiskLevelTagValue(MObject selectedElement) {
-        String severityValue = "";
-        String probabilityValue = "";
-        List<TaggedValue> listTags = ((ModelElement) selectedElement).getTag();
-        for(TaggedValue tag:listTags) {
-        
-            if(tag.getDefinition().getName().equals(AttackTreeTagTypes.SEVERITY)) {
-        
-        
-                severityValue = TagsManager.getParameter(tag
-                        //, AttackTreeTagTypes.SEVERITY
-                        );
-        
-            } else if (tag.getDefinition().getName().equals(AttackTreeTagTypes.PROBABILITY)) {
-        
-        
-                probabilityValue = TagsManager.getParameter(tag
-                        //, AttackTreeTagTypes.PROBABILITY
-                        );
-        
-        
-            }
-        
-        }
-        int newRiskLevelOrder = Severity.valueOf(severityValue).ordinal() + Probability.valueOf(probabilityValue).ordinal();
-        
-        
-        if(Severity.valueOf(severityValue).ordinal() > 0 &&  Probability.valueOf(probabilityValue).ordinal() > 0) {
-            newRiskLevelOrder++;
-        }
-        
-        String newRiskLevelValue = RiskLevel.values()[newRiskLevelOrder].toString();
-        TagsManager.setTagValue((Class)selectedElement, AttackTreeTagTypes.RISK_LEVEL, newRiskLevelValue);
-    }
-
+//    @objid ("265d86ab-a08e-4447-b11d-9b74afdbd53c")
+//    public static void updateRiskLevelTagValue(ModelElement element) {
+//        String severityValue = "";
+//        String probabilityValue = "";
+//        TaggedValue severityTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
+//
+//        TaggedValue probabilityTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
+//
+//        List<TaggedValue> listTags = ((ModelElement) element).getTag();
+//        for(TaggedValue tag:listTags) {
+//
+//            if(tag.getDefinition().getName().equals(AttackTreeTagTypes.SEVERITY)) {
+//
+//
+//                severityValue = TagsManager.getTagParameter(tag
+//                        //, AttackTreeTagTypes.SEVERITY
+//                        );
+//
+//            } else if (tag.getDefinition().getName().equals(AttackTreeTagTypes.PROBABILITY)) {
+//
+//
+//                probabilityValue = TagsManager.getTagParameter(tag
+//                        //, AttackTreeTagTypes.PROBABILITY
+//                        );
+//
+//
+//            }
+//
+//        }
+//        int newRiskLevelOrder = Severity.valueOf(severityValue).ordinal() + Probability.valueOf(probabilityValue).ordinal();
+//
+//
+//        if(Severity.valueOf(severityValue).ordinal() > 0 &&  Probability.valueOf(probabilityValue).ordinal() > 0) {
+//            newRiskLevelOrder++;
+//        }
+//
+//        String newRiskLevelValue = RiskLevel.values()[newRiskLevelOrder].toString();
+//        TagsManager.setTagValue((Class)element, AttackTreeTagTypes.RISK_LEVEL, newRiskLevelValue);
+//    }
 }
