@@ -5,9 +5,16 @@ import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.api.module.propertiesPage.IModulePropertyTable;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
+import org.modelio.metamodel.uml.infrastructure.Note;
+import org.modelio.metamodel.uml.infrastructure.TaggedValue;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.Classifier;
+import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
+import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
+import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
+import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
+import org.modelio.module.attacktreedesigner.utils.TagsManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementReferencing;
 
 @objid ("c07b6144-87dc-44fc-ab74-b757ac83385b")
@@ -27,14 +34,65 @@ public class TreeReferencePropertyPage implements IPropertyContent {
         Class referenceTree = (Class) element;
         ElementReferencing.getAvailableTrees(referenceTree);
         
-        // add referenced tree and show available trees
+        
+        
+        /*
+         * add referenced tree and show available trees
+         */
         List<String> trees = new ArrayList<>();
         trees.add("");
         trees.addAll(ElementReferencing.getAvailableTreesNames());
         
         String[] availableTreeNames = trees.toArray(new String[0]);
-        String value = ElementReferencing.getReferencedTreeName(referenceTree);
+        
+        Class referencedTree = ElementReferencing.getReferencedTree(referenceTree);
+        String value = "";
+        if(referencedTree != null) {
+            value = ElementReferencing.getStandardName(referencedTree);
+        }
         table.addProperty (Messages.getString("Ui.Property.Reference.Name"), value, availableTreeNames);
+       
+        
+        
+        /*
+         * Show referenced tree Root tags an counetr measures (Show only)
+         */
+        if(referencedTree != null) {
+
+            // Name
+            table.addConsultProperty(Messages.getString("Ui.Property.Name.Name"), referencedTree.getName());
+
+            // Severity property
+            TaggedValue severityTag = referencedTree.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
+            table.addConsultProperty (AttackTreeTagTypes.SEVERITY, TagsManager.getTagParameter(severityTag)); 
+            
+            // Probability property
+            TaggedValue probabilityTag = referencedTree.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
+            table.addConsultProperty (AttackTreeTagTypes.PROBABILITY, TagsManager.getTagParameter(probabilityTag)); 
+            
+            // Risk Level Consult property (Read only, because it is calculated automatically based on severity and probability property)
+            table.addConsultProperty (AttackTreeTagTypes.RISK_LEVEL, TagsManager.getElementRiskLevel(referencedTree));
+            
+            // Security related
+            TaggedValue securityRelatedTag = referencedTree.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SECURITY_RELATED);
+            table.addConsultProperty(AttackTreeTagTypes.SECURITY_RELATED, TagsManager.getTagParameter(securityRelatedTag));
+                    
+            // Safety related
+            TaggedValue safetyRelatedTag = referencedTree.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SAFETY_RELATED);
+            table.addConsultProperty(AttackTreeTagTypes.SAFETY_RELATED, TagsManager.getTagParameter(safetyRelatedTag));
+            
+            // Out of scope
+            TaggedValue outOfScopeTag = referencedTree.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.OUT_OF_SCOPE);
+            table.addConsultProperty(AttackTreeTagTypes.OUT_OF_SCOPE, TagsManager.getTagParameter(outOfScopeTag));
+         
+            // Counter measures
+            List<Note> rootNotes = referencedTree.getDescriptor();
+            for(Note rootNote:rootNotes) {
+                if(rootNote.getModel().getName().equals(AttackTreeNoteTypes.COUNTER_MEASURE)) {
+                    table.addConsultProperty (AttackTreeNoteTypes.COUNTER_MEASURE,rootNote.getContent());
+                }
+            }
+        }        
     }
 
 }

@@ -67,15 +67,15 @@ public class ElementReferencing {
 
     @objid ("0056c4aa-9142-4f32-a3f0-8f37c3d54817")
     private static GeneralClass getTreeByName(String referencedTreeName) {
-        for (Class root : _roots) {
-            if (getStandardName(root).equals(referencedTreeName))
-                return root;
+        for (Class tree : _roots) {
+            if (getStandardName(tree).equals(referencedTreeName))
+                return tree;
         }
         return null;
     }
 
     @objid ("b672dc6a-c41b-498b-9e37-21dc8a9b2852")
-    private static String getStandardName(GeneralClass root) {
+    public static String getStandardName(Class root) {
         return root.getOwner().getName() + "::" + root.getName();
     }
 
@@ -88,8 +88,8 @@ public class ElementReferencing {
         return null;
     }
 
-    @objid ("78d9ba1d-875d-4e46-bf30-04f1fc357284")
-    public static String getReferencedTreeName(Class selectedElement) {
+    @objid ("d00a4c28-6562-452c-8902-09fe41d9a7d3")
+    public static Class getReferencedTree(Class selectedElement) {
         List<Attribute> attributes = selectedElement.getOwnedAttribute();
         
         for(Attribute attribute : attributes) {
@@ -97,11 +97,11 @@ public class ElementReferencing {
                 GeneralClass type = attribute.getType();
                 if ((type != null)
                         && (type.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT))){
-                    return getStandardName(type);
+                    return (Class) type;
                 }
             }
         }
-        return "";
+        return null;
     }
 
 }

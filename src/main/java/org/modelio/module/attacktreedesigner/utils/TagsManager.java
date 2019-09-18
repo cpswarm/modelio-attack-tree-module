@@ -6,6 +6,7 @@ import org.modelio.api.modelio.model.IModelingSession;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.TagParameter;
 import org.modelio.metamodel.uml.infrastructure.TaggedValue;
+import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 
@@ -94,11 +95,6 @@ public class TagsManager {
         severityTaggedValue.getActual().add(0,tagParameter);
     }
 
-//    @objid ("8fcc44b6-4c6b-4c39-b517-e5ab4f0ea68c")
-//    public static TaggedValue createTag(IModelingSession session, String tagName, ModelElement attackElement) {
-//        TaggedValue taggedValue = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, tagName, attackElement);
-//        return taggedValue;
-//    }
     @objid ("20bae7fd-cbc6-4f63-98d7-5c4ee875dfc0")
     public static String getElementTagParameter(ModelElement element, String sterotypeName, String tagDefinitionName) {
         TaggedValue tag =  element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, sterotypeName, tagDefinitionName);
@@ -109,44 +105,20 @@ public class TagsManager {
         }
     }
 
+    @objid ("3dedc5fd-4427-4344-bb9a-68f1e8367a0b")
+    public static String getElementRiskLevel(ModelElement element) {
+        String severityValue = TagsManager.getElementTagParameter(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
+        String probabilityValue = TagsManager.getElementTagParameter(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
+        
+        if(severityValue != null && probabilityValue != null) {
+            int newRiskLevelOrder = Severity.valueOf(severityValue).ordinal() + Probability.valueOf(probabilityValue).ordinal();
+            
+            if(Severity.valueOf(severityValue).ordinal() > 0 &&  Probability.valueOf(probabilityValue).ordinal() > 0) 
+                newRiskLevelOrder++;
+            
+            return RiskLevel.values()[newRiskLevelOrder].toString();
+        }
+        return null;
+    }
 
-//    @objid ("265d86ab-a08e-4447-b11d-9b74afdbd53c")
-//    public static void updateRiskLevelTagValue(ModelElement element) {
-//        String severityValue = "";
-//        String probabilityValue = "";
-//        TaggedValue severityTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
-//
-//        TaggedValue probabilityTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
-//
-//        List<TaggedValue> listTags = ((ModelElement) element).getTag();
-//        for(TaggedValue tag:listTags) {
-//
-//            if(tag.getDefinition().getName().equals(AttackTreeTagTypes.SEVERITY)) {
-//
-//
-//                severityValue = TagsManager.getTagParameter(tag
-//                        //, AttackTreeTagTypes.SEVERITY
-//                        );
-//
-//            } else if (tag.getDefinition().getName().equals(AttackTreeTagTypes.PROBABILITY)) {
-//
-//
-//                probabilityValue = TagsManager.getTagParameter(tag
-//                        //, AttackTreeTagTypes.PROBABILITY
-//                        );
-//
-//
-//            }
-//
-//        }
-//        int newRiskLevelOrder = Severity.valueOf(severityValue).ordinal() + Probability.valueOf(probabilityValue).ordinal();
-//
-//
-//        if(Severity.valueOf(severityValue).ordinal() > 0 &&  Probability.valueOf(probabilityValue).ordinal() > 0) {
-//            newRiskLevelOrder++;
-//        }
-//
-//        String newRiskLevelValue = RiskLevel.values()[newRiskLevelOrder].toString();
-//        TagsManager.setTagValue((Class)element, AttackTreeTagTypes.RISK_LEVEL, newRiskLevelValue);
-//    }
 }
