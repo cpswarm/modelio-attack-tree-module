@@ -49,7 +49,7 @@
                 <Icon path=""/>
                 <Image path=""/>
             </Stereotype>
-            <Stereotype name="TreeReferenceDecoration" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.TreeReferenceDecoration.label" uid="c85b8741-354e-43f5-be03-a53c72961da3" is-abstract="false">
+            <Stereotype name="TreeReference" metaclass="Standard.Class" owner-stereotype="mref#'' {9c3f6aa5-547c-4558-87db-d64dca132d75} Infrastructure.Stereotype" is-hidden="false" label="%stereotype.TreeReference.label" uid="c85b8741-354e-43f5-be03-a53c72961da3" is-abstract="false">
                 <Icon path="res/icon/gui/ReferenceTreeDecoration_24.png"/>
                 <Image path="res/icon/gui/ReferenceTreeDecoration_48.png"/>
             </Stereotype>
@@ -99,7 +99,7 @@
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.AutoLayoutCommand"/>
             </Command>
             <Command id="Open_referenced_tree_diagram" label="%command.Open_referenced_tree_diagram.label" tooltip="%command.Open_referenced_tree_diagram.tooltip" image="res/icon/gui/OpenRefTreeDiagCommand_24.png" modify-model="false">
-                <Scope metaclass="Standard.Class" stereotype="AttackTreeDesigner#TreeReferenceDecoration"/>
+                <Scope metaclass="Standard.Class" stereotype="AttackTreeDesigner#TreeReference"/>
                 <Scope metaclass="Standard.Attribute" stereotype="AttackTreeDesigner#TreeReferenceAttribute"/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.OpenReferencedTreeDiagram">
                     <HParameter name="name" value=""/>
@@ -145,6 +145,14 @@
                 <Handler class="org.modelio.module.attacktreedesigner.command.tools.CounterMeasureTool">
                     <HParameter name="metaclass" value="Infrastructure.Note"/>
                     <HParameter name="name" value="CounterMeasure"/>
+                </Handler>
+            </Tool>
+            <Tool id="Reference_Attack_Tree" label="%tool.Reference_Attack_Tree.label" tooltip="%tool.Reference_Attack_Tree.tooltip" image="res/icon/gui/ReferenceTreeDecoration_24.png">
+                <Scope-source metaclass="Standard.Class" stereotype="AttackTreeDesigner#Root"/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.tools.CreateTreeReferenceTool">
+                    <HParameter name="stereotype" value="AttackTreeDesigner#TreeReference"/>
+                    <HParameter name="metaclass" value="Standard.Class"/>
+                    <HParameter name="name" value="Tree Reference"/>
                 </Handler>
             </Tool>
         </Tools>

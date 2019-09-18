@@ -6,7 +6,7 @@ import com.modeliosoft.modelio.javadesigner.annotations.objid;
 public enum DiagramElementStyle {
     OPERATOR ("NONE", "IMAGE"),
     ATTACK ("SIMPLE", "SIMPLE"),
-    REFERENCED_TREE ("SIMPLE", "STRUCTURED");
+    TREE_REFERENCE ("SIMPLE", "STRUCTURED");
 
     @objid ("94a929ff-c998-4705-b409-0a0d70ac3828")
     private String showNameProperty;

@@ -109,9 +109,12 @@ public class ElementRepresentationManager {
         if(((Class) graphNode.getElement()).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
             graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.ATTACK.getShowNameProperty());
             graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.ATTACK.getRepresentationMode());
-        } else {
+        } else if(((Class) graphNode.getElement()).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR)) {
             graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.OPERATOR.getShowNameProperty());
             graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.OPERATOR.getRepresentationMode());
+        } else {
+            graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.TREE_REFERENCE.getShowNameProperty());
+            graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.TREE_REFERENCE.getShowNameProperty());
         }
     }
 
@@ -152,7 +155,7 @@ public class ElementRepresentationManager {
                 if( diagramGraphics.size()>0 && diagramGraphics.get(0) instanceof IDiagramNode) {
         
                     IDiagramNode diagramNode = (IDiagramNode )diagramGraphics.get(0);
-                    diagramNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.REFERENCED_TREE.getRepresentationMode());
+                    diagramNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.TREE_REFERENCE.getRepresentationMode());
         
                 }                        
         

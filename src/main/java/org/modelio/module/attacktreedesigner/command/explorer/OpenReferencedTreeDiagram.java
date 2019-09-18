@@ -28,7 +28,7 @@ public class OpenReferencedTreeDiagram extends DefaultModuleCommandHandler {
         if(referencedTreeDiagram != null) {
             moduleContext.getModelioServices().getEditionService().openEditor(referencedTreeDiagram);
         } else {
-            MessageDialog.openInformation(Display.getDefault().getActiveShell(), "No Diagram Found!", "Sorry! We could not the diagram of the referenced tree");
+            MessageDialog.openInformation(Display.getDefault().getActiveShell(), "No Diagram Found!", "Sorry! We could not find the diagram of the referenced tree");
         }
     }
 
@@ -40,7 +40,7 @@ public class OpenReferencedTreeDiagram extends DefaultModuleCommandHandler {
             return ((selectedElement != null) 
                     && (
                             ((selectedElement instanceof Class)
-                                    && ((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_DECORATION))
+                                    && ((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE))
                             
                             || ((selectedElement instanceof Attribute)
                                     && ((Attribute) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE))

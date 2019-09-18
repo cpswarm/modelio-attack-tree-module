@@ -22,4 +22,7 @@ public interface IAttackTreeCustomizerPredefinedField {
     @objid ("b8c07ebc-0c7d-4970-afda-f6bae3e8460e")
     public static final String COUNTER_MEASURE = "CounterMeasure";
 
+    @objid ("fbd9cab9-1a0a-497e-bfa7-ada6d197d165")
+    public static final String TREE_REFERENCE = "Reference_Attack_Tree";
+
 }

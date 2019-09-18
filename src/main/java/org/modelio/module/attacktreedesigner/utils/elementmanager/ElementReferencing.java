@@ -1,10 +1,9 @@
 package org.modelio.module.attacktreedesigner.utils.elementmanager;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
-import org.modelio.api.module.context.IModuleContext;
+import org.modelio.api.modelio.model.IUmlModel;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Attribute;
 import org.modelio.metamodel.uml.statik.Class;
@@ -13,8 +12,6 @@ import org.modelio.metamodel.uml.statik.GeneralClass;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
-import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerPeerModule;
-import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
 
 @objid ("bca5a48e-7295-4265-b0f2-e7a1a20607dc")
 public class ElementReferencing {
@@ -26,11 +23,11 @@ public class ElementReferencing {
 
     @objid ("3056ec3a-3f3f-416f-8875-f0aa37d93ce4")
     public static List<String> getAvailableTreesNames() {
-        List<String> result = new ArrayList<>();
+        List<String> availableTreeNames = new ArrayList<>();
         for(Class root : _roots) {           
-            result.add(root.getOwner().getName() + "::" +  root.getName());        
+            availableTreeNames.add(root.getOwner().getName() + "::" +  root.getName());        
         }
-        return result;
+        return availableTreeNames;
     }
 
     /**
@@ -52,67 +49,20 @@ public class ElementReferencing {
     }
 
     @objid ("9333b99d-75ca-4cc1-95d3-e0009d44c934")
-    public static void addReference(Classifier selectedElement, String referencedTreeName) {
-        IModuleContext moduleContext = AttackTreeDesignerModule.getInstance().getModuleContext();
+    public static void updateReference(Classifier selectedElement, String referencedTreeName) {
+        IUmlModel model = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession().getModel();
         
         GeneralClass referencedTree = null;       
         
         if (!(referencedTreeName.equals("")))
             referencedTree = getTreeByName(referencedTreeName);
         
-        if (referencedTree != null) {
+        Attribute referenceAttribute = getRefAttribute(selectedElement);
         
-            /*
-             *  Referenced Tree is not null, update reference attribute
-             */
-            
-            Attribute ref = getRefAttribute(selectedElement);
-            
-            if (ref == null) {
-        
-                // Create new Attribute
-                Attribute referenceTreeAttribute = moduleContext.getModelingSession().getModel().createAttribute(
-                        REF_DEFAULT_NAME, referencedTree, selectedElement, IAttackTreeDesignerPeerModule.MODULE_NAME, 
-                        AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE); 
-                
-                // add stereotype of TREE_REFERENCE_DECORATION
-                selectedElement.addStereotype(AttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_DECORATION);
-                
-                // Update style to referencing tree attack style
-                ElementRepresentationManager.changeStyleToReferencedTree(selectedElement, moduleContext, referenceTreeAttribute);
-             
-            }else {
-                // Attribute already created, need only to change its type (i.e. its reference)
-                ref.setType(referencedTree);
-            }
-        }else {
-            
-            /*
-             *  Referenced Tree is null, delete TREE_REFERENCE_ATTRIBUTE
-             */
-            
-            // Delete Attribute
-            deleteAttribute(selectedElement);
-            
-            // Remove TREE_REFERENCE_DECORATION Stereotype from Class
-            selectedElement.removeStereotypes(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_DECORATION);
-            
-            // Upddate to Style of a simple (non referencing) attack 
-            ElementRepresentationManager.changeStyleToAttack(selectedElement, moduleContext);
-        }
-    }
-
-    @objid ("dda1fa11-c55a-479c-a0ed-b34255991f5a")
-    public static void deleteAttribute(Classifier selectedElement) {
-        List<Attribute> attributes = selectedElement.getOwnedAttribute();               
-        Iterator<Attribute> iterator = attributes.iterator();        
-        while ( iterator.hasNext() ) {
-            Attribute attribute = iterator.next();
-            if (attribute.isStereotyped( IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE)) {
-                iterator.remove();
-                attribute.delete();
-            }
-        }
+        if (referencedTree != null)             
+            referenceAttribute.setType(referencedTree);            
+        else             
+            referenceAttribute.setType(model.getUmlTypes().getUNDEFINED());
     }
 
     @objid ("0056c4aa-9142-4f32-a3f0-8f37c3d54817")
@@ -131,9 +81,9 @@ public class ElementReferencing {
 
     @objid ("cc5fdae9-6de0-4103-8986-622fe9616dd0")
     private static Attribute getRefAttribute(Classifier leaf) {
-        for (Attribute attr : leaf.getOwnedAttribute()) {
-            if (attr.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE))
-                return attr;
+        for (Attribute attribute : leaf.getOwnedAttribute()) {
+            if (attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE))
+                return attribute;
         }
         return null;
     }

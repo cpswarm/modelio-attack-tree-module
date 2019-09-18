@@ -35,7 +35,7 @@ public interface AttackTreeStereotypes {
     public static final String OPERATOR = "Operator";
 
     @objid ("d23a5afb-bfda-498f-9d0d-9b57b2e29985")
-    public static final String TREE_REFERENCE_DECORATION = "TreeReferenceDecoration";
+    public static final String TREE_REFERENCE = "TreeReference";
 
     @objid ("1220a502-fe6e-4e3c-9a61-a5c600a26614")
     public static final String TREE_REFERENCE_ATTRIBUTE = "TreeReferenceAttribute";
