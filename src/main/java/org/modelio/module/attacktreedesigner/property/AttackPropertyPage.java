@@ -29,16 +29,10 @@ public class AttackPropertyPage implements IPropertyContent {
             // row=2 -> Severity property
             TagsManager.setElementTagValue(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY, value);
         
-            // calculate Risk Level
-            updateRiskLevelTagValue(element);
-        
         
         } else if (row == 3) {
             // row=3 -> Probability property
             TagsManager.setElementTagValue(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY, value);
-        
-            // calculate Risk Level
-            updateRiskLevelTagValue(element);
         
         } else if (row == 5) {
             // row=5 -> Security related
@@ -78,8 +72,7 @@ public class AttackPropertyPage implements IPropertyContent {
         table.addProperty (AttackTreeTagTypes.PROBABILITY, TagsManager.getTagParameter(probabilityTag), TagsManager.PROBABILITY_VALUES); 
         
         // row=4 -> Risk Level Consult property (Read only, because it is calculated automatically based on severity and probability property)
-        TaggedValue riskLevelTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.RISK_LEVEL);
-        table.addConsultProperty (AttackTreeTagTypes.RISK_LEVEL, TagsManager.getTagParameter(riskLevelTag));
+        table.addConsultProperty (AttackTreeTagTypes.RISK_LEVEL, getElementRiskLevel(element));
         
         // row=5 -> Security related
         TaggedValue securityRelatedTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SECURITY_RELATED);
@@ -163,7 +156,7 @@ public class AttackPropertyPage implements IPropertyContent {
     }
 
     @objid ("c3d68873-7052-4395-ae47-9d981f51afd8")
-    private static void updateRiskLevelTagValue(ModelElement element) {
+    private static String getElementRiskLevel(ModelElement element) {
         String severityValue = TagsManager.getElementTagParameter(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
         String probabilityValue = TagsManager.getElementTagParameter(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
         
@@ -173,9 +166,9 @@ public class AttackPropertyPage implements IPropertyContent {
             if(Severity.valueOf(severityValue).ordinal() > 0 &&  Probability.valueOf(probabilityValue).ordinal() > 0) 
                 newRiskLevelOrder++;
             
-            String newRiskLevelValue = RiskLevel.values()[newRiskLevelOrder].toString();
-            TagsManager.setElementTagValue(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.RISK_LEVEL, newRiskLevelValue);
+            return RiskLevel.values()[newRiskLevelOrder].toString();
         }
+        return null;
     }
 
 }

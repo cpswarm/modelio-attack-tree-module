@@ -64,12 +64,7 @@ public class TagsManager {
         TaggedValue probabilityTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.PROBABILITY, attackElement);
         //TagsManager.createTag(session,  AttackTreeTagTypes.PROBABILITY, attackElement);
         TagsManager.createTagParameter(session, probabilityTag, TagsManager.DEFAULT_PROBABILITY_VALUE);
-        attackElement.getTag().add(probabilityTag);
-        
-        TaggedValue riskLevelTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.RISK_LEVEL, attackElement);
-        //TagsManager.createTag(session, AttackTreeTagTypes.RISK_LEVEL, attackElement);
-        TagsManager.createTagParameter(session, riskLevelTag, TagsManager.DEFAULT_RISK_LEVEL_VALUE);
-        attackElement.getTag().add(riskLevelTag);
+        attackElement.getTag().add(probabilityTag);        
         
         TaggedValue securityRelatedTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SECURITY_RELATED, attackElement);
         //TagsManager.createTag(session, AttackTreeTagTypes.SECURITY_RELATED, attackElement);

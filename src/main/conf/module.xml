@@ -19,7 +19,6 @@
                 <TagTypes>
                     <TagType name="Severity" uid="d8fb88fd-74a5-49a4-808c-750ab6e76b3f" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
                     <TagType name="Probability" uid="035608cc-09d8-450e-a160-8889204ad6de" label="%tagtype.null.label" parameter-card="" is-hidden="false" is-signed="false"/>
-                    <TagType name="Risk level" uid="78846b15-2d05-43c7-8ae4-e60cc34a2866" label="%tagtype.Risk level.label" parameter-card="1" is-hidden="false" is-signed="false"/>
                     <TagType name="Security related" uid="923a8a26-c1af-4c8d-b627-c75164e8ba61" label="%tagtype.Security related.label" parameter-card="1" is-hidden="false" is-signed="false"/>
                     <TagType name="Safety related" uid="e6005ad7-e8fe-45bd-ad76-6c2e195de688" label="%tagtype.Safety related.label" parameter-card="1" is-hidden="false" is-signed="false"/>
                     <TagType name="Out of scope" uid="6cdb9550-932c-4872-bd5b-47dac059f337" label="%tagtype.Out of scope.label" parameter-card="1" is-hidden="false" is-signed="false"/>
