@@ -19,12 +19,20 @@ import org.modelio.metamodel.uml.statik.Classifier;
 import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
+import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
+import org.modelio.module.attacktreedesigner.utils.CounterMeasureManager;
 import org.modelio.module.attacktreedesigner.utils.DiagramElementStyle;
 import org.modelio.module.attacktreedesigner.utils.Labels;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("8d87749a-8242-406b-a1a8-9a84f227ed71")
 public class ElementRepresentationManager {
+    @objid ("bbdfeb9d-92e7-4e49-9871-787a3f28706a")
+    public static final String DEFAULT_ATTACK_COLOR = "250, 240, 210";
+
+    @objid ("c77d8c6e-671f-42a0-9e76-34b37bc7dab8")
+    public static final String COUNTERED_ATTACK_COLOR = "220, 250, 210";
+
     @objid ("2e7eb0d3-339a-499b-8833-1cca9c83d496")
     public static void maskChildren(IModuleContext moduleContext, IDiagramService diagramService, MObject element, IDiagramHandle diagramHandle) {
         if(((Class)element).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) {
@@ -65,27 +73,6 @@ public class ElementRepresentationManager {
         int newX = x;
         int newY = y + AutoLayoutManager.VERTICAL_AUTOSPACING;
         
-        
-        //        if(((Class)element).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) {
-        //            // get children of Root
-        //            List<Dependency> elementDependencies = ((ModelTree) element).getDependsOnDependency();
-        //        
-        //            for(Dependency dependency:elementDependencies) {
-        //                if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
-        //                    ModelElement child = dependency.getDependsOn();
-        //        
-        //                    // recursively call maskChildren to children
-        //                    unmaskChildren(moduleContext, diagramService, diagramHandle, child, newX, newY);     
-        //        
-        //                    // unmask current child
-        //                    unmaskElement(diagramHandle, newX, newY, child);                       
-        //        
-        //                    // increment x
-        //                    newX += AutoLayoutManager.HORIZONTAL_AUTOSPACING;
-        //                }
-        //            }
-        //        
-        //        } else {
         List<Class> elementChildren = ((ModelTree) element).getOwnedElement(Class.class);            
         
         // unmask children
@@ -106,15 +93,26 @@ public class ElementRepresentationManager {
 
     @objid ("4e91463c-0100-4339-84bb-41c1ae661e26")
     public static void updateNodeStyle(IDiagramNode graphNode) {
-        if(((Class) graphNode.getElement()).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
+        Class nodeElement = (Class) graphNode.getElement();
+        if(nodeElement.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
             graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.ATTACK.getShowNameProperty());
             graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.ATTACK.getRepresentationMode());
-        } else if(((Class) graphNode.getElement()).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR)) {
+            if(CounterMeasureManager.isCountered(nodeElement, true))
+                graphNode.setFillColor(COUNTERED_ATTACK_COLOR);
+            else
+                graphNode.setFillColor(DEFAULT_ATTACK_COLOR);
+            
+        } else if(nodeElement.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR)) {
             graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.OPERATOR.getShowNameProperty());
             graphNode.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.OPERATOR.getRepresentationMode());
-        } else {
+            
+        } else if(nodeElement.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
             graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.TREE_REFERENCE.getShowNameProperty());
             graphNode.setProperty(Labels.CLASS_SHOWNAME.name(), DiagramElementStyle.TREE_REFERENCE.getShowNameProperty());
+            if(CounterMeasureManager.isCountered(nodeElement, true))
+                graphNode.setFillColor(COUNTERED_ATTACK_COLOR);
+            else
+                graphNode.setFillColor(DEFAULT_ATTACK_COLOR);
         }
     }
 
@@ -203,6 +201,27 @@ public class ElementRepresentationManager {
         for(Attribute attribute:elementAttributes) {
             if(attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE)) {
                 diagramHandle.unmask(attribute,0,0);
+            }
+        }
+    }
+
+    @objid ("a0b4c771-4e82-435f-8711-84f36cf71481")
+    public static void setClassColor(Class element, IDiagramHandle diagramHandle, String color) {
+        List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(element);
+        if(! diagramGraphics.isEmpty()) {
+            IDiagramNode diagramNode = (IDiagramNode) diagramGraphics.get(0);
+            diagramNode.setFillColor(color);
+        }
+    }
+
+    @objid ("ea9842d2-e462-4320-afd2-86dfa1dbf70b")
+    public static void setClassColor(Class element, String color) {
+        IDiagramService diagramService = AttackTreeDesignerModule.getInstance().getModuleContext().getModelioServices().getDiagramService();                    
+        List<AbstractDiagram> diagrams = element.getDiagramElement(AbstractDiagram.class);
+        for(AbstractDiagram diagram: diagrams) {
+            try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+                ElementRepresentationManager.setClassColor(element, diagramHandle, color);
+        
             }
         }
     }

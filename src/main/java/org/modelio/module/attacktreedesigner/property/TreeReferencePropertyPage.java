@@ -8,7 +8,6 @@ import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.Note;
 import org.modelio.metamodel.uml.infrastructure.TaggedValue;
 import org.modelio.metamodel.uml.statik.Class;
-import org.modelio.metamodel.uml.statik.Classifier;
 import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
@@ -24,7 +23,7 @@ public class TreeReferencePropertyPage implements IPropertyContent {
     @Override
     public void changeProperty(ModelElement element, int row, String value) {
         if (row == 1) {
-            ElementReferencing.updateReference((Classifier) element, value);
+            ElementReferencing.updateReference((Class) element, value);
         }
     }
 

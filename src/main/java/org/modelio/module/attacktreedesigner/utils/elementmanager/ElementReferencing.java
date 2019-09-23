@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.api.modelio.model.IUmlModel;
+import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Attribute;
 import org.modelio.metamodel.uml.statik.Class;
@@ -12,6 +13,9 @@ import org.modelio.metamodel.uml.statik.GeneralClass;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
+import org.modelio.module.attacktreedesigner.impl.AttackTreeModelChangeHandler;
+import org.modelio.module.attacktreedesigner.utils.CounterMeasureManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
 
 @objid ("bca5a48e-7295-4265-b0f2-e7a1a20607dc")
 public class ElementReferencing {
@@ -49,24 +53,48 @@ public class ElementReferencing {
     }
 
     @objid ("9333b99d-75ca-4cc1-95d3-e0009d44c934")
-    public static void updateReference(Classifier selectedElement, String referencedTreeName) {
+    public static void updateReference(Class element, String referencedTreeName) {
         IUmlModel model = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession().getModel();
         
-        GeneralClass referencedTree = null;       
+        Class referencedTree = null;       
         
         if (!(referencedTreeName.equals("")))
             referencedTree = getTreeByName(referencedTreeName);
         
-        Attribute referenceAttribute = getRefAttribute(selectedElement);
+        Attribute referenceAttribute = getRefAttribute(element);
         
-        if (referencedTree != null)             
-            referenceAttribute.setType(referencedTree);            
-        else             
+        
+        
+        
+        if (referencedTree != null) {            
+        
+            referenceAttribute.setType(referencedTree);       
+        
+            if(CounterMeasureManager.isCountered(referencedTree, true)) {
+                ElementRepresentationManager.setClassColor(element, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);
+        
+        
+            } else {
+                ElementRepresentationManager.setClassColor(element, ElementRepresentationManager.DEFAULT_ATTACK_COLOR);
+            }
+        } else {             
             referenceAttribute.setType(model.getUmlTypes().getUNDEFINED());
+            ElementRepresentationManager.setClassColor(element, ElementRepresentationManager.DEFAULT_ATTACK_COLOR);
+        }
+        
+        /*
+         * Propagate to ascendants of reference
+         */
+        for(Dependency parentDependency : element.getImpactedDependency()) {
+            if(parentDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                Class elementParent = (Class) parentDependency.getImpacted();                
+                AttackTreeModelChangeHandler.updateAndPropagateAttackTags(elementParent, false, false, true);                         
+            }
+        }
     }
 
     @objid ("0056c4aa-9142-4f32-a3f0-8f37c3d54817")
-    private static GeneralClass getTreeByName(String referencedTreeName) {
+    private static Class getTreeByName(String referencedTreeName) {
         for (Class tree : _roots) {
             if (getStandardName(tree).equals(referencedTreeName))
                 return tree;

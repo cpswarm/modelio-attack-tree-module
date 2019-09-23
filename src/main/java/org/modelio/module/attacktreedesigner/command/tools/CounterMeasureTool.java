@@ -11,14 +11,16 @@ import org.modelio.api.modelio.diagram.tools.DefaultAttachedBoxTool;
 import org.modelio.api.modelio.model.IModelingSession;
 import org.modelio.api.modelio.model.ITransaction;
 import org.modelio.api.modelio.model.IUmlModel;
-import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.Note;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
+import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
+import org.modelio.module.attacktreedesigner.utils.TagsManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("44e9eff9-fdf9-424a-8b26-2eee8557bb47")
@@ -39,11 +41,17 @@ public class CounterMeasureTool extends DefaultAttachedBoxTool {
         IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession();
         IUmlModel model = session.getModel();                
         try( ITransaction transaction = session.createTransaction (Messages.getString("Info.Session.Create", "Counter Measure"))){
-            ModelElement owner = (ModelElement) originNode.getElement();
+            Class counteredAttack = (Class) originNode.getElement();
             
-            Note note = model.createNote(IAttackTreeDesignerPeerModule.MODULE_NAME,AttackTreeNoteTypes.COUNTER_MEASURE, owner, AttackTreeNoteTypes.COUNTER_MEASURE);   
+            Note note = model.createNote(IAttackTreeDesignerPeerModule.MODULE_NAME,AttackTreeNoteTypes.COUNTER_MEASURE, counteredAttack, AttackTreeNoteTypes.COUNTER_MEASURE);   
         
             diagramHandle.unmask(note, point.x, point.y );
+            
+            // update countered Attack color
+            ElementRepresentationManager.setClassColor(counteredAttack, diagramHandle, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);
+            
+            // update countered Attack "Countered attack" tag
+            TagsManager.setElementTagValue(counteredAttack, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.COUNTERED_ATTACK, "true");
             
             diagramHandle.save();
             diagramHandle.close();

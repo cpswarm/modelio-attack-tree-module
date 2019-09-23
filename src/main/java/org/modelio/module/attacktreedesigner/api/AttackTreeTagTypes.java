@@ -23,6 +23,9 @@ public interface AttackTreeTagTypes {
     public static final String OUT_OF_SCOPE = "Out of scope";
 
     @objid ("4280546a-6b03-40cb-924f-68c035a1cbae")
-    public static final String CUSTOM_FIELD = "Custom field";
+    public static final String CUSTOM_TAG = "Custom tag";
+
+    @objid ("b0582ef9-cde5-4c02-bb51-72e3717bf89a")
+    public static final String COUNTERED_ATTACK = "Countered attack";
 
 }
