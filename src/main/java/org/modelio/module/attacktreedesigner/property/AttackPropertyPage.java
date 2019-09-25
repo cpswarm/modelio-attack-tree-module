@@ -64,11 +64,14 @@ public class AttackPropertyPage implements IPropertyContent {
         // row=2 -> Severity property
         TaggedValue severityTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
         int minSeverityIndex = TagsManager.getMinSeverityIndex((Class) element);
-        table.addProperty (AttackTreeTagTypes.SEVERITY, TagsManager.getTagParameter(severityTag), subArray(TagsManager.SEVERITY_VALUES, minSeverityIndex)); 
+        table.addProperty (AttackTreeTagTypes.SEVERITY, TagsManager.getTagParameter(severityTag), 
+                subArray(TagsManager.SEVERITY_VALUES, minSeverityIndex, TagsManager.SEVERITY_VALUES.length-1)); 
         
         // row=3 -> Probability property
         TaggedValue probabilityTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
-        table.addProperty (AttackTreeTagTypes.PROBABILITY, TagsManager.getTagParameter(probabilityTag), TagsManager.PROBABILITY_VALUES); 
+        int [] probabilityIndexBounds =  TagsManager.getProbabilityIndexBounds((Class) element);
+        table.addProperty (AttackTreeTagTypes.PROBABILITY, TagsManager.getTagParameter(probabilityTag), 
+                subArray(TagsManager.PROBABILITY_VALUES, probabilityIndexBounds[0], probabilityIndexBounds[1])); 
         
         // row=4 -> Risk Level Consult property (Read only, because it is calculated automatically based on severity and probability property)
         table.addConsultProperty (AttackTreeTagTypes.RISK_LEVEL, TagsManager.getElementRiskLevel(element));
@@ -86,11 +89,17 @@ public class AttackPropertyPage implements IPropertyContent {
         table.addProperty(AttackTreeTagTypes.OUT_OF_SCOPE, TagsManager.getTagParameter(outOfScopeTag).equals("true"));
     }
 
+    /**
+     * Sub array of an array
+     * @param array
+     * @param indexStart should be superior to 0
+     * @param indexEnd should be inferior than array.length
+     * @return sub array of array that starts from index indexStart inclusive and ends at indexEnd (inclusive)
+     */
     @objid ("3303df11-b591-44b6-8b6c-7274daf26675")
-    private static String[] subArray(String[] array, int index) {
-        int arrayLength = array.length;
+    private static String[] subArray(String[] array, int indexStart, int indexEnd) {
         List<String> list = new ArrayList<>();
-        for(int i=index; i < arrayLength; i++) {
+        for(int i=indexStart; i <= indexEnd; i++) {
             list.add(array[i]);
         }
         return list.toArray(new String[list.size()]);

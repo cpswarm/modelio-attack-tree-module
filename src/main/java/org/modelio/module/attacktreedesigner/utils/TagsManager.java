@@ -138,109 +138,11 @@ public class TagsManager {
         
         } else if (node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR)) {
         
-            int minSeverityLevel = 0;
-        
-            for(Dependency dependency: node.getDependsOnDependency()) {
-                if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
-                    Class child = (Class) dependency.getDependsOn();
-                    int currentMinSeverityIndex;
-        
-                    /*
-                     * Calculate currentMinSeverityIndex depending on the child nature (Attack, reference, or else operator)
-                     */
-                    if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
-                        String childSeverity = TagsManager.getElementTagParameter(child, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
-                        currentMinSeverityIndex = 0;
-                        for(int i=0; i<SEVERITY_VALUES.length; i++) {
-                            if(childSeverity.equals(SEVERITY_VALUES[i])) {
-                                currentMinSeverityIndex = i;
-                                break;
-                            }
-                        }
-                    } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
-                        currentMinSeverityIndex = 0;
-                        Class childReference = ElementReferencing.getReferencedTree(child) ;
-                        if(childReference != null) {
-                            String childReferenceSeverity = TagsManager.getElementTagParameter(childReference, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
-                            for(int i=0; i<SEVERITY_VALUES.length; i++) {
-                                if(childReferenceSeverity.equals(SEVERITY_VALUES[i])) {
-                                    currentMinSeverityIndex = i;
-                                    break;
-                                }
-                            }
-                        }
-        
-                    } else {
-                        currentMinSeverityIndex = getMinSeverityIndex(child);
-                    }
-        
-                    /*
-                     * update minSeverityIndex
-                     */
-                    if( currentMinSeverityIndex > minSeverityLevel) 
-                        minSeverityLevel = currentMinSeverityIndex;
-        
-                }
-            }
-        
-            return minSeverityLevel;
+            return getMinSeverityIndexOROperator(node);
         
         } else if (node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND)) {
         
-            boolean nodeHasChildren = false;
-        
-            int minSeverityIndex = SEVERITY_VALUES.length-1;
-        
-            for(Dependency dependency: node.getDependsOnDependency()) {
-                if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
-                    nodeHasChildren = true;
-                    Class child = (Class) dependency.getDependsOn();
-        
-                    int currentMinSeverityIndex; 
-        
-                    /*
-                     * Calculate currentMinSeverityIndex depending on the child nature (Attack, reference, or else operator)
-                     */
-                    if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
-                        String childSeverity = TagsManager.getElementTagParameter(child, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
-                        currentMinSeverityIndex = 0;
-                        for(int i=0; i<SEVERITY_VALUES.length; i++) {
-                            if(childSeverity.equals(SEVERITY_VALUES[i])) {
-                                currentMinSeverityIndex = i;
-                                break;
-                            }
-                        }
-                    } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
-                        Class childReference = ElementReferencing.getReferencedTree(child) ;
-                        currentMinSeverityIndex = 0;
-                        if(childReference != null) {
-                            String childReferenceSeverity = TagsManager.getElementTagParameter(childReference, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
-                            for(int i=0; i<SEVERITY_VALUES.length; i++) {
-                                if(childReferenceSeverity.equals(SEVERITY_VALUES[i])) {
-                                    currentMinSeverityIndex = i;
-                                    break;
-                                }
-                            }
-                        }
-        
-                    } else {
-                        currentMinSeverityIndex = getMinSeverityIndex(child);
-                    }
-        
-                    /*
-                     * update minSeverityIndex
-                     */
-                    if( currentMinSeverityIndex < minSeverityIndex)
-                        minSeverityIndex = currentMinSeverityIndex;
-        
-        
-                }
-            }
-        
-            if(nodeHasChildren)
-                return minSeverityIndex;
-            else
-                return 0;
+            return getMinSeverityIndexANDOperator(node);
         
         } else if (node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
         
@@ -252,6 +154,279 @@ public class TagsManager {
                 return 0;
         }
         return 0;
+    }
+
+    @objid ("43d3077c-ecab-436d-8ba6-da04f4b1d6c1")
+    private static int getMinSeverityIndexOROperator(Class node) {
+        int minSeverityLevel = 0;
+              
+        for(Dependency dependency: node.getDependsOnDependency()) {
+            if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                Class child = (Class) dependency.getDependsOn();
+                int currentMinSeverityIndex;
+              
+                /*
+                 * Calculate currentMinSeverityIndex depending on the child nature (Attack, reference, or else operator)
+                 */
+                if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
+                    String childSeverity = TagsManager.getElementTagParameter(child, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
+                    currentMinSeverityIndex = 0;
+                    for(int i=0; i<SEVERITY_VALUES.length; i++) {
+                        if(childSeverity.equals(SEVERITY_VALUES[i])) {
+                            currentMinSeverityIndex = i;
+                            break;
+                        }
+                    }
+                } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
+                    currentMinSeverityIndex = 0;
+                    Class childReference = ElementReferencing.getReferencedTree(child) ;
+                    if(childReference != null) {
+                        String childReferenceSeverity = TagsManager.getElementTagParameter(childReference, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
+                        for(int i=0; i<SEVERITY_VALUES.length; i++) {
+                            if(childReferenceSeverity.equals(SEVERITY_VALUES[i])) {
+                                currentMinSeverityIndex = i;
+                                break;
+                            }
+                        }
+                    }
+              
+                } else {
+                    currentMinSeverityIndex = getMinSeverityIndex(child);
+                }
+              
+                /*
+                 * update minSeverityIndex
+                 */
+                if( currentMinSeverityIndex > minSeverityLevel) 
+                    minSeverityLevel = currentMinSeverityIndex;
+              
+            }
+        }
+        return minSeverityLevel;
+    }
+
+    @objid ("de311d0d-46a1-4730-ae23-d16a0c86de31")
+    private static int getMinSeverityIndexANDOperator(Class node) {
+        boolean nodeHasChildren = false;
+              
+        int minSeverityIndex = SEVERITY_VALUES.length-1;
+              
+        for(Dependency dependency: node.getDependsOnDependency()) {
+            if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                nodeHasChildren = true;
+                Class child = (Class) dependency.getDependsOn();
+              
+                int currentMinSeverityIndex; 
+              
+                /*
+                 * Calculate currentMinSeverityIndex depending on the child nature (Attack, reference, or else operator)
+                 */
+                if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
+                    String childSeverity = TagsManager.getElementTagParameter(child, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
+                    currentMinSeverityIndex = 0;
+                    for(int i=0; i<SEVERITY_VALUES.length; i++) {
+                        if(childSeverity.equals(SEVERITY_VALUES[i])) {
+                            currentMinSeverityIndex = i;
+                            break;
+                        }
+                    }
+                } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
+                    Class childReference = ElementReferencing.getReferencedTree(child) ;
+                    currentMinSeverityIndex = 0;
+                    if(childReference != null) {
+                        String childReferenceSeverity = TagsManager.getElementTagParameter(childReference, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
+                        for(int i=0; i<SEVERITY_VALUES.length; i++) {
+                            if(childReferenceSeverity.equals(SEVERITY_VALUES[i])) {
+                                currentMinSeverityIndex = i;
+                                break;
+                            }
+                        }
+                    }
+              
+                } else {
+                    currentMinSeverityIndex = getMinSeverityIndex(child);
+                }
+              
+                /*
+                 * update minSeverityIndex
+                 */
+                if( currentMinSeverityIndex < minSeverityIndex)
+                    minSeverityIndex = currentMinSeverityIndex;
+              
+              
+            }
+        }
+              
+        if(nodeHasChildren)
+            return minSeverityIndex;
+        else
+            return 0;
+    }
+
+    @objid ("a4873896-2260-4e31-b4b4-cca869285903")
+    public static int[] getProbabilityIndexBounds(Class node) {
+        int[] defaultBounds = {0, PROBABILITY_VALUES.length - 1};
+        
+        if(node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
+            
+            // may have at most 1 child Operator (i.e. AND/OR)
+            for(Dependency dependency: node.getDependsOnDependency()) {
+                if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+        
+                    return getProbabilityIndexBounds((Class) dependency.getDependsOn()); 
+                }
+            }
+        
+        } else if (node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR)) {
+        
+            return getProbabilityIndexBoundsOROperator(node);
+        
+        } else if (node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND)) {
+        
+            return getProbabilityIndexBoundsANDOperator(node);
+        
+        } else if (node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
+        
+            // return the minProbabilityIndex of the reference
+            Class referencedTree = ElementReferencing.getReferencedTree(node);
+            if(referencedTree  != null)
+                return getProbabilityIndexBounds(referencedTree);
+            else
+                return defaultBounds;
+        }
+        return defaultBounds;
+    }
+
+    @objid ("3b4504fb-1b9c-4419-9b39-f75d2b94fa93")
+    private static int[] getProbabilityIndexBoundsANDOperator(Class node) {
+        // max probability is the min of the probabilities of the children
+        int maxProbabilityIndex = PROBABILITY_VALUES.length - 1;
+        
+        for(Dependency dependency: node.getDependsOnDependency()) {
+            if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+        
+                Class child = (Class) dependency.getDependsOn();
+                
+                int currrentMaxProbabilityIndex ;
+                
+                if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
+                    String childProbability = TagsManager.getElementTagParameter(child, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
+                    currrentMaxProbabilityIndex = 0;
+                    for(int i=0; i<PROBABILITY_VALUES.length; i++) {
+                        if(childProbability.equals(PROBABILITY_VALUES[i])) {
+                            currrentMaxProbabilityIndex = i;
+                            break;
+                        }
+                    }
+        
+        
+                } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR)) {
+                    
+                    currrentMaxProbabilityIndex = getProbabilityIndexBounds(child)[0];
+                } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND)) {
+                    
+                    currrentMaxProbabilityIndex = getProbabilityIndexBounds(child)[1];
+                } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
+             
+                    Class childReference = ElementReferencing.getReferencedTree(child) ;
+                    currrentMaxProbabilityIndex = PROBABILITY_VALUES.length - 1;
+                    if(childReference != null) {
+                        String childReferenceProbability = TagsManager.getElementTagParameter(childReference, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
+                        for(int i=0; i<PROBABILITY_VALUES.length; i++) {
+                            if(childReferenceProbability.equals(PROBABILITY_VALUES[i])) {
+                                currrentMaxProbabilityIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    
+                } else {
+                    // this branch must never be reached (as the child node must have one of the 4 previously stated stereotypes)
+                    currrentMaxProbabilityIndex = maxProbabilityIndex;
+                }
+        
+                if(currrentMaxProbabilityIndex < maxProbabilityIndex) {
+                    maxProbabilityIndex = currrentMaxProbabilityIndex;
+                }
+            }
+        }
+        
+        int[] probabilityBouns = {0,maxProbabilityIndex};
+        return probabilityBouns;
+    }
+
+    @objid ("97abe5f3-7d92-4a90-9a67-378aeba8277d")
+    private static int[] getProbabilityIndexBoundsOROperator(Class node) {
+        // min probability is the max of the probabilities of the children
+        int minProbabilityIndex = 0;
+        
+        for(Dependency dependency: node.getDependsOnDependency()) {
+            if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+        
+                Class child = (Class) dependency.getDependsOn();
+                
+                int currrentMinProbabilityIndex ;
+                
+                if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
+                    String childProbability = TagsManager.getElementTagParameter(child, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
+                    currrentMinProbabilityIndex = 0;
+                    for(int i=0; i<PROBABILITY_VALUES.length; i++) {
+                        if(childProbability.equals(PROBABILITY_VALUES[i])) {
+                            currrentMinProbabilityIndex = i;
+                            break;
+                        }
+                    }
+        
+        
+                } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
+             
+                    Class childReference = ElementReferencing.getReferencedTree(child) ;
+                    currrentMinProbabilityIndex = 0;
+                    if(childReference != null) {
+                        String childReferenceProbability = TagsManager.getElementTagParameter(childReference, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
+                        for(int i=0; i<PROBABILITY_VALUES.length; i++) {
+                            if(childReferenceProbability.equals(PROBABILITY_VALUES[i])) {
+                                currrentMinProbabilityIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    
+                } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR)) {
+                    
+                    currrentMinProbabilityIndex = getProbabilityIndexBounds(child)[0];
+                } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND)) {
+                    
+                    currrentMinProbabilityIndex = getProbabilityIndexBounds(child)[1];
+                } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
+             
+                    Class childReference = ElementReferencing.getReferencedTree(child) ;
+                    currrentMinProbabilityIndex = 0;
+                    if(childReference != null) {
+                        String childReferenceProbability = TagsManager.getElementTagParameter(childReference, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
+                        for(int i=0; i<PROBABILITY_VALUES.length; i++) {
+                            if(childReferenceProbability.equals(PROBABILITY_VALUES[i])) {
+                                currrentMinProbabilityIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    
+                } else {
+                    // this branch must never be executed (as the child node must have one of the 4 previously stated stereotypes)
+                    currrentMinProbabilityIndex = minProbabilityIndex;
+                }
+        
+                if(currrentMinProbabilityIndex > minProbabilityIndex) {
+                    minProbabilityIndex = currrentMinProbabilityIndex;
+                }
+            }
+        }
+        
+        
+        
+        int[] probabilityBouns = {minProbabilityIndex, PROBABILITY_VALUES.length - 1};
+        return probabilityBouns;
     }
 
 }

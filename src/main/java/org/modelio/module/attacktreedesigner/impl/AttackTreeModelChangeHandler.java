@@ -213,7 +213,23 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
         }
         
         if(updateProbability) {
-            // TODO
+        
+            int[] probabilityIndexBounds = TagsManager.getProbabilityIndexBounds(attack);
+            String attackProbability = TagsManager.getElementTagParameter(attack, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
+        
+            
+            for(int i=0; i < TagsManager.PROBABILITY_VALUES.length; i++) {
+                if(attackProbability.equals(TagsManager.PROBABILITY_VALUES[i])) {
+                    int attackProbabilityIndex = i;
+                    if(attackProbabilityIndex < probabilityIndexBounds[0]) {
+                        TagsManager.setElementTagValue(attack, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY, TagsManager.PROBABILITY_VALUES[probabilityIndexBounds[0]]);
+                    } else if(attackProbabilityIndex > probabilityIndexBounds[1]) {
+                        TagsManager.setElementTagValue(attack, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY, TagsManager.PROBABILITY_VALUES[probabilityIndexBounds[1]]);
+                    }
+        
+                    break;
+                }
+            }            
         }
         
         if(updateCountered) {
@@ -289,7 +305,7 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                     || node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)){
                 for(Dependency dependency: node.getImpactedDependency()) {
                     if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)){
-                        return (Class) dependency.getImpacted();
+                        return getFirstNonDeletedAttackAscendant(dependency);
                     }
                 }
             }
