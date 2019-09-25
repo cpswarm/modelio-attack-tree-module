@@ -117,8 +117,8 @@ public class ElementReferencing {
     }
 
     @objid ("d00a4c28-6562-452c-8902-09fe41d9a7d3")
-    public static Class getReferencedTree(Class selectedElement) {
-        List<Attribute> attributes = selectedElement.getOwnedAttribute();
+    public static Class getReferencedTree(Class reference) {
+        List<Attribute> attributes = reference.getOwnedAttribute();
         
         for(Attribute attribute : attributes) {
             if (attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE)) {

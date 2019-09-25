@@ -5,7 +5,7 @@
   <!-- definition -->
   <groupId>org.modelio.module</groupId>
   <artifactId>attacktreedesigner</artifactId>
-  <version>0.03.04</version>
+  <version>0.04.04</version>
   <name>AttackTreeDesigner</name>
   <repositories>
       <repository>

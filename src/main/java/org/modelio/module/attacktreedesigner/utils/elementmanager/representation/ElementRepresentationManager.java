@@ -222,6 +222,8 @@ public class ElementRepresentationManager {
             try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
                 ElementRepresentationManager.setClassColor(element, diagramHandle, color);
         
+                diagramHandle.save();
+                diagramHandle.close();
             }
         }
     }

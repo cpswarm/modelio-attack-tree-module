@@ -1,9 +1,12 @@
 package org.modelio.module.attacktreedesigner.property;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.api.module.propertiesPage.IModulePropertyTable;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.TaggedValue;
+import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
@@ -25,7 +28,6 @@ public class AttackPropertyPage implements IPropertyContent {
         } else if (row == 2) {
             // row=2 -> Severity property
             TagsManager.setElementTagValue(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY, value);
-        
         
         } else if (row == 3) {
             // row=3 -> Probability property
@@ -59,10 +61,10 @@ public class AttackPropertyPage implements IPropertyContent {
         /*
          *  add tags properties
          */
-        
         // row=2 -> Severity property
         TaggedValue severityTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
-        table.addProperty (AttackTreeTagTypes.SEVERITY, TagsManager.getTagParameter(severityTag), TagsManager.SEVERITY_VALUES); 
+        int minSeverityIndex = TagsManager.getMinSeverityIndex((Class) element);
+        table.addProperty (AttackTreeTagTypes.SEVERITY, TagsManager.getTagParameter(severityTag), subArray(TagsManager.SEVERITY_VALUES, minSeverityIndex)); 
         
         // row=3 -> Probability property
         TaggedValue probabilityTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
@@ -82,6 +84,16 @@ public class AttackPropertyPage implements IPropertyContent {
         // row=7 -> Out of scope
         TaggedValue outOfScopeTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.OUT_OF_SCOPE);
         table.addProperty(AttackTreeTagTypes.OUT_OF_SCOPE, TagsManager.getTagParameter(outOfScopeTag).equals("true"));
+    }
+
+    @objid ("3303df11-b591-44b6-8b6c-7274daf26675")
+    private static String[] subArray(String[] array, int index) {
+        int arrayLength = array.length;
+        List<String> list = new ArrayList<>();
+        for(int i=index; i < arrayLength; i++) {
+            list.add(array[i]);
+        }
+        return list.toArray(new String[list.size()]);
     }
 
 }
