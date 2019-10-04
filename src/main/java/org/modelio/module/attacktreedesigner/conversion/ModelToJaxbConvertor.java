@@ -1,6 +1,7 @@
 package org.modelio.module.attacktreedesigner.conversion;
 
 import java.util.List;
+import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.metamodel.diagrams.AbstractDiagram;
 import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.Note;
@@ -22,33 +23,37 @@ import org.modelio.module.attacktreedesigner.utils.TagsManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementReferencing;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
+@objid ("7576d0d6-54bd-480d-b8d8-5fec7597d807")
 public class ModelToJaxbConvertor {
-
+    @objid ("0f3c064b-7d12-4bfe-b8c0-93e3dda47de9")
     private static AttackTreeXMLObjectFactory objectFactory = new AttackTreeXMLObjectFactory();
-    
+
+    @objid ("c596db91-d9e8-46e0-b03a-a700bec3cb3a")
     private Class modelTree;
 
+    @objid ("54d80aa2-3e79-4372-96a7-6089709fca07")
     public Class getModelTree() {
         return this.modelTree;
     }
 
+    @objid ("f70bb9b8-f7eb-4443-bd41-d48c13d403fd")
     public void setModelTree(Class modelTree) {
         this.modelTree = modelTree;
     }
 
+    @objid ("ec312248-9be1-4398-9828-2533395830dd")
     public ModelToJaxbConvertor(Class modelTree) {
         this.modelTree = modelTree;
     }
 
+    @objid ("568ee29e-1504-477c-aee1-0b268b626f57")
     public AttackTreeType convertModelToJaxb() {
-        
-
         /*
          * Create Tree
          */ 
         AttackTreeType tree = objectFactory.createAttackTreeType();
-
-
+        
+        
         /*
          * Set Diagram
          */
@@ -60,24 +65,20 @@ public class ModelToJaxbConvertor {
                 break;
             }
         }
-
-
+        
+        
         /*
          * Set Root Node
          */
         AttackType root = convertNode(this.modelTree);
         tree.setAttack(root);
-
+        
         // Add children nodes 
         addChildrenNodes(this.modelTree, root);
-
-
-
         return tree;
-
-
     }
 
+    @objid ("dbb61575-17b7-4d61-bfe1-67402492b5ab")
     private static AttackType convertNode(Class modelNode) {
         AttackType attack = objectFactory.createAttackType();
         attack.setName(modelNode.getName());
@@ -91,7 +92,7 @@ public class ModelToJaxbConvertor {
         probabilityTag.setName(AttackTreeTagTypes.PROBABILITY);
         probabilityTag.setValue(TagsManager.getElementTagParameter(modelNode, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY));
         attack.getTag().add(probabilityTag);
-
+        
         TagType securityRelatedTag = objectFactory.createTagType();
         securityRelatedTag.setName(AttackTreeTagTypes.SECURITY_RELATED);
         securityRelatedTag.setValue(TagsManager.getElementTagParameter(modelNode, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SECURITY_RELATED));
@@ -115,13 +116,11 @@ public class ModelToJaxbConvertor {
                 attack.getCounterMeasure().add(counterMeasure);
             }
         }
-        
         return attack;
     }
 
+    @objid ("a690e78d-4f6b-4394-97eb-bf973a90aeb0")
     private void addChildrenNodes(Class parentNode, AttackType root) {
-        
-
         for(Dependency dependency : parentNode.getDependsOnDependency()) {
             if (dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
                 
@@ -135,7 +134,7 @@ public class ModelToJaxbConvertor {
                 }                
                 root.setOperator(operator);
                 
-
+        
                 for(Dependency dependency2:operatorNode.getDependsOnDependency()) {
                     if (dependency2.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
                         
@@ -155,9 +154,9 @@ public class ModelToJaxbConvertor {
                     }
                 }
                 //operator.getAttackOrTreeReference().add(e)
-
+        
             }                
         }
-
     }
+
 }
