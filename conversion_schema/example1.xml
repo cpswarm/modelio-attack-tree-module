@@ -1,0 +1,39 @@
+<?xml version='1.0'?>
+<attackTree>
+    <treeDiagram name="Tree Diagram" />
+    <attack name="Tree">
+        <tag name="Severity">MEDIUM</tag>
+        <tag name="Probability">MEDIUM</tag>
+        <tag name="Security related">false</tag>
+        <tag name="Safety related">false</tag>
+        <tag name="Out of scope">false</tag>
+        <operator type="AND">
+            <attack name="Attack1">
+                <tag name="Severity">MEDIUM</tag>
+                <tag name="Probability">MEDIUM</tag>
+                <tag name="Security related">false</tag>
+                <tag name="Safety related">false</tag>
+                <tag name="Out of scope">false</tag>
+                <counterMeasure content="Counter-Measure" />
+                <counterMeasure content="Counter-Measure 2" />
+                <operator type="OR">
+                    <attack name="Attack">
+                        <tag name="Severity">MEDIUM</tag>
+                        <tag name="Probability">MEDIUM</tag>
+                        <tag name="Security related">false</tag>
+                        <tag name="Safety related">false</tag>
+                        <tag name="Out of scope">false</tag>
+                    </attack>
+                    <treeReference ref="Model/Package/Tree" />
+                </operator>
+            </attack>
+            <attack name="Attack">
+                <tag name="Severity">MEDIUM</tag>
+                <tag name="Probability">MEDIUM</tag>
+                <tag name="Security related">false</tag>
+                <tag name="Safety related">false</tag>
+                <tag name="Out of scope">false</tag>
+            </attack>
+        </operator>
+    </attack>
+</attackTree>

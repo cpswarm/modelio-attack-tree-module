@@ -81,6 +81,7 @@
             </Command>
             <Command id="Export" label="%command.Export.label" tooltip="%command.Export.tooltip" image="res/icon/gui/Export_24.png" modify-model="false">
                 <Scope metaclass="Standard.Class" stereotype="AttackTreeDesigner#Root"/>
+                <Scope metaclass="Standard.Package" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.ExportCommand">
                     <HParameter name="name" value=""/>
                 </Handler>

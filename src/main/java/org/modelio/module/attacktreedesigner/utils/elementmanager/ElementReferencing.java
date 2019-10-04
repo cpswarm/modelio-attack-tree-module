@@ -108,7 +108,7 @@ public class ElementReferencing {
     }
 
     @objid ("cc5fdae9-6de0-4103-8986-622fe9616dd0")
-    private static Attribute getRefAttribute(Classifier leaf) {
+    public static Attribute getRefAttribute(Classifier leaf) {
         for (Attribute attribute : leaf.getOwnedAttribute()) {
             if (attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE))
                 return attribute;
