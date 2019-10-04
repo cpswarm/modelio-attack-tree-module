@@ -100,7 +100,7 @@ public class AttackTreeXMLObjectFactory {
     @objid ("0b68dab5-8a65-490f-a0e9-380b6f0fed04")
     @XmlElementDecl(namespace = "", name = "attackTree")
     public JAXBElement<AttackTreeType> createAttackTree(AttackTreeType value) {
-        return new JAXBElement<AttackTreeType>(_AttackTree_QNAME, AttackTreeType.class, null, value);
+        return new JAXBElement<>(_AttackTree_QNAME, AttackTreeType.class, null, value);
     }
 
 }

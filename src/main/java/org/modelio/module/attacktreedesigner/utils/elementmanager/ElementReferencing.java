@@ -16,20 +16,25 @@ import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeModelChangeHandler;
 import org.modelio.module.attacktreedesigner.utils.CounterMeasureManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
+import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("bca5a48e-7295-4265-b0f2-e7a1a20607dc")
 public class ElementReferencing {
     @objid ("f2d82ec6-ea30-49ef-a7be-8b5e8011bbaa")
     private static final String REF_DEFAULT_NAME = "ref";
 
+    @objid ("abf2f19b-1e2e-4175-8da0-6cfa944df18e")
+    private static final String PATH_SEPARATOR = "/";
+
     @objid ("bcc90451-b1e2-413b-834b-bb3425131013")
-    private static List<Class> _roots = null;
+    private static List<Class> _availableTrees = null;
 
     @objid ("3056ec3a-3f3f-416f-8875-f0aa37d93ce4")
-    public static List<String> getAvailableTreesNames() {
+    public static List<String> getAvailableTreesFullPath() {
         List<String> availableTreeNames = new ArrayList<>();
-        for(Class root : _roots) {           
-            availableTreeNames.add(root.getOwner().getName() + "::" +  root.getName());        
+        for(Class tree : _availableTrees) {           
+        //            availableTreeNames.add(tree.getOwner().getName() + "::" +  tree.getName());        
+            availableTreeNames.add(getTreeFullPath(tree));        
         }
         return availableTreeNames;
     }
@@ -39,15 +44,15 @@ public class ElementReferencing {
      * @return List of trees roots contained in the same package as the root of the selectedElement
      */
     @objid ("3e22b7bc-fb49-49c7-a5de-a139307b12d9")
-    public static void getAvailableTrees(ModelTree selectedElement) {
-        _roots = new ArrayList<>();
+    public static void updateListOfAvailableTrees(ModelTree selectedElement) {
+        _availableTrees = new ArrayList<>();
         
         ModelTree rootElement = ElementNavigationManager.getRootElement(selectedElement);
         
         for(Class clazz: AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession().findByClass(Class.class)) {
             if(clazz.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT) 
                     && (!(clazz.equals(rootElement)))) {
-                _roots.add(clazz);
+                _availableTrees.add(clazz);
             }
         }
     }
@@ -59,7 +64,7 @@ public class ElementReferencing {
         Class referencedTree = null;       
         
         if (!(referencedTreeName.equals("")))
-            referencedTree = getTreeByName(referencedTreeName);
+            referencedTree = getTreeByFullPathName(referencedTreeName);
         
         Attribute referenceAttribute = getRefAttribute(element);
         
@@ -94,21 +99,20 @@ public class ElementReferencing {
     }
 
     @objid ("0056c4aa-9142-4f32-a3f0-8f37c3d54817")
-    private static Class getTreeByName(String referencedTreeName) {
-        for (Class tree : _roots) {
-            if (getStandardName(tree).equals(referencedTreeName))
+    private static Class getTreeByFullPathName(String referencedTreeName) {
+        for (Class tree : _availableTrees) {
+            if (getTreeFullPath(tree).equals(referencedTreeName))
                 return tree;
         }
         return null;
     }
 
-    @objid ("b672dc6a-c41b-498b-9e37-21dc8a9b2852")
-    public static String getStandardName(Class root) {
-        return root.getOwner().getName() + "::" + root.getName();
-    }
-
+//    @objid ("b672dc6a-c41b-498b-9e37-21dc8a9b2852")
+//    public static String getStandardName(Class tree) {
+//        return tree.getOwner().getName() + "::" + tree.getName();
+//    }
     @objid ("cc5fdae9-6de0-4103-8986-622fe9616dd0")
-    public static Attribute getRefAttribute(Classifier leaf) {
+    private static Attribute getRefAttribute(Classifier leaf) {
         for (Attribute attribute : leaf.getOwnedAttribute()) {
             if (attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE))
                 return attribute;
@@ -130,6 +134,17 @@ public class ElementReferencing {
             }
         }
         return null;
+    }
+
+    @objid ("13b2fa67-bd54-4605-a525-b2b0372e8af8")
+    public static String getTreeFullPath(MObject element) {
+        String fullPath = element.getName();
+        MObject owner = element.getCompositionOwner();
+        if(owner != null) {
+            return getTreeFullPath(owner) + PATH_SEPARATOR + fullPath;
+        } else {
+            return fullPath;
+        }
     }
 
 }

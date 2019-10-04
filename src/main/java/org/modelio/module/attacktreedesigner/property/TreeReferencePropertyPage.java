@@ -31,7 +31,7 @@ public class TreeReferencePropertyPage implements IPropertyContent {
     @Override
     public void update(ModelElement element, IModulePropertyTable table) {
         Class referenceTree = (Class) element;
-        ElementReferencing.getAvailableTrees(referenceTree);
+        ElementReferencing.updateListOfAvailableTrees(referenceTree);
         
         
         
@@ -40,21 +40,21 @@ public class TreeReferencePropertyPage implements IPropertyContent {
          */
         List<String> trees = new ArrayList<>();
         trees.add("");
-        trees.addAll(ElementReferencing.getAvailableTreesNames());
+        trees.addAll(ElementReferencing.getAvailableTreesFullPath());
         
         String[] availableTreeNames = trees.toArray(new String[0]);
         
         Class referencedTree = ElementReferencing.getReferencedTree(referenceTree);
         String value = "";
         if(referencedTree != null) {
-            value = ElementReferencing.getStandardName(referencedTree);
+            value = ElementReferencing.getTreeFullPath(referencedTree);
         }
         table.addProperty (Messages.getString("Ui.Property.Reference.Name"), value, availableTreeNames);
        
         
         
         /*
-         * Show referenced tree Root tags an counetr measures (Show only)
+         * Show referenced tree Root tags an counter measures (Show only)
          */
         if(referencedTree != null) {
 

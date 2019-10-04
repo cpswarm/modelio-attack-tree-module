@@ -147,14 +147,12 @@ public class ModelToJaxbConvertor {
                             Class referencedTree = ElementReferencing.getReferencedTree(node);
                             if(referencedTree != null) {
                                 TreeReferenceType treeReference = objectFactory.createTreeReferenceType();
-                                treeReference.setRef(referencedTree.getName());
+                                treeReference.setRef(ElementReferencing.getTreeFullPath(referencedTree));
                                 operator.getAttackOrTreeReference().add(treeReference);
                             }
                         }
                     }
-                }
-                //operator.getAttackOrTreeReference().add(e)
-        
+                }        
             }                
         }
     }
