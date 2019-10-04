@@ -25,6 +25,9 @@ import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("7576d0d6-54bd-480d-b8d8-5fec7597d807")
 public class ModelToJaxbConvertor {
+    @objid ("845ca98f-5f2c-438f-83d0-bc6dfda90850")
+    private static final String UNDEFINED_LABEL = "Undefined";
+
     @objid ("0f3c064b-7d12-4bfe-b8c0-93e3dda47de9")
     private static AttackTreeXMLObjectFactory objectFactory = new AttackTreeXMLObjectFactory();
 
@@ -70,7 +73,7 @@ public class ModelToJaxbConvertor {
         /*
          * Set Root Node
          */
-        AttackType root = convertNode(this.modelTree);
+        AttackType root = convertAttack(this.modelTree);
         tree.setAttack(root);
         
         // Add children nodes 
@@ -79,7 +82,7 @@ public class ModelToJaxbConvertor {
     }
 
     @objid ("dbb61575-17b7-4d61-bfe1-67402492b5ab")
-    private static AttackType convertNode(Class modelNode) {
+    private static AttackType convertAttack(Class modelNode) {
         AttackType attack = objectFactory.createAttackType();
         attack.setName(modelNode.getName());
         
@@ -120,40 +123,64 @@ public class ModelToJaxbConvertor {
     }
 
     @objid ("a690e78d-4f6b-4394-97eb-bf973a90aeb0")
-    private void addChildrenNodes(Class parentNode, AttackType root) {
-        for(Dependency dependency : parentNode.getDependsOnDependency()) {
-            if (dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
-                
-                OperatorType operator = objectFactory.createOperatorType();
-                
-                Class operatorNode = (Class) dependency.getDependsOn();
-                if(operatorNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR)) {
-                    operator.setType(OperationType.OR);
-                } else if (operatorNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND)) {
-                    operator.setType(OperationType.AND);
-                }                
-                root.setOperator(operator);
-                
+    private void addChildrenNodes(Class parentNode, Object parentJaxbObject) {
+        if (parentNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
+            for(Dependency dependency : parentNode.getDependsOnDependency()) {
+                if (dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                    OperatorType operator = objectFactory.createOperatorType();
         
-                for(Dependency dependency2:operatorNode.getDependsOnDependency()) {
-                    if (dependency2.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                    Class operatorNode = (Class) dependency.getDependsOn();
+                    if(operatorNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR)) {
+                        operator.setType(OperationType.OR);
+                    } else if (operatorNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND)) {
+                        operator.setType(OperationType.AND);
+                    }                
+                    ((AttackType) parentJaxbObject).setOperator(operator);
+                    addChildrenNodes(operatorNode, operator);
+                }
+            }           
+        } else if (parentNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR)) {
+            for(Dependency dependency : parentNode.getDependsOnDependency()) {
+                if (dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                    Class childNode = (Class) dependency.getDependsOn();
+                    if (childNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
+        
+                        AttackType attack = convertAttack(childNode);
+                        ((OperatorType) parentJaxbObject).getAttackOrTreeReferenceOrOperator().add(attack);
+                        addChildrenNodes(childNode, attack);
+        
+                    } else if (childNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR)) {
+        
+                        OperatorType operator = objectFactory.createOperatorType();
+                        operator.setType(OperationType.OR);
+                        ((OperatorType) parentJaxbObject).getAttackOrTreeReferenceOrOperator().add(operator);
+                        addChildrenNodes(childNode, operator);
+        
+                    } else if (childNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND)) {
+        
+                        OperatorType operator = objectFactory.createOperatorType();
+                        operator.setType(OperationType.AND);
+                        ((OperatorType) parentJaxbObject).getAttackOrTreeReferenceOrOperator().add(operator);
+                        addChildrenNodes(childNode, operator);
+        
+                    } else if (childNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
+        
+                        TreeReferenceType treeReference = objectFactory.createTreeReferenceType();
+        
+        
+                        Class referencedTree = ElementReferencing.getReferencedTree(childNode);
+                        if(referencedTree != null)
+                            treeReference.setRef(ElementReferencing.getTreeFullPath(referencedTree));
+                        else 
+                            treeReference.setRef(UNDEFINED_LABEL);
                         
-                        Class node = (Class) dependency2.getDependsOn();
-                        if(node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
-                            AttackType attack = convertNode(node);
-                            operator.getAttackOrTreeReference().add(attack);
-                            addChildrenNodes(node, attack);
-                        } else if (node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
-                            Class referencedTree = ElementReferencing.getReferencedTree(node);
-                            if(referencedTree != null) {
-                                TreeReferenceType treeReference = objectFactory.createTreeReferenceType();
-                                treeReference.setRef(ElementReferencing.getTreeFullPath(referencedTree));
-                                operator.getAttackOrTreeReference().add(treeReference);
-                            }
-                        }
+                        ((OperatorType) parentJaxbObject).getAttackOrTreeReferenceOrOperator().add(treeReference);
+        
                     }
-                }        
-            }                
+                }
+            } 
+        
+        
         }
     }
 

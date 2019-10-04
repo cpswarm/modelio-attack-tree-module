@@ -41,9 +41,10 @@
 
     <xs:complexType name="operatorType">
         <xs:sequence>
-            <xs:choice minOccurs="2" maxOccurs="unbounded">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element type="attackType" name="attack"/>
                 <xs:element type="treeReferenceType" name="treeReference"/>
+                <xs:element type="operatorType" name="operator"/>
             </xs:choice>
         </xs:sequence>
         <xs:attribute type="operationType" name="type" use="required"/>
