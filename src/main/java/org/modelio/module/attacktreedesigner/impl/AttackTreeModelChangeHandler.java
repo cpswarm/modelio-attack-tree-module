@@ -127,6 +127,12 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                 if(attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE)) {
                     Class reference = (Class) attribute.getOwner();
                     if(!reference.isDeleted()) {
+                        
+                        /*
+                         * Update reference Color to Countered
+                         */
+                        ElementRepresentationManager.setClassColor(reference, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);                        
+            
                         // if reference has a parent
                         for(Dependency parentDependency: reference.getImpactedDependency()) {
                             if(parentDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
