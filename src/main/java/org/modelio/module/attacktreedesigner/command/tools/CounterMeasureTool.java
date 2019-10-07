@@ -19,8 +19,8 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
-import org.modelio.module.attacktreedesigner.utils.TagsManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.TagsManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("44e9eff9-fdf9-424a-8b26-2eee8557bb47")

@@ -1,5 +1,6 @@
 package org.modelio.module.attacktreedesigner.utils.elementmanager;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.api.modelio.diagram.IDiagramGraphic;
@@ -7,6 +8,7 @@ import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
+import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("211fa652-db71-4a19-8253-a61ecfcff0e5")
 public class ElementNavigationManager {
@@ -53,44 +55,16 @@ public class ElementNavigationManager {
         }
     }
 
+    @objid ("93946b85-dd09-4388-981a-789bda20d4e2")
+    public static List<MObject> getElementListPath(MObject element) {
+        List<MObject> listElementsPath = new ArrayList<>();
+        
+        MObject currentElement = element;
+        while(currentElement != null) {
+            listElementsPath.add(0,currentElement);
+            currentElement = currentElement.getCompositionOwner();
+        }
+        return listElementsPath;
+    }
 
-//    public static boolean areChildrenCountered(Class node) {
-//
-//
-//        for(Dependency dependency: node.getDependsOnDependency()) {
-//            if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)
-//                    && !dependency.isDeleted()) {
-//                Class child = (Class) dependency.getDependsOn();
-//                boolean childDeleted = child.isDeleted();
-//                if(!child.isDeleted()){
-//                    if (child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)){
-//                        return TagsManager.getElementTagParameter(node, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.COUNTERED_ATTACK).equals("true");
-//
-//                    } else if (child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND)){
-//
-//                        for(Dependency childDependency: child.getDependsOnDependency()) {
-//                            if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)
-//                                    && !dependency.isDeleted()) {
-//                                if(!child.isDeleted()){
-//
-//                                }
-//
-//                            }
-//                        }
-//
-//                    } else if (child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR)){
-//
-//                    } else if (child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)){
-//
-//                    }
-//                }
-//
-//
-//
-//            }
-//        }
-//
-//        return false;
-//
-//    }
 }

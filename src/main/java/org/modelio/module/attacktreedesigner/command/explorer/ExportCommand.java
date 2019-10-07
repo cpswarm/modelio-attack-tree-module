@@ -23,14 +23,16 @@ public class ExportCommand extends DefaultModuleCommandHandler {
             return;
         
         MObject selectedElement = selectedElements.get(0);
+        
+        // selectedElement is a Tree
         if(selectedElement instanceof Class) {
             Class modelTree = (Class) selectedElement;
-            ModelToJaxbConvertor modelToJaxbConvertor = new ModelToJaxbConvertor(modelTree);
-            
-            File file = FileSystemManager.createFile(directoryPath, modelToJaxbConvertor.getModelTree().getName() + FileSystemManager.XML_FILE_EXTENSION);
-        
-            FileSystemManager.marchallJaxbContentInFile(file, modelToJaxbConvertor.convertModelToJaxb());
-        
+            exportTree(directoryPath, modelTree);        
+        } 
+        // selected element is a package
+        else if (selectedElement instanceof Package) {
+            Package pkg = (Package) selectedElement;
+            exportPackageTrees(directoryPath, pkg);
         }
     }
 
@@ -47,6 +49,28 @@ public class ExportCommand extends DefaultModuleCommandHandler {
                     );
         }
         return false;
+    }
+
+    @objid ("3305ebb0-7e96-4806-8e8a-8bd47f90bdc7")
+    private void exportPackageTrees(String directoryPath, Package pkg) {
+        for(MObject element : pkg.getCompositionChildren()) {
+            if(element instanceof Class) {
+                Class node = (Class) element;
+                if(node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) {
+                    exportTree(directoryPath + FileSystemManager.PATH_SEPARATOR + pkg.getName(), node);
+                }
+            } else if (element instanceof Package) {
+                Package childPackage = (Package) element;
+                exportPackageTrees(directoryPath + FileSystemManager.PATH_SEPARATOR + pkg.getName(), childPackage);
+            }
+        }
+    }
+
+    @objid ("1f6c3069-cbbf-4875-8bc7-beac1a409a26")
+    private void exportTree(String directoryPath, Class modelTree) {
+        ModelToJaxbConvertor modelToJaxbConvertor = new ModelToJaxbConvertor(modelTree);
+        File file = FileSystemManager.createFile(directoryPath, modelToJaxbConvertor.getModelTree().getName() + FileSystemManager.XML_FILE_EXTENSION);
+        FileSystemManager.marchallJaxbContentInFile(file, modelToJaxbConvertor.convertModelToJaxb());
     }
 
 }

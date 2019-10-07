@@ -20,9 +20,8 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
-import org.modelio.module.attacktreedesigner.utils.CounterMeasureManager;
-import org.modelio.module.attacktreedesigner.utils.DiagramElementStyle;
-import org.modelio.module.attacktreedesigner.utils.Labels;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.CounterMeasureManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.Labels;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("8d87749a-8242-406b-a1a8-9a84f227ed71")

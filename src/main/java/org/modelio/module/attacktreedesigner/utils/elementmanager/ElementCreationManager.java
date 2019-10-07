@@ -13,8 +13,7 @@ import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.NameSpace;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
-import org.modelio.module.attacktreedesigner.utils.DiagramElementStyle;
-import org.modelio.module.attacktreedesigner.utils.Labels;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.DiagramElementStyle;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("9ff6243a-c266-42ed-8c3a-1fc351ac1cf9")

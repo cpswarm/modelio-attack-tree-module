@@ -14,7 +14,6 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeModelChangeHandler;
-import org.modelio.module.attacktreedesigner.utils.CounterMeasureManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
@@ -34,7 +33,7 @@ public class ElementReferencing {
         List<String> availableTreeNames = new ArrayList<>();
         for(Class tree : _availableTrees) {           
         //            availableTreeNames.add(tree.getOwner().getName() + "::" +  tree.getName());        
-            availableTreeNames.add(getTreeFullPath(tree));        
+            availableTreeNames.add(getElementFullPath(tree));        
         }
         return availableTreeNames;
     }
@@ -101,7 +100,7 @@ public class ElementReferencing {
     @objid ("0056c4aa-9142-4f32-a3f0-8f37c3d54817")
     private static Class getTreeByFullPathName(String referencedTreeName) {
         for (Class tree : _availableTrees) {
-            if (getTreeFullPath(tree).equals(referencedTreeName))
+            if (getElementFullPath(tree).equals(referencedTreeName))
                 return tree;
         }
         return null;
@@ -137,11 +136,11 @@ public class ElementReferencing {
     }
 
     @objid ("13b2fa67-bd54-4605-a525-b2b0372e8af8")
-    public static String getTreeFullPath(MObject element) {
+    public static String getElementFullPath(MObject element) {
         String fullPath = element.getName();
         MObject owner = element.getCompositionOwner();
         if(owner != null) {
-            return getTreeFullPath(owner) + PATH_SEPARATOR + fullPath;
+            return getElementFullPath(owner) + PATH_SEPARATOR + fullPath;
         } else {
             return fullPath;
         }

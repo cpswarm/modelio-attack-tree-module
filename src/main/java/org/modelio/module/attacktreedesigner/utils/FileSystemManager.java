@@ -17,6 +17,12 @@ public class FileSystemManager {
     @objid ("10adea65-4deb-4025-a682-a99fe8ecb198")
     public static final String XML_FILE_EXTENSION = ".xml";
 
+    @objid ("26722ba7-d008-40df-8db2-5dbdc545a808")
+    public static final String PATH_SEPARATOR = "/";
+
+    @objid ("31e97337-6289-47d2-ba4e-52fdb4c4fe8c")
+    public static final String PATH_PREDECESSOR = "..";
+
     @objid ("e4580c8f-106a-4175-9d9a-d1c78bf3f018")
     public static String getDialogPath() {
         FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.MULTI);
@@ -45,7 +51,10 @@ public class FileSystemManager {
 
     @objid ("0abac3d2-3692-427e-a77f-9395a26e9e8e")
     public static File createFile(String directoryPath, String fileName) {
-        File file = new File(directoryPath+"/"+fileName);
+        File directory = new File(directoryPath);
+        directory.mkdirs();
+        File file = new File(directory, fileName);
+        //File file = new File(directoryPath+PATH_SEPARATOR+fileName);
         return file;
     }
 

@@ -11,7 +11,7 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
-import org.modelio.module.attacktreedesigner.utils.TagsManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.TagsManager;
 
 @objid ("224ee252-26f1-4b33-9ecc-84279671ca6c")
 public class AttackPropertyPage implements IPropertyContent {

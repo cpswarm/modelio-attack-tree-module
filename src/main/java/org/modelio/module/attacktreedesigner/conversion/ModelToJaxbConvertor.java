@@ -1,5 +1,6 @@
 package org.modelio.module.attacktreedesigner.conversion;
 
+import java.util.Iterator;
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.metamodel.diagrams.AbstractDiagram;
@@ -19,8 +20,10 @@ import org.modelio.module.attacktreedesigner.conversion.schema.OperatorType;
 import org.modelio.module.attacktreedesigner.conversion.schema.TagType;
 import org.modelio.module.attacktreedesigner.conversion.schema.TreeDiagramType;
 import org.modelio.module.attacktreedesigner.conversion.schema.TreeReferenceType;
-import org.modelio.module.attacktreedesigner.utils.TagsManager;
+import org.modelio.module.attacktreedesigner.utils.FileSystemManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementNavigationManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementReferencing;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.TagsManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("7576d0d6-54bd-480d-b8d8-5fec7597d807")
@@ -169,11 +172,40 @@ public class ModelToJaxbConvertor {
         
         
                         Class referencedTree = ElementReferencing.getReferencedTree(childNode);
-                        if(referencedTree != null)
-                            treeReference.setRef(ElementReferencing.getTreeFullPath(referencedTree));
-                        else 
+                        if(referencedTree != null) {
+        
+                            List<MObject> referencedTreeListPath = ElementNavigationManager.getElementListPath(referencedTree);
+                            Iterator<MObject> referencedTreeListPathIterator = referencedTreeListPath.iterator();
+        
+                            List<MObject> currentTreeListPath = ElementNavigationManager.getElementListPath(this.modelTree);
+                            Iterator<MObject> currentTreeListPathIterator = currentTreeListPath.iterator();
+        
+                            String referencedTreePath = "";
+        
+                            MObject refrerencedTreePathCurrentElement;
+                            while (referencedTreeListPathIterator.hasNext() && currentTreeListPathIterator.hasNext()) {
+                                refrerencedTreePathCurrentElement = referencedTreeListPathIterator.next();
+                                if(!currentTreeListPathIterator.next().equals(refrerencedTreePathCurrentElement)) {
+                                    referencedTreePath = refrerencedTreePathCurrentElement.getName();
+                                    break;                                
+                                }
+                            }
+        
+        
+                            while(currentTreeListPathIterator.hasNext()) {
+                                currentTreeListPathIterator.next();
+                                referencedTreePath = FileSystemManager.PATH_PREDECESSOR + FileSystemManager.PATH_SEPARATOR + referencedTreePath;
+                            
+                            }
+                            
+                            while(referencedTreeListPathIterator.hasNext())
+                                referencedTreePath = referencedTreePath + FileSystemManager.PATH_SEPARATOR + referencedTreeListPathIterator.next().getName();
+        
+                            treeReference.setRef(referencedTreePath + FileSystemManager.XML_FILE_EXTENSION);
+        
+                        } else {
                             treeReference.setRef(UNDEFINED_LABEL);
-                        
+                        }
                         ((OperatorType) parentJaxbObject).getAttackOrTreeReferenceOrOperator().add(treeReference);
         
                     }

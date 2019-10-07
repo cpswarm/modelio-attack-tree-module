@@ -13,8 +13,8 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
-import org.modelio.module.attacktreedesigner.utils.TagsManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementReferencing;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.TagsManager;
 
 @objid ("c07b6144-87dc-44fc-ab74-b757ac83385b")
 public class TreeReferencePropertyPage implements IPropertyContent {
@@ -47,7 +47,7 @@ public class TreeReferencePropertyPage implements IPropertyContent {
         Class referencedTree = ElementReferencing.getReferencedTree(referenceTree);
         String value = "";
         if(referencedTree != null) {
-            value = ElementReferencing.getTreeFullPath(referencedTree);
+            value = ElementReferencing.getElementFullPath(referencedTree);
         }
         table.addProperty (Messages.getString("Ui.Property.Reference.Name"), value, availableTreeNames);
        
