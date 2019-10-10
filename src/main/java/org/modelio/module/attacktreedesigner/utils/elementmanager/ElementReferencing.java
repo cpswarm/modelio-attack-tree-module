@@ -20,7 +20,7 @@ import org.modelio.vcore.smkernel.mapi.MObject;
 @objid ("bca5a48e-7295-4265-b0f2-e7a1a20607dc")
 public class ElementReferencing {
     @objid ("f2d82ec6-ea30-49ef-a7be-8b5e8011bbaa")
-    private static final String REF_DEFAULT_NAME = "ref";
+    public static final String REF_DEFAULT_NAME = "ref";
 
     @objid ("abf2f19b-1e2e-4175-8da0-6cfa944df18e")
     private static final String PATH_SEPARATOR = "/";
@@ -63,7 +63,7 @@ public class ElementReferencing {
         Class referencedTree = null;       
         
         if (!(referencedTreeName.equals("")))
-            referencedTree = getTreeByFullPathName(referencedTreeName);
+            referencedTree = getTreeByAbsolutePathName(referencedTreeName);
         
         Attribute referenceAttribute = getRefAttribute(element);
         
@@ -98,7 +98,7 @@ public class ElementReferencing {
     }
 
     @objid ("0056c4aa-9142-4f32-a3f0-8f37c3d54817")
-    private static Class getTreeByFullPathName(String referencedTreeName) {
+    private static Class getTreeByAbsolutePathName(String referencedTreeName) {
         for (Class tree : _availableTrees) {
             if (getElementFullPath(tree).equals(referencedTreeName))
                 return tree;
@@ -106,12 +106,8 @@ public class ElementReferencing {
         return null;
     }
 
-//    @objid ("b672dc6a-c41b-498b-9e37-21dc8a9b2852")
-//    public static String getStandardName(Class tree) {
-//        return tree.getOwner().getName() + "::" + tree.getName();
-//    }
     @objid ("cc5fdae9-6de0-4103-8986-622fe9616dd0")
-    private static Attribute getRefAttribute(Classifier leaf) {
+    public static Attribute getRefAttribute(Classifier leaf) {
         for (Attribute attribute : leaf.getOwnedAttribute()) {
             if (attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE))
                 return attribute;

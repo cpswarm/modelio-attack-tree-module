@@ -22,7 +22,7 @@ import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
-import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
+import org.modelio.module.attacktreedesigner.utils.IAttackTreeCustomizerPredefinedField;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.Labels;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.DiagramElementBounds;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.TagsManager;
@@ -37,19 +37,15 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
     @objid ("58a5f190-c903-4ec2-aea0-41aaddb30e74")
     private static final String TREE = "Tree";
 
-    @objid ("dfab0bf7-9d32-4d00-88ff-2a1653f7b0ee")
-    private static final String ATTACKTREE_STYLE_NAME = "attacktree";
-
     @objid ("289b34c8-b854-4b43-ba33-6c907c5e23b7")
     @Override
     public void actionPerformed(List<MObject> selectedElements, IModule module) {
-        IModuleContext moduleContext = AttackTreeDesignerModule.getInstance().getModuleContext();
+        IModuleContext moduleContext = module.getModuleContext();
         IModelingSession session = moduleContext.getModelingSession();
         ModelElement owner = (ModelElement) selectedElements.get(0);    
         
-        Messages.getString ("Ui.Command.AttackTreeDiagramExplorerCommand.Name", owner.getName());
         
-        try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.Create", "AttackTree Diagram"))){
+        try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.Create", Messages.getString ("Ui.Command.AttackTreeDiagramExplorerCommand.Label")))){
         
             // create Root Class
             ModelElement rootElement = session.getModel().createClass(Labels.DEFAULT_NAME.toString(), (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
@@ -71,7 +67,7 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
                 IDiagramDG dg = diagramHandle.getDiagramNode();
         
                 for (IStyleHandle style : diagramService.listStyles()){
-                    if (style.getName().equals(ATTACKTREE_STYLE_NAME)){
+                    if (style.getName().equals(IAttackTreeCustomizerPredefinedField.ATTACKTREE_STYLE_NAME)){
                         dg.setStyle(style);
                         break;
                     }

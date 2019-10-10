@@ -36,12 +36,12 @@ public class CreateAttackTool extends DefaultBoxTool {
         IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession();
         try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", AttackTreeStereotypes.ATTACK))){
         
-            MObject rootElement = diagramHandle.getDiagram().getOrigin().getCompositionOwner();
+            MObject rootParent = diagramHandle.getDiagram().getOrigin().getCompositionOwner();
         
             // create stereotyped Attack Class
             Class attackElement = session.getModel().createClass(
                     Labels.DEFAULT_NAME.toString(), 
-                    (NameSpace) rootElement, 
+                    (NameSpace) rootParent, 
                     IAttackTreeDesignerPeerModule.MODULE_NAME, 
                     AttackTreeStereotypes.ATTACK);
             

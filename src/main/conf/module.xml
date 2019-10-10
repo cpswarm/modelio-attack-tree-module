@@ -73,7 +73,7 @@
                     <HParameter name="name" value=""/>
                 </Handler>
             </Command>
-            <Command id="Import" label="%command.Import.label" tooltip="%command.Import.tooltip" image="res/icon/gui/Import2_24.png" modify-model="false">
+            <Command id="Import_a_tree" label="%command.Import_a_tree.label" tooltip="%command.Import_a_tree.tooltip" image="res/icon/gui/Import2_24.png" modify-model="false">
                 <Scope metaclass="Standard.Package" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.ImportCommand">
                     <HParameter name="name" value=""/>
@@ -105,6 +105,11 @@
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.OpenReferencedTreeDiagram">
                     <HParameter name="name" value=""/>
                 </Handler>
+            </Command>
+            <Command id="Import_a_package" label="%command.Import_a_package.label" tooltip="%command.Import_a_package.tooltip" image="res/icon/gui/ImportPackage_24.png" modify-model="false">
+                <Scope metaclass="Standard.Package" stereotype=""/>
+                <Scope metaclass="Standard.Project" stereotype=""/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.explorer.ImportPackageCommand"/>
             </Command>
         </Commands>
         <Tools>
@@ -162,9 +167,10 @@
             <CommandRef refid="Mask_SubTree" group="" group-image=""/>
             <CommandRef refid="Unmask_SubTree" group="" group-image=""/>
             <CommandRef refid="Auto_Layout" group="" group-image=""/>
-            <CommandRef refid="Import" group="" group-image=""/>
+            <CommandRef refid="Import_a_tree" group="" group-image=""/>
             <CommandRef refid="Export" group="" group-image=""/>
             <CommandRef refid="Open_referenced_tree_diagram" group="" group-image=""/>
+            <CommandRef refid="Import_a_package" group="" group-image=""/>
         </ContextualMenu>
         <Diagrams>
             <DiagramType base-diagram="Standard.ClassDiagram" stereotype="AttackTreeDesigner#AttackTreeDiagram">

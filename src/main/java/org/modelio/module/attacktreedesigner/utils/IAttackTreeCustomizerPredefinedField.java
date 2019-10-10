@@ -25,4 +25,7 @@ public interface IAttackTreeCustomizerPredefinedField {
     @objid ("fbd9cab9-1a0a-497e-bfa7-ada6d197d165")
     public static final String TREE_REFERENCE = "Reference_Attack_Tree";
 
+    @objid ("e8524cca-0172-499a-9d52-e91cdd07fd64")
+    public static final Object ATTACKTREE_STYLE_NAME = "attacktree";
+
 }

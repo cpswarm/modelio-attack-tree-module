@@ -4,8 +4,8 @@ import java.io.File;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -23,20 +23,16 @@ public class FileSystemManager {
     @objid ("31e97337-6289-47d2-ba4e-52fdb4c4fe8c")
     public static final String PATH_PREDECESSOR = "..";
 
+    @objid ("46ffe6e4-70b3-4b52-ae51-55a16dcb7887")
+    public static final String XML_FILE_WILDCARD = "*.xml";
+
     @objid ("e4580c8f-106a-4175-9d9a-d1c78bf3f018")
-    public static String getDialogPath() {
-        FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.MULTI);
-        dialog.setText(Messages.getString("Ui.Dialog.SelectDirectoryExport.Label"));
-        String[] extension = { "*.xml" };
-        dialog.setFilterExtensions(extension);
-        if (dialog.open() != null) {
-            for (String filename : dialog.getFileNames()) {
-                File file = new File(dialog.getFilterPath() + File.separatorChar + filename);
-                String name = file.getName();
-                name = file.getName();
-            }
-        }
-        return null;
+    public static String getXMLFileDialogPath() {
+        FileDialog fileDialog = new FileDialog(Display.getDefault().getActiveShell());
+        fileDialog.setText(Messages.getString("Ui.Dialog.SelectDirectoryExport.Label"));
+        String[] extension = { XML_FILE_WILDCARD };
+        fileDialog.setFilterExtensions(extension);
+        return fileDialog.open();
     }
 
     /**
@@ -59,7 +55,7 @@ public class FileSystemManager {
     }
 
     @objid ("22a7348f-632f-458c-8048-4915214ab5a0")
-    public static void marchallJaxbContentInFile(File file, AttackTreeType tree) {
+    public static void marshallJaxbContentInFile(File file, AttackTreeType tree) {
         JAXBContext jaxbContext;
         try {
             jaxbContext = JAXBContext.newInstance(AttackTreeType.class);
@@ -72,6 +68,20 @@ public class FileSystemManager {
         } catch (JAXBException e) {
             e.printStackTrace();
         }
+    }
+
+    @objid ("fe3be8c8-a80a-46a9-86b2-e755c7ab923a")
+    public static AttackTreeType unmarshallFileToJaxb(File file) {
+        JAXBContext jaxbContext;
+        try {
+            jaxbContext = JAXBContext.newInstance(AttackTreeType.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            return (AttackTreeType) jaxbUnmarshaller.unmarshal(file);
+            
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

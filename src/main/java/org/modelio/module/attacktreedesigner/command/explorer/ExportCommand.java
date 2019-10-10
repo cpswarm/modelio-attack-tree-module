@@ -41,11 +41,10 @@ public class ExportCommand extends DefaultModuleCommandHandler {
     public boolean accept(final List<MObject> selectedElements, final IModule module) {
         if ((selectedElements != null) && (selectedElements.size() == 1)){
             MObject selectedElement = selectedElements.get(0);
-            return ((selectedElement != null) 
-                    && (
+            return (
                             ((selectedElement instanceof Class) 
                                     && ((Class)selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) 
-                            || selectedElement instanceof Package)
+                            || selectedElement instanceof Package
                     );
         }
         return false;
@@ -70,7 +69,7 @@ public class ExportCommand extends DefaultModuleCommandHandler {
     private void exportTree(String directoryPath, Class modelTree) {
         ModelToJaxbConvertor modelToJaxbConvertor = new ModelToJaxbConvertor(modelTree);
         File file = FileSystemManager.createFile(directoryPath, modelToJaxbConvertor.getModelTree().getName() + FileSystemManager.XML_FILE_EXTENSION);
-        FileSystemManager.marchallJaxbContentInFile(file, modelToJaxbConvertor.convertModelToJaxb());
+        FileSystemManager.marshallJaxbContentInFile(file, modelToJaxbConvertor.convertModelToJaxb());
     }
 
 }

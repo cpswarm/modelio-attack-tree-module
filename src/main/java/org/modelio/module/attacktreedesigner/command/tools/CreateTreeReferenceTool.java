@@ -17,14 +17,12 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementReferencing;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.Labels;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("cca968f2-9a79-49c1-b7f6-6b577f9c2234")
 public class CreateTreeReferenceTool extends DefaultBoxTool {
-    @objid ("a374ece3-f6b6-41b1-9f2e-022a71581fa8")
-    private static final String REF_DEFAULT_NAME = "ref";
-
     @objid ("4f44d2e9-c742-4e09-b816-7a245db7611e")
     @Override
     public boolean acceptElement(final IDiagramHandle diagramHandle, final IDiagramGraphic targetNode) {
@@ -53,7 +51,7 @@ public class CreateTreeReferenceTool extends DefaultBoxTool {
             
             // Create new Attribute Reference Tree
             Attribute referenceTreeAttribute = model.createAttribute(
-                    REF_DEFAULT_NAME, model.getUmlTypes().getUNDEFINED(), referenceTreeElement, IAttackTreeDesignerPeerModule.MODULE_NAME, 
+                    ElementReferencing.REF_DEFAULT_NAME, model.getUmlTypes().getUNDEFINED(), referenceTreeElement, IAttackTreeDesignerPeerModule.MODULE_NAME, 
                     AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE); 
             
         

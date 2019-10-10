@@ -40,13 +40,15 @@ public class TagsManager {
     public static final String DEFAULT_OUT_OF_SCOPE = "false";
 
     @objid ("246c8b59-3174-46d2-9808-90e6716e5ca2")
-    private static final String DEFAULT_COUNTERED_ATTACK = "false";
+    public static final String DEFAULT_COUNTERED_ATTACK = "false";
 
     @objid ("350bdc99-632e-4ad6-8431-41eca7841703")
     public static String getTagParameter(TaggedValue tag) {
-        List<TagParameter> actuals = tag.getActual();
-        if ((actuals != null) && (actuals.size() > 0)) {
-            return actuals.get(0).getValue();
+        if(tag!=null) {
+            List<TagParameter> actuals = tag.getActual();
+            if ((actuals != null) && (actuals.size() > 0)) {
+                return actuals.get(0).getValue();
+            }
         }
         return null;
     }
@@ -65,23 +67,23 @@ public class TagsManager {
     public static void createAttackDefaultTags(IModelingSession session, ModelElement attackElement) {
         TaggedValue severityTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SEVERITY, attackElement);
         TagsManager.createTagParameter(session, severityTag, TagsManager.DEFAULT_SEVERITY_VALUE);
-        attackElement.getTag().add(severityTag);
+        //attackElement.getTag().add(severityTag);
         
         TaggedValue probabilityTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.PROBABILITY, attackElement);
         TagsManager.createTagParameter(session, probabilityTag, TagsManager.DEFAULT_PROBABILITY_VALUE);
-        attackElement.getTag().add(probabilityTag);        
+        //attackElement.getTag().add(probabilityTag);        
         
         TaggedValue securityRelatedTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SECURITY_RELATED, attackElement);
         TagsManager.createTagParameter(session, securityRelatedTag, TagsManager.DEFAULT_SECURITY_RELATED);
-        attackElement.getTag().add(securityRelatedTag);
+        //attackElement.getTag().add(securityRelatedTag);
         
         TaggedValue safetyRelatedTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SAFETY_RELATED, attackElement);
         TagsManager.createTagParameter(session, safetyRelatedTag, TagsManager.DEFAULT_SAFETY_RELATED);
-        attackElement.getTag().add(safetyRelatedTag);
+        //attackElement.getTag().add(safetyRelatedTag);
         
         TaggedValue outOfScopeTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.OUT_OF_SCOPE, attackElement);
         TagsManager.createTagParameter(session, outOfScopeTag, TagsManager.DEFAULT_OUT_OF_SCOPE);
-        attackElement.getTag().add(outOfScopeTag);
+        //attackElement.getTag().add(outOfScopeTag);
         
         
         /*
@@ -89,7 +91,7 @@ public class TagsManager {
          */
         TaggedValue counteredAttackTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.COUNTERED_ATTACK, attackElement);
         TagsManager.createTagParameter(session, counteredAttackTag, TagsManager.DEFAULT_COUNTERED_ATTACK);
-        attackElement.getTag().add(counteredAttackTag);
+        //attackElement.getTag().add(counteredAttackTag);
     }
 
     @objid ("4810aaa4-fd61-433f-9c3f-8b9cb6cebb7c")
@@ -159,12 +161,12 @@ public class TagsManager {
     @objid ("43d3077c-ecab-436d-8ba6-da04f4b1d6c1")
     private static int getMinSeverityIndexOROperator(Class node) {
         int minSeverityLevel = 0;
-              
+        
         for(Dependency dependency: node.getDependsOnDependency()) {
             if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
                 Class child = (Class) dependency.getDependsOn();
                 int currentMinSeverityIndex;
-              
+        
                 /*
                  * Calculate currentMinSeverityIndex depending on the child nature (Attack, reference, or else operator)
                  */
@@ -189,17 +191,17 @@ public class TagsManager {
                             }
                         }
                     }
-              
+        
                 } else {
                     currentMinSeverityIndex = getMinSeverityIndex(child);
                 }
-              
+        
                 /*
                  * update minSeverityIndex
                  */
                 if( currentMinSeverityIndex > minSeverityLevel) 
                     minSeverityLevel = currentMinSeverityIndex;
-              
+        
             }
         }
         return minSeverityLevel;
@@ -208,16 +210,16 @@ public class TagsManager {
     @objid ("de311d0d-46a1-4730-ae23-d16a0c86de31")
     private static int getMinSeverityIndexANDOperator(Class node) {
         boolean nodeHasChildren = false;
-              
+        
         int minSeverityIndex = SEVERITY_VALUES.length-1;
-              
+        
         for(Dependency dependency: node.getDependsOnDependency()) {
             if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
                 nodeHasChildren = true;
                 Class child = (Class) dependency.getDependsOn();
-              
+        
                 int currentMinSeverityIndex; 
-              
+        
                 /*
                  * Calculate currentMinSeverityIndex depending on the child nature (Attack, reference, or else operator)
                  */
@@ -242,21 +244,21 @@ public class TagsManager {
                             }
                         }
                     }
-              
+        
                 } else {
                     currentMinSeverityIndex = getMinSeverityIndex(child);
                 }
-              
+        
                 /*
                  * update minSeverityIndex
                  */
                 if( currentMinSeverityIndex < minSeverityIndex)
                     minSeverityIndex = currentMinSeverityIndex;
-              
-              
+        
+        
             }
         }
-              
+        
         if(nodeHasChildren)
             return minSeverityIndex;
         else
@@ -268,7 +270,7 @@ public class TagsManager {
         int[] defaultBounds = {0, PROBABILITY_VALUES.length - 1};
         
         if(node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
-            
+        
             // may have at most 1 child Operator (i.e. AND/OR)
             for(Dependency dependency: node.getDependsOnDependency()) {
                 if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
@@ -306,9 +308,9 @@ public class TagsManager {
             if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
         
                 Class child = (Class) dependency.getDependsOn();
-                
+        
                 int currrentMaxProbabilityIndex ;
-                
+        
                 if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
                     String childProbability = TagsManager.getElementTagParameter(child, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
                     currrentMaxProbabilityIndex = 0;
@@ -321,13 +323,13 @@ public class TagsManager {
         
         
                 } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR)) {
-                    
+        
                     currrentMaxProbabilityIndex = getProbabilityIndexBounds(child)[0];
                 } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND)) {
-                    
+        
                     currrentMaxProbabilityIndex = getProbabilityIndexBounds(child)[1];
                 } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
-             
+        
                     Class childReference = ElementReferencing.getReferencedTree(child) ;
                     currrentMaxProbabilityIndex = PROBABILITY_VALUES.length - 1;
                     if(childReference != null) {
@@ -339,7 +341,7 @@ public class TagsManager {
                             }
                         }
                     }
-                    
+        
                 } else {
                     // this branch must never be reached (as the child node must have one of the 4 previously stated stereotypes)
                     currrentMaxProbabilityIndex = maxProbabilityIndex;
@@ -364,9 +366,9 @@ public class TagsManager {
             if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
         
                 Class child = (Class) dependency.getDependsOn();
-                
+        
                 int currrentMinProbabilityIndex ;
-                
+        
                 if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
                     String childProbability = TagsManager.getElementTagParameter(child, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
                     currrentMinProbabilityIndex = 0;
@@ -379,7 +381,7 @@ public class TagsManager {
         
         
                 } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
-             
+        
                     Class childReference = ElementReferencing.getReferencedTree(child) ;
                     currrentMinProbabilityIndex = 0;
                     if(childReference != null) {
@@ -391,15 +393,15 @@ public class TagsManager {
                             }
                         }
                     }
-                    
+        
                 } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OR)) {
-                    
+        
                     currrentMinProbabilityIndex = getProbabilityIndexBounds(child)[0];
                 } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.AND)) {
-                    
+        
                     currrentMinProbabilityIndex = getProbabilityIndexBounds(child)[1];
                 } else if(child.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)) {
-             
+        
                     Class childReference = ElementReferencing.getReferencedTree(child) ;
                     currrentMinProbabilityIndex = 0;
                     if(childReference != null) {
@@ -411,7 +413,7 @@ public class TagsManager {
                             }
                         }
                     }
-                    
+        
                 } else {
                     // this branch must never be executed (as the child node must have one of the 4 previously stated stereotypes)
                     currrentMinProbabilityIndex = minProbabilityIndex;
