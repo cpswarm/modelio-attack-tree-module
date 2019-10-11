@@ -25,6 +25,8 @@ import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.CounterMeasureManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementCreationManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.ProbabilityTagManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.SeverityTagManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.TagsManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
@@ -202,7 +204,7 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
     public static void updateAndPropagateAttackTags(Class attack, boolean updateSeverity, boolean updateProbability, boolean updateCountered) {
         if(updateSeverity) {
             
-            int minSeverityIndex = TagsManager.getMinSeverityIndex(attack);
+            int minSeverityIndex = SeverityTagManager.getMinSeverityIndex(attack);
             String attackSeverity = TagsManager.getElementTagParameter(attack, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
             int attackSeverityIndex = minSeverityIndex;
             
@@ -220,7 +222,7 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
         
         if(updateProbability) {
         
-            int[] probabilityIndexBounds = TagsManager.getProbabilityIndexBounds(attack);
+            int[] probabilityIndexBounds = ProbabilityTagManager.getProbabilityIndexBounds(attack);
             String attackProbability = TagsManager.getElementTagParameter(attack, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
         
             
