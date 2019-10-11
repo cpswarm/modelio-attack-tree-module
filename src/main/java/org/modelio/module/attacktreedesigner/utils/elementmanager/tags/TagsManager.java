@@ -67,23 +67,18 @@ public class TagsManager {
     public static void createAttackDefaultTags(IModelingSession session, ModelElement attackElement) {
         TaggedValue severityTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SEVERITY, attackElement);
         TagsManager.createTagParameter(session, severityTag, TagsManager.DEFAULT_SEVERITY_VALUE);
-        //attackElement.getTag().add(severityTag);
         
         TaggedValue probabilityTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.PROBABILITY, attackElement);
         TagsManager.createTagParameter(session, probabilityTag, TagsManager.DEFAULT_PROBABILITY_VALUE);
-        //attackElement.getTag().add(probabilityTag);        
         
         TaggedValue securityRelatedTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SECURITY_RELATED, attackElement);
         TagsManager.createTagParameter(session, securityRelatedTag, TagsManager.DEFAULT_SECURITY_RELATED);
-        //attackElement.getTag().add(securityRelatedTag);
         
         TaggedValue safetyRelatedTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.SAFETY_RELATED, attackElement);
         TagsManager.createTagParameter(session, safetyRelatedTag, TagsManager.DEFAULT_SAFETY_RELATED);
-        //attackElement.getTag().add(safetyRelatedTag);
         
         TaggedValue outOfScopeTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.OUT_OF_SCOPE, attackElement);
         TagsManager.createTagParameter(session, outOfScopeTag, TagsManager.DEFAULT_OUT_OF_SCOPE);
-        //attackElement.getTag().add(outOfScopeTag);
         
         
         /*
@@ -91,7 +86,6 @@ public class TagsManager {
          */
         TaggedValue counteredAttackTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.COUNTERED_ATTACK, attackElement);
         TagsManager.createTagParameter(session, counteredAttackTag, TagsManager.DEFAULT_COUNTERED_ATTACK);
-        //attackElement.getTag().add(counteredAttackTag);
     }
 
     @objid ("4810aaa4-fd61-433f-9c3f-8b9cb6cebb7c")
