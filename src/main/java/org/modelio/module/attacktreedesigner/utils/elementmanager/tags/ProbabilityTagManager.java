@@ -1,5 +1,6 @@
 package org.modelio.module.attacktreedesigner.utils.elementmanager.tags;
 
+import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
@@ -7,11 +8,9 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementReferencing;
 
+@objid ("cb42bd24-d33a-4075-8eeb-50e79a97112e")
 public class ProbabilityTagManager {
-
-
-    
-    
+    @objid ("4cd81035-6cf7-428d-b9d1-f653939061cb")
     public static int[] getProbabilityIndexBounds(Class node) {
         int[] defaultBounds = {0, TagsManager.PROBABILITY_VALUES.length - 1};
         
@@ -44,9 +43,8 @@ public class ProbabilityTagManager {
         }
         return defaultBounds;
     }
-    
-    
 
+    @objid ("9b12b3bd-198a-4eac-b010-18c495993f58")
     private static int[] getProbabilityIndexBoundsANDOperator(Class node) {
         // max probability is the min of the probabilities of the children
         int maxProbabilityIndex = TagsManager.PROBABILITY_VALUES.length - 1;
@@ -104,8 +102,7 @@ public class ProbabilityTagManager {
         return probabilityBouns;
     }
 
-    
-    
+    @objid ("4f27dda0-5cbd-4d08-a0c1-38469767f379")
     private static int[] getProbabilityIndexBoundsOROperator(Class node) {
         // min probability is the max of the probabilities of the children
         int minProbabilityIndex = 0;

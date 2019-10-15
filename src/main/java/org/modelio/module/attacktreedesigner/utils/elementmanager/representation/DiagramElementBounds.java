@@ -5,7 +5,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 @objid ("4937636a-2bda-46e1-afbb-7eef33bce98d")
 public enum DiagramElementBounds {
-    ROOT (300, 40, 140, 40);
+    ROOT (300, 40, 140, 40),
+    COUNTER_MEASURE(300,40,140,60);
 
     @objid ("f0493680-fe2c-4f66-99a6-87b11643b374")
     private int x;
@@ -41,5 +42,14 @@ public enum DiagramElementBounds {
     public int getY() {
         return this.y;
     }
+    
+   
+    public int getWidth() {
+        return this.width;
+    }
 
+
+    public int getHeight() {
+        return this.height;
+    }
 }

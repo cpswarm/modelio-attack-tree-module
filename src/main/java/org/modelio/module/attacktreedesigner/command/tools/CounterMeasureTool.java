@@ -1,11 +1,13 @@
 package org.modelio.module.attacktreedesigner.command.tools;
 
+import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.api.modelio.diagram.IDiagramHandle;
 import org.modelio.api.modelio.diagram.IDiagramLink.LinkRouterKind;
+import org.modelio.api.modelio.diagram.IDiagramNode;
 import org.modelio.api.modelio.diagram.ILinkPath;
 import org.modelio.api.modelio.diagram.tools.DefaultAttachedBoxTool;
 import org.modelio.api.modelio.model.IModelingSession;
@@ -19,6 +21,7 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.DiagramElementBounds;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.TagsManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
@@ -45,10 +48,19 @@ public class CounterMeasureTool extends DefaultAttachedBoxTool {
             
             Note note = model.createNote(IAttackTreeDesignerPeerModule.MODULE_NAME,AttackTreeNoteTypes.COUNTER_MEASURE, counteredAttack, AttackTreeNoteTypes.COUNTER_MEASURE);   
         
-            diagramHandle.unmask(note, point.x, point.y );
+            List<IDiagramGraphic> nodeGraphics = diagramHandle.unmask(note, point.x, point.y );
+            
+            
+            if(! nodeGraphics.isEmpty()) {
+                IDiagramNode diagramNode = (IDiagramNode) nodeGraphics.get(0);
+                Rectangle nodeBounds = diagramNode.getBounds();
+                nodeBounds.setHeight(DiagramElementBounds.COUNTER_MEASURE.getHeight());
+                diagramNode.setBounds(nodeBounds);
+            }
             
             // update countered Attack color
             ElementRepresentationManager.setClassColor(counteredAttack, diagramHandle, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);
+        
             
             // update countered Attack "Countered attack" tag
             TagsManager.setElementTagValue(counteredAttack, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.COUNTERED_ATTACK, "true");

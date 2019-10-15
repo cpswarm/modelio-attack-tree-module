@@ -1,5 +1,6 @@
 package org.modelio.module.attacktreedesigner.utils.elementmanager.tags;
 
+import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
@@ -7,9 +8,9 @@ import org.modelio.module.attacktreedesigner.api.AttackTreeTagTypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementReferencing;
 
+@objid ("98175c32-cdba-444f-8be5-f9b8afee9649")
 public class SeverityTagManager {
-
-
+    @objid ("c852642d-3f4d-41df-b616-c25b41c370c7")
     public static int getMinSeverityIndex(Class node) {
         if(node.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)) {
         
@@ -41,6 +42,7 @@ public class SeverityTagManager {
         return 0;
     }
 
+    @objid ("c55d27ca-c0e8-48e0-935c-b0921f1dcfa7")
     private static int getMinSeverityIndexANDOperator(Class node) {
         int minSeverityLevel = 0;
         
@@ -89,6 +91,7 @@ public class SeverityTagManager {
         return minSeverityLevel;
     }
 
+    @objid ("4d33ed9e-478b-48a4-b535-018d28deff5b")
     private static int getMinSeverityIndexOROperator(Class node) {
         boolean nodeHasChildren = false;
         
@@ -145,5 +148,5 @@ public class SeverityTagManager {
         else
             return 0;
     }
-    
+
 }
