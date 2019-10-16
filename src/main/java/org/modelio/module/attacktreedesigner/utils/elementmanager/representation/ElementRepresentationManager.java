@@ -2,6 +2,7 @@ package org.modelio.module.attacktreedesigner.utils.elementmanager.representatio
 
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.api.modelio.diagram.IDiagramHandle;
 import org.modelio.api.modelio.diagram.IDiagramNode;
@@ -191,7 +192,15 @@ public class ElementRepresentationManager {
         int noteSpacingY = newY;
         for(Note note:elementNotes) {
             if(note.getModel().getName().equals(AttackTreeNoteTypes.COUNTER_MEASURE)) {
-                diagramHandle.unmask(note, noteSpacingX += (AutoLayoutManager.HORIZONTAL_AUTOSPACING / 4), noteSpacingY += AutoLayoutManager.VERTICAL_AUTOSPACING / 4);
+                List<IDiagramGraphic> nodeGraphics = diagramHandle.unmask(note, noteSpacingX += (AutoLayoutManager.HORIZONTAL_AUTOSPACING / 4), noteSpacingY);
+                if(! nodeGraphics.isEmpty()) {
+                    IDiagramNode noteNode = (IDiagramNode) nodeGraphics.get(0);
+                    Rectangle nodeBounds = noteNode.getBounds();
+                    nodeBounds.setHeight(DiagramElementBounds.COUNTER_MEASURE.getHeight());
+                    noteNode.setBounds(nodeBounds);
+        
+                }
+        
             }
         }
         

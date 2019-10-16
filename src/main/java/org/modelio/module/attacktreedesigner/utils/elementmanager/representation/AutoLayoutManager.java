@@ -22,6 +22,9 @@ public class AutoLayoutManager {
     @objid ("40e45c6d-d487-449a-b733-3753d3102bf3")
     public static final int HORIZONTAL_AUTOSPACING = 80;
 
+    @objid ("5f0d3bb4-b9ce-4884-8aa6-0d807e69fd04")
+    public static final int VERTICAL_ADJUSTMENT_FOR_COUNTER_MEASURES = 10;
+
     @objid ("37a5e19b-9765-45a9-a037-0b90df94706a")
     private static int max(int n1, int n2) {
         if( n1 > n2)
@@ -57,10 +60,12 @@ public class AutoLayoutManager {
         
                 Rectangle childNodeBounds = childNodeGraphic.getBounds();
         
-                childrenWidth = updateChildBounds(diagramHandle, elementBounds, levelsLeftLimitX, level + 1, numberOfChildren, child, childNodeBounds);
+                //childrenWidth = 
+                updateChildBounds(diagramHandle, elementBounds, levelsLeftLimitX, level + 1, numberOfChildren, child, childNodeBounds);
         
                 recursivelyAutolayoutSubTree(diagramHandle, child, childNodeGraphic, childNodeBounds, levelsLeftLimitX, level + 1);
                 firstChildrenX = childNodeBounds.x;
+                childrenWidth = childNodeBounds.width;
             }
         
         
@@ -92,23 +97,24 @@ public class AutoLayoutManager {
             /*
              * Last child
              */
-            if(numberOfChildren>1) {
-                child = elementChildren.get(numberOfChildren - 1);
-                childDiagramGraphics = diagramHandle.getDiagramGraphics(child);
+             if(numberOfChildren>1) {
+                 child = elementChildren.get(numberOfChildren - 1);
+                 childDiagramGraphics = diagramHandle.getDiagramGraphics(child);
         
-                if(! childDiagramGraphics.isEmpty()) {
-                    IDiagramNode childNodeGraphic = (IDiagramNode) childDiagramGraphics.get(0);
+                 if(! childDiagramGraphics.isEmpty()) {
+                     IDiagramNode childNodeGraphic = (IDiagramNode) childDiagramGraphics.get(0);
         
-                    Rectangle childNodeBounds = childNodeGraphic.getBounds();
+                     Rectangle childNodeBounds = childNodeGraphic.getBounds();
         
-                    int lastChildWidth = updateChildBounds(diagramHandle, elementBounds, levelsLeftLimitX, level + 1, numberOfChildren, child, childNodeBounds);                    
+                     //int lastChildWidth = 
+                     updateChildBounds(diagramHandle, elementBounds, levelsLeftLimitX, level + 1, numberOfChildren, child, childNodeBounds);                    
         
-                    recursivelyAutolayoutSubTree(diagramHandle, child, childNodeGraphic, childNodeBounds, levelsLeftLimitX, level + 1);
+                     recursivelyAutolayoutSubTree(diagramHandle, child, childNodeGraphic, childNodeBounds, levelsLeftLimitX, level + 1);
         
-                    childrenWidth = childNodeBounds.x + lastChildWidth - firstChildrenX; 
-                }
+                     childrenWidth = childNodeBounds.x + childNodeBounds.width - firstChildrenX; 
+                 }
         
-            }
+             }
         
         }
         
@@ -118,20 +124,20 @@ public class AutoLayoutManager {
          * Update element and its notes after having positioned its children
          */
         if(! element.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) {
-            
+        
         
             elementBounds.setX( firstChildrenX + ((childrenWidth - elementBounds.width)/2) );
             Rectangle lastBounds = elementBounds;
             for(Note note:element.getDescriptor()) {
-              List<IDiagramGraphic> noteDiagramGraphics = diagramHandle.getDiagramGraphics(note);
-              if(! noteDiagramGraphics.isEmpty()) {
-                  IDiagramNode noteNodeGraphic = (IDiagramNode) noteDiagramGraphics.get(0);                       
-                  Rectangle noteBounds = noteNodeGraphic.getBounds();
-                  noteBounds.setX(lastBounds.x + lastBounds.width + HORIZONTAL_AUTOSPACING);
-                  lastBounds = noteBounds;
-                  
-                  noteNodeGraphic.setBounds(noteBounds);
-              }
+                List<IDiagramGraphic> noteDiagramGraphics = diagramHandle.getDiagramGraphics(note);
+                if(! noteDiagramGraphics.isEmpty()) {
+                    IDiagramNode noteNodeGraphic = (IDiagramNode) noteDiagramGraphics.get(0);                       
+                    Rectangle noteBounds = noteNodeGraphic.getBounds();
+                    noteBounds.setX(lastBounds.x + lastBounds.width + HORIZONTAL_AUTOSPACING);
+                    lastBounds = noteBounds;
+        
+                    noteNodeGraphic.setBounds(noteBounds);
+                }
             }
         
             levelsLeftLimitX.set(level, lastBounds.x + lastBounds.width + HORIZONTAL_AUTOSPACING);
@@ -201,6 +207,7 @@ public class AutoLayoutManager {
         
         
         // list element notes 
+        int adjustedY = 0;
         for(Note note:element.getDescriptor()) {
         
             List<IDiagramGraphic> noteDiagramGraphics = diagramHandle.getDiagramGraphics(note);
@@ -210,7 +217,8 @@ public class AutoLayoutManager {
                 Rectangle noteBounds = noteNodeGraphic.getBounds();
         
                 // SET Y of Counter Measure
-                noteBounds.setY(elementBounds.y + (elementBounds.height / 2) - (noteBounds.height/2));
+                noteBounds.setY(elementBounds.y + (elementBounds.height / 2) - (noteBounds.height/2) + adjustedY);
+                adjustedY = adjustedY + VERTICAL_ADJUSTMENT_FOR_COUNTER_MEASURES;
         
                 // SET X of Counter Measure
                 if (levelsLeftLimitX.size() <= level) {

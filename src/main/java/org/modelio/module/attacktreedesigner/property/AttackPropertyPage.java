@@ -20,6 +20,13 @@ public class AttackPropertyPage implements IPropertyContent {
     @objid ("2594a992-2f3e-4018-962a-cb950f5accaa")
     public static final int PROPERTIES_SIZE = 7;
 
+    /**
+     * This method handles the changes of the given property, identified by its row index, of a selected element
+     * to a new value.
+     * @param MObject : the selected element
+     * @param row : the row of the changed property
+     * @param value : the new value of the property
+     */
     @objid ("0f24f03d-602a-4141-b7e2-13cf4b88e0c7")
     @Override
     public void changeProperty(ModelElement element, int row, String value) {
@@ -51,6 +58,11 @@ public class AttackPropertyPage implements IPropertyContent {
         }
     }
 
+    /**
+     * This method handles the construction of the property table of a selected element
+     * @param MObject : the selected element
+     * @param table : the property table to fulfill
+     */
     @objid ("bc6ed339-b45d-4786-b049-966c4f598c2f")
     @Override
     public void update(ModelElement element, IModulePropertyTable table) {
