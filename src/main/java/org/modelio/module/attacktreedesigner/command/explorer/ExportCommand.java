@@ -51,7 +51,7 @@ public class ExportCommand extends DefaultModuleCommandHandler {
     }
 
     @objid ("3305ebb0-7e96-4806-8e8a-8bd47f90bdc7")
-    private void exportPackageTrees(String directoryPath, Package pkg) {
+    public static void exportPackageTrees(String directoryPath, Package pkg) {
         for(MObject element : pkg.getCompositionChildren()) {
             if(element instanceof Class) {
                 Class node = (Class) element;
@@ -66,7 +66,7 @@ public class ExportCommand extends DefaultModuleCommandHandler {
     }
 
     @objid ("1f6c3069-cbbf-4875-8bc7-beac1a409a26")
-    private void exportTree(String directoryPath, Class modelTree) {
+    public static void exportTree(String directoryPath, Class modelTree) {
         ModelToJaxbConvertor modelToJaxbConvertor = new ModelToJaxbConvertor(modelTree);
         File file = FileSystemManager.createFile(directoryPath, modelToJaxbConvertor.getModelTree().getName() + FileSystemManager.XML_FILE_EXTENSION);
         FileSystemManager.marshallJaxbContentInFile(file, modelToJaxbConvertor.convertModelToJaxb());

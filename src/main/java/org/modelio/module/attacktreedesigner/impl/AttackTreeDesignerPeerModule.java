@@ -2,7 +2,11 @@ package org.modelio.module.attacktreedesigner.impl;
 
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.api.module.context.configuration.IModuleAPIConfiguration;
+import org.modelio.metamodel.uml.infrastructure.ModelElement;
+import org.modelio.metamodel.uml.statik.Class;
+import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
+import org.modelio.module.attacktreedesigner.command.explorer.ExportCommand;
 import org.modelio.vbasic.version.Version;
 
 @objid ("b9938b7d-5f07-445a-ba5a-251f256f4742")
@@ -45,6 +49,21 @@ public class AttackTreeDesignerPeerModule implements IAttackTreeDesignerPeerModu
 
     @objid ("da953104-2737-4a29-ba2d-fe9703fefc68")
     void init() {
+    }
+
+    @objid ("d62f3325-2366-4de8-9780-f21b2cd1136c")
+    @Override
+    public void exportModel(ModelElement selectedElement, String targetDirectoryPath) {
+        // selectedElement is a Tree
+        if(selectedElement instanceof Class) {
+            Class modelTree = (Class) selectedElement;
+            ExportCommand.exportTree(targetDirectoryPath, modelTree);        
+        } 
+        // selected element is a package
+        else if (selectedElement instanceof Package) {
+            Package pkg = (Package) selectedElement;
+            ExportCommand.exportPackageTrees(targetDirectoryPath, pkg);
+        }
     }
 
 }
