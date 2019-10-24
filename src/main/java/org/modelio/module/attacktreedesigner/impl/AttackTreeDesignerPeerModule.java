@@ -1,5 +1,6 @@
 package org.modelio.module.attacktreedesigner.impl;
 
+import java.io.File;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.api.module.context.configuration.IModuleAPIConfiguration;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
@@ -7,6 +8,8 @@ import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.command.explorer.ExportCommand;
+import org.modelio.module.attacktreedesigner.command.explorer.ImportCommand;
+import org.modelio.module.attacktreedesigner.command.explorer.ImportPackageCommand;
 import org.modelio.vbasic.version.Version;
 
 @objid ("b9938b7d-5f07-445a-ba5a-251f256f4742")
@@ -63,6 +66,20 @@ public class AttackTreeDesignerPeerModule implements IAttackTreeDesignerPeerModu
         else if (selectedElement instanceof Package) {
             Package pkg = (Package) selectedElement;
             ExportCommand.exportPackageTrees(targetDirectoryPath, pkg);
+        }
+    }
+
+    @objid ("f249428d-8ea2-45d8-8c98-47bbc0fe9b65")
+    @Override
+    public void importModel(Package targetPackage, String sourceElementPath) {
+        File file = new File(sourceElementPath);
+        
+        if(file.isDirectory()) {
+            ImportPackageCommand.importDirectory(this.module, sourceElementPath, targetPackage);
+        
+        } else if(file.isFile()) {
+            ImportCommand.importXMLFile( this.module, sourceElementPath, targetPackage);
+        
         }
     }
 

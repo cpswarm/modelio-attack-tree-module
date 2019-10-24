@@ -27,10 +27,7 @@ public class ImportPackageCommand extends DefaultModuleCommandHandler {
         if(directoryPath == null)
             return;
         
-        File directory = new File (directoryPath);
-        walkDirectoryAndImportTree(directory, module, destinationPackage);
-        
-        JaxbToModelConvertor.updatePostponedReferences();
+        importDirectory(module, directoryPath, destinationPackage);
     }
 
     @objid ("55818d2f-f714-4233-b8cd-fe6af41c74cc")
@@ -43,7 +40,7 @@ public class ImportPackageCommand extends DefaultModuleCommandHandler {
     }
 
     @objid ("3e9faabc-f3eb-4da1-8c7f-4803c9029707")
-    private void walkDirectoryAndImportTree(File directory, IModule module, Package destinationPackage) {
+    private static void walkDirectoryAndImportTree(File directory, IModule module, Package destinationPackage) {
         for(File file: directory.listFiles()){
             if(file.isDirectory()) {
         
@@ -69,6 +66,14 @@ public class ImportPackageCommand extends DefaultModuleCommandHandler {
                 modelToJaxbConvertor.createTreeModel(module, destinationPackage);
             }
         }
+    }
+
+    @objid ("882dd116-0588-4e48-8c21-dc4dbcf52945")
+    public static void importDirectory(final IModule module, String directoryPath, Package destinationPackage) {
+        File directory = new File (directoryPath);
+        walkDirectoryAndImportTree(directory, module, destinationPackage);
+        
+        JaxbToModelConvertor.updatePostponedReferences();
     }
 
 }

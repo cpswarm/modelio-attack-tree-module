@@ -18,14 +18,11 @@ public class ImportCommand extends DefaultModuleCommandHandler {
     public void actionPerformed(List<MObject> selectedElements, IModule module) {
         String xmlFilePath = FileSystemManager.getXMLFileDialogPath();
         if(xmlFilePath == null)
-            return;        
-        
-        AttackTreeType jaxbTree = FileSystemManager.unmarshallFileToJaxb(new File(xmlFilePath));
-        JaxbToModelConvertor modelToJaxbConvertor = new JaxbToModelConvertor(jaxbTree);
+            return;       
         
         Package destinationPackage = (Package) selectedElements.get(0); 
-        modelToJaxbConvertor.createTreeModel(module, destinationPackage);
-        JaxbToModelConvertor.updatePostponedReferences();
+        
+        importXMLFile(module, xmlFilePath, destinationPackage );
     }
 
     @objid ("2e25b03b-87c0-412c-b7be-96654411cfd6")
@@ -35,6 +32,15 @@ public class ImportCommand extends DefaultModuleCommandHandler {
             return selectedElements.get(0) instanceof Package ;
         }
         return false;
+    }
+
+    @objid ("1a7672e7-1c20-4cb4-adaa-d42912e4c1c5")
+    public static void importXMLFile(IModule module, String xmlFilePath, Package destinationPackage) {
+        AttackTreeType jaxbTree = FileSystemManager.unmarshallFileToJaxb(new File(xmlFilePath));
+        JaxbToModelConvertor modelToJaxbConvertor = new JaxbToModelConvertor(jaxbTree);
+        
+        modelToJaxbConvertor.createTreeModel(module, destinationPackage);
+        JaxbToModelConvertor.updatePostponedReferences();
     }
 
 }
