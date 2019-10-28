@@ -71,9 +71,21 @@ public class ImportPackageCommand extends DefaultModuleCommandHandler {
     @objid ("882dd116-0588-4e48-8c21-dc4dbcf52945")
     public static void importDirectory(final IModule module, String directoryPath, Package destinationPackage) {
         File directory = new File (directoryPath);
-        walkDirectoryAndImportTree(directory, module, destinationPackage);
+                
         
-        JaxbToModelConvertor.updatePostponedReferences();
+        IModelingSession modellingSession = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession ();
+        IUmlModel model = modellingSession.getModel();                
+        
+        try( ITransaction transaction = modellingSession.createTransaction(Messages.getString ("Info.Session.Create", ""))){
+            
+            Package newPackage = model.createPackage(directory.getName(), destinationPackage);
+        
+            walkDirectoryAndImportTree(directory, module, newPackage);
+            
+            JaxbToModelConvertor.updatePostponedReferences();
+            
+            transaction.commit ();
+        }
     }
 
 }
