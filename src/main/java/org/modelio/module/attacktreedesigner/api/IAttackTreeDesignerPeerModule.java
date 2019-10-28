@@ -16,4 +16,7 @@ public interface IAttackTreeDesignerPeerModule extends IPeerModule {
     @objid ("f7819d05-47d0-4973-a336-bc6e5b583ee7")
     void importModel(Package targetPackage, String sourceElementPath);
 
+    @objid ("1761e79e-34b9-456f-862f-03588326df15")
+    void createNewTree(ModelElement owner);
+
 }

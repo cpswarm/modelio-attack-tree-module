@@ -7,6 +7,7 @@ import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
+import org.modelio.module.attacktreedesigner.command.explorer.AttackTreeDiagramCommand;
 import org.modelio.module.attacktreedesigner.command.explorer.ExportCommand;
 import org.modelio.module.attacktreedesigner.command.explorer.ImportCommand;
 import org.modelio.module.attacktreedesigner.command.explorer.ImportPackageCommand;
@@ -81,6 +82,12 @@ public class AttackTreeDesignerPeerModule implements IAttackTreeDesignerPeerModu
             ImportCommand.importXMLFile( this.module, sourceElementPath, targetPackage);
         
         }
+    }
+
+    @objid ("f20d74e7-3cd2-44a3-915e-698d87a8bcb8")
+    @Override
+    public void createNewTree(ModelElement owner) {
+        AttackTreeDiagramCommand.createNewTree(this.module, owner);
     }
 
 }

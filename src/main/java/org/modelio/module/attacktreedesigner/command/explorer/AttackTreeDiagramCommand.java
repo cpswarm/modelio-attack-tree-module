@@ -40,10 +40,28 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
     @objid ("289b34c8-b854-4b43-ba33-6c907c5e23b7")
     @Override
     public void actionPerformed(List<MObject> selectedElements, IModule module) {
-        IModuleContext moduleContext = module.getModuleContext();
-        IModelingSession session = moduleContext.getModelingSession();
         ModelElement owner = (ModelElement) selectedElements.get(0);    
         
+        createNewTree(module, owner);
+    }
+
+    @objid ("2375ec67-7c56-4d00-a193-52f2683549a1")
+    @Override
+    public boolean accept(List<MObject> selectedElements, IModule module) {
+        if ((selectedElements != null) && (selectedElements.size() == 1)){
+            MObject selectedElt = selectedElements.get(0);
+            return ((selectedElt != null) &&
+                    (((selectedElt instanceof Package) 
+                            && !(selectedElt instanceof Profile)
+                            && selectedElt.getStatus().isModifiable())));
+        }
+        return false;
+    }
+
+    @objid ("d5d897b3-9694-4635-9cff-67a65ec169f0")
+    public static void createNewTree(IModule module, ModelElement owner) {
+        IModuleContext moduleContext = module.getModuleContext();
+        IModelingSession session = moduleContext.getModelingSession();
         
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.Create", Messages.getString ("Ui.Command.AttackTreeDiagramExplorerCommand.Label")))){
         
@@ -89,19 +107,6 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
             
             transaction.commit ();
         }
-    }
-
-    @objid ("2375ec67-7c56-4d00-a193-52f2683549a1")
-    @Override
-    public boolean accept(List<MObject> selectedElements, IModule module) {
-        if ((selectedElements != null) && (selectedElements.size() == 1)){
-            MObject selectedElt = selectedElements.get(0);
-            return ((selectedElt != null) &&
-                    (((selectedElt instanceof Package) 
-                            && !(selectedElt instanceof Profile)
-                            && selectedElt.getStatus().isModifiable())));
-        }
-        return false;
     }
 
 }
