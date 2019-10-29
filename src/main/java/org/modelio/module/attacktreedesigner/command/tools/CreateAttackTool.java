@@ -33,13 +33,19 @@ public class CreateAttackTool extends DefaultBoxTool {
     @objid ("5ce94569-dd8e-49a1-88c9-8a8e79488a83")
     @Override
     public void actionPerformed(IDiagramHandle diagramHandle, IDiagramGraphic targetDiagramGraphic, Rectangle rect) {
+        createAttack(diagramHandle, targetDiagramGraphic, rect);
+    }
+
+    @objid ("a3a5d752-cf99-4d62-8af9-b820595709c9")
+    public static Class createAttack(IDiagramHandle diagramHandle, IDiagramGraphic targetDiagramGraphic, Rectangle rect) {
+        Class attackElement = null;
         IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession();
         try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", AttackTreeStereotypes.ATTACK))){
         
             MObject rootParent = diagramHandle.getDiagram().getOrigin().getCompositionOwner();
         
             // create stereotyped Attack Class
-            Class attackElement = session.getModel().createClass(
+            attackElement = session.getModel().createClass(
                     Labels.DEFAULT_NAME.toString(), 
                     (NameSpace) rootParent, 
                     IAttackTreeDesignerPeerModule.MODULE_NAME, 
@@ -61,6 +67,7 @@ public class CreateAttackTool extends DefaultBoxTool {
         
             transaction.commit ();
         }
+        return attackElement;
     }
 
 }

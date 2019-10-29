@@ -50,6 +50,11 @@ public class ConnectionTool extends DefaultLinkTool {
     @objid ("e019777d-2d6c-4712-bec4-d46af7e96675")
     @Override
     public void actionPerformed(IDiagramHandle diagramHandle, IDiagramGraphic originNode, IDiagramGraphic targetNode, LinkRouterKind touterType, ILinkPath path) {
+        createConnection(diagramHandle, originNode, targetNode);
+    }
+
+    @objid ("be228e59-40ff-4745-bc22-1684c4a5fdcf")
+    public static void createConnection(IDiagramHandle diagramHandle, IDiagramGraphic originNode, IDiagramGraphic targetNode) {
         IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession();
         try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", AttackTreeStereotypes.CONNECTION))){
         

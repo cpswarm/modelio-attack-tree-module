@@ -7,6 +7,7 @@ import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.api.modelio.diagram.IDiagramHandle;
 import org.modelio.api.modelio.diagram.IDiagramNode;
 import org.modelio.api.modelio.model.IModelingSession;
+import org.modelio.api.modelio.model.ITransaction;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Attribute;
@@ -14,52 +15,61 @@ import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.NameSpace;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
+import org.modelio.module.attacktreedesigner.i18n.Messages;
+import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.DiagramElementStyle;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("9ff6243a-c266-42ed-8c3a-1fc351ac1cf9")
 public class ElementCreationManager {
     @objid ("278a8f10-6f30-47a3-8eb2-a7b6e7b10570")
-    public static void createOperatorElement(IDiagramHandle diagramHandle, List<IDiagramGraphic> otherNodes, Rectangle rectangle, IModelingSession session, String stereotypeName) {
-        ModelTree parentElement = (ModelTree) otherNodes.get(0).getElement();
-        MObject rootParent = diagramHandle.getDiagram().getOrigin().getCompositionOwner();       
-              
-        /*
-         * Create and unmask OPERATOR Element
-         */
-        Class operatorElement = createAndUnmaskOperatorElement(diagramHandle, rectangle, session, stereotypeName, parentElement, rootParent);
-              
-              
-        /*
-         * Create Connections
-         */
-        ModelElement connectionFirstElement = session.getModel().createDependency(parentElement, 
-                operatorElement, 
-                IAttackTreeDesignerPeerModule.MODULE_NAME, 
-                AttackTreeStereotypes.CONNECTION); 
-        diagramHandle.unmask(connectionFirstElement, 0, 0);
-              
-              
-        int nodesSize = otherNodes.size();
-        for (int i = 1; i < nodesSize; i++) {
-            MObject element = otherNodes.get(i).getElement();
-            ((ModelTree)element).setOwner(operatorElement);
-            ModelElement connection = session.getModel().createDependency(operatorElement, 
-                    (ModelElement) element, 
+    public static Class createOperatorElement(IDiagramHandle diagramHandle, List<IDiagramGraphic> otherNodes, Rectangle rectangle, String stereotypeName) {
+        Class operatorElement = null;
+        IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession();
+        try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", AttackTreeStereotypes.OPERATOR))){
+        
+            ModelTree parentElement = (ModelTree) otherNodes.get(0).getElement();
+            MObject rootParent = diagramHandle.getDiagram().getOrigin().getCompositionOwner();       
+        
+            /*
+             * Create and unmask OPERATOR Element
+             */
+            operatorElement = createAndUnmaskOperatorElement(diagramHandle, rectangle, session, stereotypeName, parentElement, rootParent);
+        
+        
+            /*
+             * Create Connections
+             */
+            ModelElement connectionFirstElement = session.getModel().createDependency(parentElement, 
+                    operatorElement, 
                     IAttackTreeDesignerPeerModule.MODULE_NAME, 
-                    AttackTreeStereotypes.CONNECTION);
-            
-            ElementCreationManager.renameElement(session, (ModelTree) element); 
-            
-            diagramHandle.unmask(connection, 0, 0);
+                    AttackTreeStereotypes.CONNECTION); 
+            diagramHandle.unmask(connectionFirstElement, 0, 0);
+        
+        
+            int nodesSize = otherNodes.size();
+            for (int i = 1; i < nodesSize; i++) {
+                MObject element = otherNodes.get(i).getElement();
+                ((ModelTree)element).setOwner(operatorElement);
+                ModelElement connection = session.getModel().createDependency(operatorElement, 
+                        (ModelElement) element, 
+                        IAttackTreeDesignerPeerModule.MODULE_NAME, 
+                        AttackTreeStereotypes.CONNECTION);
+        
+                ElementCreationManager.renameElement(session, (ModelTree) element); 
+        
+                diagramHandle.unmask(connection, 0, 0);
+            }
+        
+        
+            diagramHandle.save();
+            diagramHandle.close();
+        
+            session.getModel().getDefaultNameService()
+            .setDefaultName(operatorElement, stereotypeName);
+            transaction.commit ();
         }
-              
-              
-        diagramHandle.save();
-        diagramHandle.close();
-              
-        session.getModel().getDefaultNameService()
-        .setDefaultName(operatorElement, stereotypeName);
+        return operatorElement;
     }
 
     @objid ("37d184f1-c6b7-4e95-bfc3-541242c78ad8")

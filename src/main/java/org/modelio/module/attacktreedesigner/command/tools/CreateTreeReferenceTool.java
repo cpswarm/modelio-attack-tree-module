@@ -35,6 +35,13 @@ public class CreateTreeReferenceTool extends DefaultBoxTool {
     @objid ("6d82c0ff-21fa-4880-a11c-9007e3d1c79a")
     @Override
     public void actionPerformed(final IDiagramHandle diagramHandle, final IDiagramGraphic targetDiagramGraphic, final Rectangle rect) {
+        createReference(diagramHandle, targetDiagramGraphic, rect);
+    }
+
+    @objid ("5fcc0476-1f7b-4562-b363-3a876d47d26d")
+    public static Class createReference(final IDiagramHandle diagramHandle, final IDiagramGraphic targetDiagramGraphic, final Rectangle rect) {
+        Class referenceTreeElement = null;
+        
         IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession();
         try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", AttackTreeStereotypes.TREE_REFERENCE))){
         
@@ -43,7 +50,7 @@ public class CreateTreeReferenceTool extends DefaultBoxTool {
             MObject rootElement = diagramHandle.getDiagram().getOrigin().getCompositionOwner();
         
             // create stereotyped Tree Reference Class
-            Class referenceTreeElement = model.createClass(
+            referenceTreeElement = model.createClass(
                     Labels.DEFAULT_NAME.toString(), 
                     (NameSpace) rootElement, 
                     IAttackTreeDesignerPeerModule.MODULE_NAME, 
@@ -74,6 +81,7 @@ public class CreateTreeReferenceTool extends DefaultBoxTool {
         
             transaction.commit ();
         }
+        return referenceTreeElement;
     }
 
 }

@@ -17,6 +17,7 @@ import org.modelio.metamodel.diagrams.ClassDiagram;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.Profile;
 import org.modelio.metamodel.uml.infrastructure.Stereotype;
+import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.NameSpace;
 import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
@@ -59,14 +60,16 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
     }
 
     @objid ("d5d897b3-9694-4635-9cff-67a65ec169f0")
-    public static void createNewTree(IModule module, ModelElement owner) {
+    public static Class createNewTree(IModule module, ModelElement owner) {
         IModuleContext moduleContext = module.getModuleContext();
         IModelingSession session = moduleContext.getModelingSession();
+        
+        Class rootElement = null;
         
         try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.Create", Messages.getString ("Ui.Command.AttackTreeDiagramExplorerCommand.Label")))){
         
             // create Root Class
-            ModelElement rootElement = session.getModel().createClass(Labels.DEFAULT_NAME.toString(), (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
+            rootElement = session.getModel().createClass(Labels.DEFAULT_NAME.toString(), (NameSpace) owner, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
         
             // create Default tags
             TagsManager.createAttackDefaultTags(session, rootElement);
@@ -107,6 +110,7 @@ public class AttackTreeDiagramCommand extends DefaultModuleCommandHandler {
             
             transaction.commit ();
         }
+        return rootElement;
     }
 
 }

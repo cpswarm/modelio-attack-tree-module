@@ -8,15 +8,11 @@ import org.modelio.api.modelio.diagram.IDiagramHandle;
 import org.modelio.api.modelio.diagram.IDiagramLink.LinkRouterKind;
 import org.modelio.api.modelio.diagram.ILinkPath;
 import org.modelio.api.modelio.diagram.tools.DefaultMultiLinkTool;
-import org.modelio.api.modelio.model.IModelingSession;
-import org.modelio.api.modelio.model.ITransaction;
 import org.modelio.metamodel.diagrams.AbstractDiagram;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
-import org.modelio.module.attacktreedesigner.i18n.Messages;
-import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementCreationManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementNavigationManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
@@ -56,13 +52,7 @@ public class AndMultiLinkTool extends DefaultMultiLinkTool {
     @objid ("b4184827-33fa-4f24-ba1b-594286f23e35")
     @Override
     public void actionPerformed(IDiagramHandle diagramHandle, IDiagramGraphic lastNode, List<IDiagramGraphic> otherNodes, List<LinkRouterKind> routerKinds, List<ILinkPath> paths, Rectangle rectangle) {
-        IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession();
-        try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", AttackTreeStereotypes.AND))){
-        
-            ElementCreationManager.createOperatorElement(diagramHandle, otherNodes, rectangle, session, AttackTreeStereotypes.AND);
-        
-            transaction.commit ();
-        }
+        ElementCreationManager.createOperatorElement(diagramHandle, otherNodes, rectangle, AttackTreeStereotypes.AND);
     }
 
 }

@@ -1,16 +1,28 @@
 package org.modelio.module.attacktreedesigner.impl;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
+import org.modelio.api.modelio.diagram.IDiagramGraphic;
+import org.modelio.api.modelio.diagram.IDiagramHandle;
+import org.modelio.api.modelio.diagram.IDiagramService;
 import org.modelio.api.module.context.configuration.IModuleAPIConfiguration;
+import org.modelio.metamodel.diagrams.ClassDiagram;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.Package;
+import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.command.explorer.AttackTreeDiagramCommand;
 import org.modelio.module.attacktreedesigner.command.explorer.ExportCommand;
 import org.modelio.module.attacktreedesigner.command.explorer.ImportCommand;
 import org.modelio.module.attacktreedesigner.command.explorer.ImportPackageCommand;
+import org.modelio.module.attacktreedesigner.command.tools.ConnectionTool;
+import org.modelio.module.attacktreedesigner.command.tools.CreateAttackTool;
+import org.modelio.module.attacktreedesigner.command.tools.CreateTreeReferenceTool;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementCreationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.DiagramElementBounds;
 import org.modelio.vbasic.version.Version;
 
 @objid ("b9938b7d-5f07-445a-ba5a-251f256f4742")
@@ -86,8 +98,94 @@ public class AttackTreeDesignerPeerModule implements IAttackTreeDesignerPeerModu
 
     @objid ("f20d74e7-3cd2-44a3-915e-698d87a8bcb8")
     @Override
-    public void createNewTree(ModelElement owner) {
-        AttackTreeDiagramCommand.createNewTree(this.module, owner);
+    public ModelElement createNewTree(ModelElement owner) {
+        return AttackTreeDiagramCommand.createNewTree(this.module, owner);
+    }
+
+    @objid ("f5e84e59-3ad7-48d5-970d-40302f975171")
+    @Override
+    public Class createANDChild(Class owner, ClassDiagram diagram) {
+        Class andChild = null;
+        if(owner.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)
+                || owner.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR)) {
+            IDiagramService diagramService = this.module.getModuleContext().getModelioServices().getDiagramService();
+            try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+                List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(owner);
+                if( !diagramGraphics.isEmpty()) {
+                    List<IDiagramGraphic> andElementList = new ArrayList<>();
+                    andElementList.add(diagramGraphics.get(0));
+                    andChild = ElementCreationManager.createOperatorElement(diagramHandle, andElementList, DiagramElementBounds.ROOT.createRectangleBounds(), AttackTreeStereotypes.AND);        
+                }
+            }
+        }
+        return andChild;
+    }
+
+    @objid ("0006f3a1-e871-4243-ad0b-02972dc2c5ed")
+    @Override
+    public Class createORChild(Class owner, ClassDiagram diagram) {
+        Class orChild = null;
+        if(owner.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)
+                || owner.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR)) {
+            IDiagramService diagramService = this.module.getModuleContext().getModelioServices().getDiagramService();
+            try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+                List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(owner);
+                if( !diagramGraphics.isEmpty()) {
+                    List<IDiagramGraphic> orElementList = new ArrayList<>();
+                    orElementList.add(diagramGraphics.get(0));
+                    orChild = ElementCreationManager.createOperatorElement(diagramHandle, orElementList, DiagramElementBounds.ROOT.createRectangleBounds(), AttackTreeStereotypes.OR);        
+                }
+            }
+        }
+        return orChild;
+    }
+
+    @objid ("bec93347-e527-49f2-928f-faa485685a04")
+    @Override
+    public Class createAttack(ClassDiagram diagram) {
+        Class attackElement = null;
+        IDiagramService diagramService = this.module.getModuleContext().getModelioServices().getDiagramService();
+        try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+            attackElement =CreateAttackTool.createAttack(diagramHandle, diagramHandle.getDiagramNode(), DiagramElementBounds.ROOT.createRectangleBounds());
+        }
+        return attackElement;
+    }
+
+    @objid ("143142a3-ac52-4198-af94-1631d08c2490")
+    @Override
+    public Class createReference(ClassDiagram diagram) {
+        Class referenceElement = null;
+        IDiagramService diagramService = this.module.getModuleContext().getModelioServices().getDiagramService();
+        try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+            referenceElement = CreateTreeReferenceTool.createReference(diagramHandle, diagramHandle.getDiagramNode(), DiagramElementBounds.ROOT.createRectangleBounds());
+        }
+        return referenceElement;
+    }
+
+    @objid ("3b5c2457-310e-4948-8b3a-f6cde12c2f0a")
+    @Override
+    public void createCounterAttack(Class attack, ClassDiagram diagram) {
+        // TODO Auto-generated method stub
+    }
+
+    @objid ("a8b529c0-fd14-4522-9be3-4469aa3c9925")
+    @Override
+    public void updateTag(Class attack, String tagType, String TagValue) {
+        // TODO Auto-generated method stub
+    }
+
+    @objid ("934c8f36-b5a7-4f94-8587-d69d6cd694dd")
+    @Override
+    public void createConnection(Class source, Class target, ClassDiagram diagram) {
+        IDiagramService diagramService = this.module.getModuleContext().getModelioServices().getDiagramService();
+        try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+        
+            List<IDiagramGraphic> sourceGraphics = diagramHandle.getDiagramGraphics(source);
+            List<IDiagramGraphic> targetGraphics = diagramHandle.getDiagramGraphics(target);
+            if( !sourceGraphics.isEmpty() && !targetGraphics.isEmpty() ) {
+                ConnectionTool.createConnection(diagramHandle, sourceGraphics.get(0), targetGraphics.get(0));        
+            }
+        }
     }
 
 }
