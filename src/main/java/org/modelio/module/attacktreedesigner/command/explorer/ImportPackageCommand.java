@@ -45,12 +45,12 @@ public class ImportPackageCommand extends DefaultModuleCommandHandler {
             if(file.isDirectory()) {
         
                 Package newPackage = destinationPackage;
-                
+        
                 IModelingSession modellingSession = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession ();
                 IUmlModel model = modellingSession.getModel();                
         
                 try( ITransaction transaction = modellingSession.createTransaction(Messages.getString ("Info.Session.Create", ""))){
-                    
+        
                     newPackage = model.createPackage(file.getName(), destinationPackage);
         
                     transaction.commit ();
@@ -58,7 +58,7 @@ public class ImportPackageCommand extends DefaultModuleCommandHandler {
         
         
                 walkDirectoryAndImportTree(file, module, newPackage);
-                
+        
             } else if (file.isFile() && file.getName().endsWith(FileSystemManager.XML_FILE_EXTENSION)) {
                 AttackTreeType jaxbTree = FileSystemManager.unmarshallFileToJaxb(file);
                 JaxbToModelConvertor modelToJaxbConvertor = new JaxbToModelConvertor(jaxbTree);
@@ -71,19 +71,18 @@ public class ImportPackageCommand extends DefaultModuleCommandHandler {
     @objid ("882dd116-0588-4e48-8c21-dc4dbcf52945")
     public static void importDirectory(final IModule module, String directoryPath, Package destinationPackage) {
         File directory = new File (directoryPath);
-                
+        
         
         IModelingSession modellingSession = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession ();
         IUmlModel model = modellingSession.getModel();                
         
         try( ITransaction transaction = modellingSession.createTransaction(Messages.getString ("Info.Session.Create", ""))){
-            
+        
             Package newPackage = model.createPackage(directory.getName(), destinationPackage);
         
             walkDirectoryAndImportTree(directory, module, newPackage);
-            
+        
             JaxbToModelConvertor.updatePostponedReferences();
-            
             transaction.commit ();
         }
     }

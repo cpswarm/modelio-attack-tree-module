@@ -4,12 +4,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
+import org.eclipse.draw2d.geometry.Point;
 import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.api.modelio.diagram.IDiagramHandle;
 import org.modelio.api.modelio.diagram.IDiagramService;
 import org.modelio.api.module.context.configuration.IModuleAPIConfiguration;
 import org.modelio.metamodel.diagrams.ClassDiagram;
+import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
+import org.modelio.metamodel.uml.infrastructure.Note;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
@@ -19,11 +22,15 @@ import org.modelio.module.attacktreedesigner.command.explorer.ExportCommand;
 import org.modelio.module.attacktreedesigner.command.explorer.ImportCommand;
 import org.modelio.module.attacktreedesigner.command.explorer.ImportPackageCommand;
 import org.modelio.module.attacktreedesigner.command.tools.ConnectionTool;
+import org.modelio.module.attacktreedesigner.command.tools.CounterMeasureTool;
 import org.modelio.module.attacktreedesigner.command.tools.CreateAttackTool;
 import org.modelio.module.attacktreedesigner.command.tools.CreateTreeReferenceTool;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementCreationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementReferencing;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.DiagramElementBounds;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.TagsManager;
 import org.modelio.vbasic.version.Version;
+import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("b9938b7d-5f07-445a-ba5a-251f256f4742")
 public class AttackTreeDesignerPeerModule implements IAttackTreeDesignerPeerModule {
@@ -164,28 +171,51 @@ public class AttackTreeDesignerPeerModule implements IAttackTreeDesignerPeerModu
 
     @objid ("3b5c2457-310e-4948-8b3a-f6cde12c2f0a")
     @Override
-    public void createCounterAttack(Class attack, ClassDiagram diagram) {
-        // TODO Auto-generated method stub
+    public Note createCounterMeasure(Class attack, ClassDiagram diagram) {
+        Note counterMeasure = null;
+        IDiagramService diagramService = this.module.getModuleContext().getModelioServices().getDiagramService();
+        try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+            List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(attack);
+            if( !diagramGraphics.isEmpty()) {
+                counterMeasure = CounterMeasureTool.createCounterMeasure(diagramHandle, diagramGraphics.get(0),  new Point(0, 0));
+            }
+        }
+        return counterMeasure;
     }
 
     @objid ("a8b529c0-fd14-4522-9be3-4469aa3c9925")
     @Override
     public void updateTag(Class attack, String tagType, String TagValue) {
-        // TODO Auto-generated method stub
+        TagsManager.setElementTagValue(attack, AttackTreeStereotypes.ATTACK, tagType, TagValue);
     }
 
     @objid ("934c8f36-b5a7-4f94-8587-d69d6cd694dd")
     @Override
-    public void createConnection(Class source, Class target, ClassDiagram diagram) {
+    public Dependency createConnection(Class source, Class target, ClassDiagram diagram) {
+        Dependency connectionElement = null;
         IDiagramService diagramService = this.module.getModuleContext().getModelioServices().getDiagramService();
         try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
         
             List<IDiagramGraphic> sourceGraphics = diagramHandle.getDiagramGraphics(source);
             List<IDiagramGraphic> targetGraphics = diagramHandle.getDiagramGraphics(target);
             if( !sourceGraphics.isEmpty() && !targetGraphics.isEmpty() ) {
-                ConnectionTool.createConnection(diagramHandle, sourceGraphics.get(0), targetGraphics.get(0));        
+                connectionElement = ConnectionTool.createConnection(diagramHandle, sourceGraphics.get(0), targetGraphics.get(0));        
             }
         }
+        return connectionElement;
+    }
+
+    @objid ("8a2b3795-3a63-4cd6-a072-470568b96d6a")
+    @Override
+    public String getElementFullPath(MObject element) {
+        return ElementReferencing.getElementFullPath(element);
+    }
+
+    @objid ("6268ed80-090a-40b9-9b1b-875ebd42f887")
+    @Override
+    public void updateReference(Class reference, String referencedTreeFullPath) {
+        ElementReferencing.updateListOfAvailableTrees(reference);
+        ElementReferencing.updateReference(reference, referencedTreeFullPath);
     }
 
 }

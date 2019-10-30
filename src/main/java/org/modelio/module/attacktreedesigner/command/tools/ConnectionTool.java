@@ -8,6 +8,7 @@ import org.modelio.api.modelio.diagram.ILinkPath;
 import org.modelio.api.modelio.diagram.tools.DefaultLinkTool;
 import org.modelio.api.modelio.model.IModelingSession;
 import org.modelio.api.modelio.model.ITransaction;
+import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.ModelTree;
 import org.modelio.metamodel.uml.statik.Class;
@@ -54,7 +55,9 @@ public class ConnectionTool extends DefaultLinkTool {
     }
 
     @objid ("be228e59-40ff-4745-bc22-1684c4a5fdcf")
-    public static void createConnection(IDiagramHandle diagramHandle, IDiagramGraphic originNode, IDiagramGraphic targetNode) {
+    public static Dependency createConnection(IDiagramHandle diagramHandle, IDiagramGraphic originNode, IDiagramGraphic targetNode) {
+        Dependency connectionElement = null;
+        
         IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession();
         try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.Create", AttackTreeStereotypes.CONNECTION))){
         
@@ -64,11 +67,11 @@ public class ConnectionTool extends DefaultLinkTool {
         
             secondElement.setOwner(firstElement);
         
-            ModelElement connection = session.getModel().createDependency(firstElement, 
+            connectionElement = session.getModel().createDependency(firstElement, 
                     secondElement, 
                     IAttackTreeDesignerPeerModule.MODULE_NAME, 
                     AttackTreeStereotypes.CONNECTION); 
-            diagramHandle.unmask(connection, 0, 0);
+            diagramHandle.unmask(connectionElement, 0, 0);
         
         
             diagramHandle.save();
@@ -79,6 +82,7 @@ public class ConnectionTool extends DefaultLinkTool {
         
             transaction.commit ();
         }
+        return connectionElement;
     }
 
 }

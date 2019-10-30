@@ -123,23 +123,23 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
         
         Class attack = (Class) updatedTag.getAnnoted();
         
-        if(attack.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) {
-            // if the attack is a Root
-            for(Attribute attribute : attack.getObject()) {
-                if(attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE)) {
-                    Class reference = (Class) attribute.getOwner();
-                    if(!reference.isDeleted()) {
-                        
-                        /*
-                         * Update reference Color to Countered
-                         */
-                        ElementRepresentationManager.setClassColor(reference, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);                        
-            
-                        // if reference has a parent
-                        for(Dependency parentDependency: reference.getImpactedDependency()) {
-                            if(parentDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
-                                Class firstAttackAscendant = getFirstNonDeletedAttackAscendant(parentDependency);
-                                if(firstAttackAscendant != null) {
+            if(attack.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) {
+                // if the attack is a Root
+                for(Attribute attribute : attack.getObject()) {
+                    if(attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE)) {
+                        Class reference = (Class) attribute.getOwner();
+                        if(!reference.isDeleted()) {
+        
+                            /*
+                             * Update reference Color to Countered
+                             */
+                            ElementRepresentationManager.setClassColor(reference, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);                        
+        
+                            // if reference has a parent
+                            for(Dependency parentDependency: reference.getImpactedDependency()) {
+                                if(parentDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                                    Class firstAttackAscendant = getFirstNonDeletedAttackAscendant(parentDependency);
+                                    if(firstAttackAscendant != null) {
                                     try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.UpdateModel"))){
                                         updateAndPropagateAttackTags(firstAttackAscendant, severityTagIsUpdated, probabilityTagIsUpdated, counteredTagIsUpdated);
                                         transaction.commit();
@@ -152,12 +152,12 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
             }
         
         
-        } else {
-            // if the attack has a parent
-            for(Dependency parentDependency : attack.getImpactedDependency()) {
-                if(parentDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
-                    Class firstAttackAscendant = getFirstNonDeletedAttackAscendant(parentDependency);
-                    if(firstAttackAscendant != null) {
+            } else {
+                // if the attack has a parent
+                for(Dependency parentDependency : attack.getImpactedDependency()) {
+                    if(parentDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                        Class firstAttackAscendant = getFirstNonDeletedAttackAscendant(parentDependency);
+                        if(firstAttackAscendant != null) {
                         try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.UpdateModel"))){
                             updateAndPropagateAttackTags(firstAttackAscendant, severityTagIsUpdated, probabilityTagIsUpdated, counteredTagIsUpdated);
                             transaction.commit();
@@ -203,18 +203,18 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
     @objid ("a8aa3c42-1c0c-43c9-96bb-e5325e7cca19")
     public static void updateAndPropagateAttackTags(Class attack, boolean updateSeverity, boolean updateProbability, boolean updateCountered) {
         if(updateSeverity) {
-            
+        
             int minSeverityIndex = SeverityTagManager.getMinSeverityIndex(attack);
             String attackSeverity = TagsManager.getElementTagParameter(attack, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
             int attackSeverityIndex = minSeverityIndex;
-            
+        
             for(int i=0; i < TagsManager.SEVERITY_VALUES.length; i++) {
                 if(attackSeverity.equals(TagsManager.SEVERITY_VALUES[i])) {
                     attackSeverityIndex = i;
                     break;
                 }
             }
-            
+        
             if(attackSeverityIndex < minSeverityIndex) {
                 TagsManager.setElementTagValue(attack, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY, TagsManager.SEVERITY_VALUES[minSeverityIndex]);
             }
@@ -225,7 +225,7 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
             int[] probabilityIndexBounds = ProbabilityTagManager.getProbabilityIndexBounds(attack);
             String attackProbability = TagsManager.getElementTagParameter(attack, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.PROBABILITY);
         
-            
+        
             for(int i=0; i < TagsManager.PROBABILITY_VALUES.length; i++) {
                 if(attackProbability.equals(TagsManager.PROBABILITY_VALUES[i])) {
                     int attackProbabilityIndex = i;
@@ -261,7 +261,7 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                 if(attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE)) {
                     Class reference = (Class) attribute.getOwner();
                     if(!reference.isDeleted()) {
-                        
+        
                         if(updateCountered) {
                             // update reference color
                             if(CounterMeasureManager.isCountered(reference, true)) {
@@ -270,7 +270,7 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                                 ElementRepresentationManager.setClassColor(reference, ElementRepresentationManager.DEFAULT_ATTACK_COLOR);
                             }
                         }
-                        
+        
         
         
                         // propagate to references ascendants

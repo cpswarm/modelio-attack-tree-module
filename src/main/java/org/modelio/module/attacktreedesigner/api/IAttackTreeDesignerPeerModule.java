@@ -3,9 +3,12 @@ package org.modelio.module.attacktreedesigner.api;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.api.module.IPeerModule;
 import org.modelio.metamodel.diagrams.ClassDiagram;
+import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
+import org.modelio.metamodel.uml.infrastructure.Note;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.Package;
+import org.modelio.vcore.smkernel.mapi.MObject;
 
 @objid ("bbd2491a-c005-46f1-80e2-5370d1fd7230")
 public interface IAttackTreeDesignerPeerModule extends IPeerModule {
@@ -34,12 +37,18 @@ public interface IAttackTreeDesignerPeerModule extends IPeerModule {
     Class createReference(ClassDiagram diagram);
 
     @objid ("1b659a6f-7bcd-435d-8594-3ff66bd9a8ec")
-    void createCounterAttack(Class attack, ClassDiagram diagram);
+    Note createCounterMeasure(Class attack, ClassDiagram diagram);
 
     @objid ("bf82fcf8-66a5-4e5d-bdc5-9398466918f7")
     void updateTag(Class attack, String tagType, String TagValue);
 
     @objid ("05bcb59d-86eb-4c2a-8ef7-75838d41cab4")
-    void createConnection(Class source, Class target, ClassDiagram diagram);
+    Dependency createConnection(Class source, Class target, ClassDiagram diagram);
+
+    @objid ("22f26825-e5a9-408e-bb98-744de3eba2ab")
+    String getElementFullPath(MObject element);
+
+    @objid ("d29d7190-885c-4cb1-a3b5-1841fcb9e1d1")
+    void updateReference(Class reference, String referencedTreeFullPath);
 
 }

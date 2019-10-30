@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.api.modelio.diagram.IDiagramHandle;
 import org.modelio.api.modelio.diagram.IDiagramNode;
@@ -161,8 +162,16 @@ public class JaxbToModelConvertor {
         for(CounterMeasureType jaxbCounterMeasure : jaxbAttack.getCounterMeasure()) {
         
             Note note = model.createNote(IAttackTreeDesignerPeerModule.MODULE_NAME,AttackTreeNoteTypes.COUNTER_MEASURE, attackNode, jaxbCounterMeasure.getContent());   
-            diagramHandle.unmask(note, 0, 0);
+            List<IDiagramGraphic> nodeGraphics = diagramHandle.unmask(note, 0, 0);
         
+            // update note bounds
+            if(! nodeGraphics.isEmpty()) {
+                IDiagramNode diagramNode = (IDiagramNode) nodeGraphics.get(0);
+                Rectangle nodeBounds = diagramNode.getBounds();
+                nodeBounds.setHeight(DiagramElementBounds.COUNTER_MEASURE.getHeight());
+                diagramNode.setBounds(nodeBounds);
+            }
+            
             // update countered Attack color
             ElementRepresentationManager.setClassColor(attackNode, diagramHandle, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);
         

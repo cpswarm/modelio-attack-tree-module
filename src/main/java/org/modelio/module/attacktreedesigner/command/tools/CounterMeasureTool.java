@@ -41,16 +41,28 @@ public class CounterMeasureTool extends DefaultAttachedBoxTool {
     @objid ("c2df77ce-c32a-4e4c-8db8-0e4d3d849ae8")
     @Override
     public void actionPerformed(IDiagramHandle diagramHandle, IDiagramGraphic originNode, LinkRouterKind routerType, ILinkPath path, Point point) {
+        createCounterMeasure(diagramHandle, originNode, point);
+    }
+
+    @objid ("b8da66a5-09f8-40f9-8a6f-5e654955d597")
+    @Override
+    public void actionPerformedInDiagram(final IDiagramHandle diagramHandle, final Rectangle rect) {
+    }
+
+    @objid ("af528edd-dcb1-4532-9733-4b1d10d68973")
+    public static Note createCounterMeasure(IDiagramHandle diagramHandle, IDiagramGraphic originNode, Point point) {
+        Note counterMeasure = null;
+        
         IModelingSession session = AttackTreeDesignerModule.getInstance().getModuleContext().getModelingSession();
         IUmlModel model = session.getModel();                
         try( ITransaction transaction = session.createTransaction (Messages.getString("Info.Session.Create", "Counter Measure"))){
             Class counteredAttack = (Class) originNode.getElement();
             
-            Note note = model.createNote(IAttackTreeDesignerPeerModule.MODULE_NAME,AttackTreeNoteTypes.COUNTER_MEASURE, counteredAttack, AttackTreeNoteTypes.COUNTER_MEASURE);   
+            counterMeasure = model.createNote(IAttackTreeDesignerPeerModule.MODULE_NAME,AttackTreeNoteTypes.COUNTER_MEASURE, counteredAttack, AttackTreeNoteTypes.COUNTER_MEASURE);   
         
-            List<IDiagramGraphic> nodeGraphics = diagramHandle.unmask(note, point.x, point.y );
+            List<IDiagramGraphic> nodeGraphics = diagramHandle.unmask(counterMeasure, point.x, point.y );
             
-            
+            // update note bounds
             if(! nodeGraphics.isEmpty()) {
                 IDiagramNode diagramNode = (IDiagramNode) nodeGraphics.get(0);
                 Rectangle nodeBounds = diagramNode.getBounds();
@@ -69,11 +81,7 @@ public class CounterMeasureTool extends DefaultAttachedBoxTool {
             diagramHandle.close();
             transaction.commit();
         }
-    }
-
-    @objid ("b8da66a5-09f8-40f9-8a6f-5e654955d597")
-    @Override
-    public void actionPerformedInDiagram(final IDiagramHandle diagramHandle, final Rectangle rect) {
+        return counterMeasure;
     }
 
 }
