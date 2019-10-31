@@ -114,6 +114,13 @@ public class ModelToJaxbConvertor {
         outOfScopeTag.setValue(TagsManager.getElementTagParameter(modelNode, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.OUT_OF_SCOPE));
         attack.getTag().add(outOfScopeTag);
         
+        
+        TagType counteredAttack = objectFactory.createTagType();
+        counteredAttack.setName(AttackTreeTagTypes.COUNTERED_ATTACK);
+        counteredAttack.setValue(TagsManager.getElementTagParameter(modelNode, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.COUNTERED_ATTACK));
+        attack.getTag().add(counteredAttack);
+        
+        
         List<Note> nodeNotes = modelNode.getDescriptor();
         for(Note note:nodeNotes) {
             if(note.getModel().getName().equals(AttackTreeNoteTypes.COUNTER_MEASURE)) {

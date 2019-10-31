@@ -86,9 +86,9 @@ public class TagsManager {
     }
 
     @objid ("4810aaa4-fd61-433f-9c3f-8b9cb6cebb7c")
-    public static void createTagParameter(IModelingSession session, TaggedValue severityTaggedValue, String value) {
-        TagParameter tagParameter= session.getModel().createTagParameter(value, severityTaggedValue);
-        severityTaggedValue.getActual().add(0,tagParameter);
+    public static void createTagParameter(IModelingSession session, TaggedValue taggedValue, String value) {
+        TagParameter tagParameter= session.getModel().createTagParameter(value, taggedValue);
+        taggedValue.getActual().add(0,tagParameter);
     }
 
     @objid ("20bae7fd-cbc6-4f63-98d7-5c4ee875dfc0")

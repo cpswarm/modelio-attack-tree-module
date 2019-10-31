@@ -73,7 +73,7 @@
                     <HParameter name="name" value=""/>
                 </Handler>
             </Command>
-            <Command id="Import_a_tree" label="%command.Import_a_tree.label" tooltip="%command.Import_a_tree.tooltip" image="res/icon/gui/Import2_24.png" modify-model="false">
+            <Command id="Import_a_tree" label="%command.Import_a_tree.label" tooltip="%command.Import_a_tree.tooltip" image="res/icon/gui/Import2_24.png" modify-model="true">
                 <Scope metaclass="Standard.Package" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.ImportCommand">
                     <HParameter name="name" value=""/>
@@ -106,7 +106,7 @@
                     <HParameter name="name" value=""/>
                 </Handler>
             </Command>
-            <Command id="Import_a_package" label="%command.Import_a_package.label" tooltip="%command.Import_a_package.tooltip" image="res/icon/gui/ImportPackage_24.png" modify-model="false">
+            <Command id="Import_a_package" label="%command.Import_a_package.label" tooltip="%command.Import_a_package.tooltip" image="res/icon/gui/ImportPackage_24.png" modify-model="true">
                 <Scope metaclass="Standard.Package" stereotype=""/>
                 <Scope metaclass="Standard.Project" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.ImportPackageCommand"/>

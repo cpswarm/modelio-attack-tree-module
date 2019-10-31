@@ -38,8 +38,10 @@ import org.modelio.module.attacktreedesigner.conversion.schema.TagType;
 import org.modelio.module.attacktreedesigner.conversion.schema.TreeReferenceType;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
+import org.modelio.module.attacktreedesigner.impl.AttackTreeModelChangeHandler;
 import org.modelio.module.attacktreedesigner.utils.FileSystemManager;
 import org.modelio.module.attacktreedesigner.utils.IAttackTreeCustomizerPredefinedField;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.CounterMeasureManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementCreationManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementReferencing;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.AutoLayoutManager;
@@ -73,7 +75,7 @@ public class JaxbToModelConvertor {
     }
 
     @objid ("0e81805a-749d-4440-a49e-b8ac857f35da")
-    public static void reInializeListOfPostponedReferences() {
+    public static void reInitializeListOfPostponedReferences() {
         if(!postponedReferences.isEmpty()) {
             postponedReferences  = new HashMap<>();
         }
@@ -82,6 +84,8 @@ public class JaxbToModelConvertor {
     @objid ("526b7cca-f429-4caf-afe1-df860b7815a0")
     public static void updatePostponedReferences() {
         postponedReferences.forEach((reference,path)->{
+            
+            
             Class referencedTree = getTreeByRelativePathName(reference, path);
             if(referencedTree != null) {
                 Attribute attribute = ElementReferencing.getRefAttribute(reference);
@@ -90,12 +94,34 @@ public class JaxbToModelConvertor {
                     try( ITransaction transaction = session.createTransaction(Messages.getString ("Info.Session.UpdateModel"))){
                         attribute.setType(referencedTree);
         
+                        /*
+                         * Update color
+                         */
+                        if(CounterMeasureManager.isCountered(referencedTree, true)) {
+                            ElementRepresentationManager.setClassColor(reference, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);
+        
+        
+                        } else {
+                            ElementRepresentationManager.setClassColor(reference, ElementRepresentationManager.DEFAULT_ATTACK_COLOR);
+                        }
+                        
+                        /*
+                         * Propagate to ascendants of reference
+                         */
+                        for(Dependency parentDependency : reference.getImpactedDependency()) {
+                            if(parentDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                                Class elementParent = (Class) parentDependency.getImpacted();                
+                                AttackTreeModelChangeHandler.updateAndPropagateAttackTags(elementParent, false, false, true);                         
+                            }
+                        }
+                        
                         transaction.commit ();
                     }
                 }
             }
+            
         });
-        reInializeListOfPostponedReferences();
+        reInitializeListOfPostponedReferences();
     }
 
     @objid ("4bd24626-04b4-4a25-8987-90725819d938")
@@ -110,7 +136,6 @@ public class JaxbToModelConvertor {
             // create Root Class and Default tags
             AttackType jaxbAttack = this.jaxbTree.getAttack();
             Class rootElement = projectModel.createClass(jaxbAttack.getName(), destinationPackage, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT);
-            updateAttackTags(modellingSession, jaxbAttack, rootElement);
         
             // Create Attack Tree Diagram
             MClass mclass = moduleContext.getModelioServices().getMetamodelService().getMetamodel().getMClass(ClassDiagram.class);
@@ -137,6 +162,9 @@ public class JaxbToModelConvertor {
                         ((IDiagramNode) diagramGraphic).setBounds(DiagramElementBounds.ROOT.createRectangleBounds());
                     }
                 }
+        
+                // update tags of Root
+                updateAttackTags(modellingSession, diagramHandle, jaxbAttack, rootElement);
         
                 // Create and unmask counter measures of Root
                 updateAttackCounterMeasures(modellingSession, diagramHandle, jaxbAttack, rootElement);
@@ -172,8 +200,8 @@ public class JaxbToModelConvertor {
                 diagramNode.setBounds(nodeBounds);
             }
             
-            // update countered Attack color
-            ElementRepresentationManager.setClassColor(attackNode, diagramHandle, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);
+            // update countered Attack color [Deprecated, treated in updateAttackTags]
+            //ElementRepresentationManager.setClassColor(attackNode, diagramHandle, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);
         
             // update countered Attack "Countered attack" tag
             TagsManager.setElementTagValue(attackNode, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.COUNTERED_ATTACK, "true");
@@ -181,19 +209,22 @@ public class JaxbToModelConvertor {
     }
 
     @objid ("63be2bc0-f545-41d1-834a-2af4cad9d371")
-    private void updateAttackTags(IModelingSession modellingSession, AttackType jaxbAttack, Class attackNode) {
+    private void updateAttackTags(IModelingSession modellingSession, IDiagramHandle diagramHandle, AttackType jaxbAttack, Class attackNode) {
         for(TagType jaxbTag: jaxbAttack.getTag()) {
             String tagType = jaxbTag.getName();
             TaggedValue tag = modellingSession.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, tagType, attackNode);
+            if(tagType.equals(AttackTreeTagTypes.COUNTERED_ATTACK) && jaxbTag.getValue().equals("true")) {
+                ElementRepresentationManager.setClassColor(attackNode, diagramHandle, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);
+            }
             TagsManager.createTagParameter(modellingSession, tag, jaxbTag.getValue());
         }
         
         /*
-         * Create Countered Attack Default Tag
+         * [Deprecated]Create Countered Attack Default Tag
          */
-        TaggedValue counteredAttackTag = modellingSession.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, 
-                AttackTreeTagTypes.COUNTERED_ATTACK, attackNode);
-        TagsManager.createTagParameter(modellingSession, counteredAttackTag, TagsManager.DEFAULT_COUNTERED_ATTACK);
+        //        TaggedValue counteredAttackTag = modellingSession.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, 
+        //                AttackTreeTagTypes.COUNTERED_ATTACK, attackNode);
+        //        TagsManager.createTagParameter(modellingSession, counteredAttackTag, TagsManager.DEFAULT_COUNTERED_ATTACK);
     }
 
     @objid ("2e95b475-e490-473d-abd9-4568d8d2b4e4")
@@ -242,7 +273,7 @@ public class JaxbToModelConvertor {
                 modellingSession, AttackTreeStereotypes.ATTACK, node, rootElement.getCompositionOwner());
         
         attackChildNode.setName(jaxbAttackChild.getName());
-        updateAttackTags(modellingSession, jaxbAttackChild, attackChildNode);
+        updateAttackTags(modellingSession, diagramHandle, jaxbAttackChild, attackChildNode);
         updateAttackCounterMeasures(modellingSession, diagramHandle, jaxbAttackChild, attackChildNode);
         
         Dependency dependency = modellingSession.getModel().createDependency(node, attackChildNode, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION); 

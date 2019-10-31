@@ -23,7 +23,7 @@ public class ImportPackageCommand extends DefaultModuleCommandHandler {
     public void actionPerformed(final List<MObject> selectedElements, final IModule module) {
         Package destinationPackage = (Package) selectedElements.get(0);
         
-        String directoryPath = FileSystemManager.getDialogDirectoryPath();
+        String directoryPath = FileSystemManager.getDialogDirectoryPath(Messages.getString("Ui.Dialog.SelectDirectoryImport.Label"));
         if(directoryPath == null)
             return;
         

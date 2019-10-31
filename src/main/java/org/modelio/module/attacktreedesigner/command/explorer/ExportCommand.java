@@ -10,6 +10,7 @@ import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.conversion.ModelToJaxbConvertor;
+import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.utils.FileSystemManager;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
@@ -18,7 +19,7 @@ public class ExportCommand extends DefaultModuleCommandHandler {
     @objid ("b18adffa-2cab-4db4-b632-4e0991478fb5")
     @Override
     public void actionPerformed(List<MObject> selectedElements, IModule module) {
-        String directoryPath = FileSystemManager.getDialogDirectoryPath();
+        String directoryPath = FileSystemManager.getDialogDirectoryPath(Messages.getString("Ui.Dialog.SelectDirectoryExport.Label"));
         if(directoryPath == null)
             return;
         

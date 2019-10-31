@@ -29,7 +29,7 @@ public class FileSystemManager {
     @objid ("e4580c8f-106a-4175-9d9a-d1c78bf3f018")
     public static String getXMLFileDialogPath() {
         FileDialog fileDialog = new FileDialog(Display.getDefault().getActiveShell());
-        fileDialog.setText(Messages.getString("Ui.Dialog.SelectDirectoryExport.Label"));
+        fileDialog.setText(Messages.getString("Ui.Dialog.SelectXMLFileImport.Label"));
         String[] extension = { XML_FILE_WILDCARD };
         fileDialog.setFilterExtensions(extension);
         return fileDialog.open();
@@ -39,9 +39,9 @@ public class FileSystemManager {
      * @return directory path or null if open dialog failed
      */
     @objid ("b3c3f28e-19ac-4c50-a0af-dc516d572e55")
-    public static String getDialogDirectoryPath() {
+    public static String getDialogDirectoryPath(String dialogText) {
         DirectoryDialog directoryDialog = new DirectoryDialog(Display.getDefault().getActiveShell());
-        directoryDialog.setText(Messages.getString("Ui.Dialog.SelectDirectoryExport.Label"));
+        directoryDialog.setText(dialogText);
         return directoryDialog.open();
     }
 

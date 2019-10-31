@@ -32,7 +32,7 @@ public class ElementReferencing {
     public static List<String> getAvailableTreesFullPath() {
         List<String> availableTreeNames = new ArrayList<>();
         for(Class tree : _availableTrees) {           
-        //            availableTreeNames.add(tree.getOwner().getName() + "::" +  tree.getName());        
+            //            availableTreeNames.add(tree.getOwner().getName() + "::" +  tree.getName());        
             availableTreeNames.add(getElementFullPath(tree));        
         }
         return availableTreeNames;
@@ -69,23 +69,23 @@ public class ElementReferencing {
         
         
         
+        if(referenceAttribute != null) {
+            if (referencedTree != null) {            
         
-        if (referencedTree != null) {            
+                referenceAttribute.setType(referencedTree);       
         
-            referenceAttribute.setType(referencedTree);       
-        
-            if(CounterMeasureManager.isCountered(referencedTree, true)) {
-                ElementRepresentationManager.setClassColor(element, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);
+                if(CounterMeasureManager.isCountered(referencedTree, true)) {
+                    ElementRepresentationManager.setClassColor(element, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);
         
         
-            } else {
+                } else {
+                    ElementRepresentationManager.setClassColor(element, ElementRepresentationManager.DEFAULT_ATTACK_COLOR);
+                }
+            } else {             
+                referenceAttribute.setType(model.getUmlTypes().getUNDEFINED());
                 ElementRepresentationManager.setClassColor(element, ElementRepresentationManager.DEFAULT_ATTACK_COLOR);
             }
-        } else {             
-            referenceAttribute.setType(model.getUmlTypes().getUNDEFINED());
-            ElementRepresentationManager.setClassColor(element, ElementRepresentationManager.DEFAULT_ATTACK_COLOR);
         }
-        
         /*
          * Propagate to ascendants of reference
          */
