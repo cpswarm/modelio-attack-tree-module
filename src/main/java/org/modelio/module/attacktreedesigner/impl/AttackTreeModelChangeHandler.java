@@ -24,6 +24,7 @@ import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.CounterMeasureManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementCreationManager;
+import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementNavigationManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.representation.ElementRepresentationManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.ProbabilityTagManager;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.SeverityTagManager;
@@ -66,10 +67,9 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
         /*
          * Handle Moved elements
          */
-        List<IElementMovedEvent> moveEvents = event.getMoveEvents();
-        for(IElementMovedEvent moveEvent:moveEvents) {
-            // TODO 
-            //(for changing the origin of a dependency) (update model, and tags)
+        List<IElementMovedEvent> movedEvents = event.getMoveEvents();
+        for(IElementMovedEvent movedEvent:movedEvents) {
+            handleMovedElement(session, movedEvent);
         }
     }
 
@@ -468,7 +468,7 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                                     break;
                                 }
                             }
-                            
+        
                             if(! childHasStereotypedConnectionIngoingDependency){
                                 // Move childNode under rootNode
                                 childNode.setOwner(rootNode);
@@ -492,19 +492,73 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                     }
                 }
         
-                
+        
+                /*
+                 * Check for forbidden connections in  originNode--(Dep)-->newDestinationNode
+                 * If it is the case then delete the updatedDependency
+                 */
+                if(newDestinationNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)
+                        || newDestinationNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)
+                        || (originNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK)
+                                && !newDestinationNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR))
+                        ||(ElementNavigationManager.getSecondLevelAncestor(originNode)
+                                .equals(ElementNavigationManager.getSecondLevelAncestor(newDestinationNode))) ){
+        
+                    updatedDependency.delete();
+                }
+        
+                /*
+                 * Move new destination node under originNode
+                 */
                 if(! updatedDependency.isDeleted()) {
-                    // Move new destination node under originNode
                     newDestinationNode.setOwner(originNode);
                     ElementCreationManager.renameElement(session, newDestinationNode); 
                 }
-                
+        
                 // propagate tags to ascendants
                 Class firstAttackAscendant = getFirstNonDeletedAttackAscendant(updatedDependency);
                 if(firstAttackAscendant != null) {
                     updateAndPropagateAttackTags(firstAttackAscendant, true, true, true);
                 }
+        
+                transaction.commit();
+            }
+        }
+    }
+
+    @objid ("dfe0f987-a999-450e-8f7a-b6b149a98451")
+    private void handleMovedElement(IModelingSession session, IElementMovedEvent movedEvent) {
+        MObject movedElement = movedEvent.getMovedElement(); 
+        
+        /*
+         * handle moved dependency
+         */
+        if(movedElement instanceof Dependency) {
+        
+            Dependency movedDependency = (Dependency) movedElement;
+            Class rootNode = (Class) movedDependency.getDiagramElement().get(0).getOrigin(); 
+            Class newOriginNode = (Class) movedDependency.getImpacted();
+            Class destinationNode = (Class) movedDependency.getDependsOn();
+            Class oldOriginNode = (Class) destinationNode.getCompositionOwner();
+        
+            try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.UpdateModel"))){
+        
+                /*
+                 * Check if destination node is already a target of an existing dependency
+                 * If it is the case then delete the updatedDependency
+                 */
                 
+                /*
+                 * Check for forbidden connections in  originNode--(Dep)-->newDestinationNode
+                 */
+                
+                /*
+                 * Move destination node 
+                 *      if ! movedDependency.deleted -> move destinationNode under Root
+                 *      else -> move destinationNode under newOriginNode
+                 */
+        
+                //if (newOriginNode)
                 transaction.commit();
             }
         }
