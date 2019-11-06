@@ -107,7 +107,8 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
             TagParameter updatedTagParameter = (TagParameter) updatedEvent;
             handleUpdatedTagParameter(session, updatedTagParameter);
         } else if (updatedEvent instanceof Dependency) {
-            // TODO
+            Dependency updatedDependency =  (Dependency) updatedEvent;
+            handleUpdatedDependency(session, updatedDependency);
         }
     }
 
@@ -123,23 +124,23 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
         
         Class attack = (Class) updatedTag.getAnnoted();
         
-            if(attack.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) {
-                // if the attack is a Root
-                for(Attribute attribute : attack.getObject()) {
-                    if(attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE)) {
-                        Class reference = (Class) attribute.getOwner();
-                        if(!reference.isDeleted()) {
+        if(attack.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)) {
+            // if the attack is a Root
+            for(Attribute attribute : attack.getObject()) {
+                if(attribute.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE)) {
+                    Class reference = (Class) attribute.getOwner();
+                    if(!reference.isDeleted()) {
         
-                            /*
-                             * Update reference Color to Countered
-                             */
-                            ElementRepresentationManager.setClassColor(reference, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);                        
+                        /*
+                         * Update reference Color to Countered
+                         */
+                        ElementRepresentationManager.setClassColor(reference, ElementRepresentationManager.COUNTERED_ATTACK_COLOR);                        
         
-                            // if reference has a parent
-                            for(Dependency parentDependency: reference.getImpactedDependency()) {
-                                if(parentDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
-                                    Class firstAttackAscendant = getFirstNonDeletedAttackAscendant(parentDependency);
-                                    if(firstAttackAscendant != null) {
+                        // if reference has a parent
+                        for(Dependency parentDependency: reference.getImpactedDependency()) {
+                            if(parentDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                                Class firstAttackAscendant = getFirstNonDeletedAttackAscendant(parentDependency);
+                                if(firstAttackAscendant != null) {
                                     try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.UpdateModel"))){
                                         updateAndPropagateAttackTags(firstAttackAscendant, severityTagIsUpdated, probabilityTagIsUpdated, counteredTagIsUpdated);
                                         transaction.commit();
@@ -152,12 +153,12 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
             }
         
         
-            } else {
-                // if the attack has a parent
-                for(Dependency parentDependency : attack.getImpactedDependency()) {
-                    if(parentDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
-                        Class firstAttackAscendant = getFirstNonDeletedAttackAscendant(parentDependency);
-                        if(firstAttackAscendant != null) {
+        } else {
+            // if the attack has a parent
+            for(Dependency parentDependency : attack.getImpactedDependency()) {
+                if(parentDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                    Class firstAttackAscendant = getFirstNonDeletedAttackAscendant(parentDependency);
+                    if(firstAttackAscendant != null) {
                         try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.UpdateModel"))){
                             updateAndPropagateAttackTags(firstAttackAscendant, severityTagIsUpdated, probabilityTagIsUpdated, counteredTagIsUpdated);
                             transaction.commit();
@@ -433,6 +434,78 @@ public class AttackTreeModelChangeHandler implements IModelChangeHandler {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @objid ("765bae68-754b-47d6-92ef-74d68b9622d1")
+    private static void handleUpdatedDependency(IModelingSession session, Dependency updatedDependency) {
+        if( updatedDependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)){
+        
+        
+            Class rootNode = (Class) updatedDependency.getDiagramElement().get(0).getOrigin(); 
+            Class originNode = (Class) updatedDependency.getImpacted();
+            Class newDestinationNode = (Class) updatedDependency.getDependsOn();
+        
+            try( ITransaction transaction = session.createTransaction (Messages.getString ("Info.Session.UpdateModel"))){
+        
+        
+        
+                /*
+                 *  Move Old Destination Node under the Root
+                 *  By moving every node under originNode which is not related with an outgoing Dependency to the root
+                 */
+                if(! originNode.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT)){
+                    for( MObject child : originNode.getCompositionChildren()) {
+                        if(child instanceof Class) {
+                            Class childNode = (Class) child;
+        
+                            boolean childHasStereotypedConnectionIngoingDependency = false;
+        
+                            for(Dependency dependency : childNode.getImpactedDependency()) {
+                                if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)){
+                                    childHasStereotypedConnectionIngoingDependency = true;
+                                    break;
+                                }
+                            }
+                            
+                            if(! childHasStereotypedConnectionIngoingDependency){
+                                // Move childNode under rootNode
+                                childNode.setOwner(rootNode);
+                                ElementCreationManager.renameElement(session, childNode); 
+                            }
+                        }
+                    }
+                }
+        
+        
+                /*
+                 * Check if destination node is already a target of an existing dependency
+                 * If it is the case then delete the updatedDependency
+                 */
+                List<Dependency> impactedDependencies = newDestinationNode.getImpactedDependency();
+                for(Dependency dependency : impactedDependencies) {
+                    if(dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)
+                            && ! dependency.equals(updatedDependency)){
+                        updatedDependency.delete();
+                        break;
+                    }
+                }
+        
+                
+                if(! updatedDependency.isDeleted()) {
+                    // Move new destination node under originNode
+                    newDestinationNode.setOwner(originNode);
+                    ElementCreationManager.renameElement(session, newDestinationNode); 
+                }
+                
+                // propagate tags to ascendants
+                Class firstAttackAscendant = getFirstNonDeletedAttackAscendant(updatedDependency);
+                if(firstAttackAscendant != null) {
+                    updateAndPropagateAttackTags(firstAttackAscendant, true, true, true);
+                }
+                
+                transaction.commit();
             }
         }
     }
