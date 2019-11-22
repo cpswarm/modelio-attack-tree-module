@@ -40,4 +40,7 @@ public interface AttackTreeStereotypes {
     @objid ("1220a502-fe6e-4e3c-9a61-a5c600a26614")
     public static final String TREE_REFERENCE_ATTRIBUTE = "TreeReferenceAttribute";
 
+    @objid ("f149b501-9819-49fd-acd1-0706096f7eb4")
+    public static final String THREAT_ANALYSIS = "ThreatAnalysis";
+
 }

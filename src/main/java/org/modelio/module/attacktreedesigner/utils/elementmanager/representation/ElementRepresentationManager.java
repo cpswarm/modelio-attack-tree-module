@@ -5,6 +5,7 @@ import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.modelio.api.modelio.diagram.IDiagramGraphic;
 import org.modelio.api.modelio.diagram.IDiagramHandle;
+import org.modelio.api.modelio.diagram.IDiagramLink;
 import org.modelio.api.modelio.diagram.IDiagramNode;
 import org.modelio.api.modelio.diagram.IDiagramService;
 import org.modelio.api.module.context.IModuleContext;
@@ -32,6 +33,12 @@ public class ElementRepresentationManager {
 
     @objid ("c77d8c6e-671f-42a0-9e76-34b37bc7dab8")
     public static final String COUNTERED_ATTACK_COLOR = "220, 250, 210";
+
+    @objid ("ca7a75f3-2b27-4d23-b2b4-8c674bdc8168")
+    private static final int ALTERNATE_LINE_PATTERN = 3;
+
+    @objid ("5c556669-89b4-4766-b026-3cc2dd167b92")
+    private static final int THREAT_ANALYSIS_DEPENDENCY_LINE_WIDTH = 2;
 
     @objid ("2e7eb0d3-339a-499b-8833-1cca9c83d496")
     public static void maskChildren(IModuleContext moduleContext, IDiagramService diagramService, MObject element, IDiagramHandle diagramHandle) {
@@ -230,6 +237,28 @@ public class ElementRepresentationManager {
             try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
                 ElementRepresentationManager.setClassColor(element, diagramHandle, color);
         
+                diagramHandle.save();
+                diagramHandle.close();
+            }
+        }
+    }
+
+    @objid ("0e12741f-2b68-4091-b9a9-11d3aec3755b")
+    public static void setThreatAnalysisDependencyStyle(Dependency dependency) {
+        IDiagramService diagramService = AttackTreeDesignerModule.getInstance().getModuleContext().getModelioServices().getDiagramService();                    
+        List<AbstractDiagram> diagrams = dependency.getDiagramElement(AbstractDiagram.class);
+        for(AbstractDiagram diagram: diagrams) {
+            
+            try(  IDiagramHandle diagramHandle = diagramService.getDiagramHandle(diagram);){
+                
+                List<IDiagramGraphic> diagramGraphics = diagramHandle.getDiagramGraphics(dependency);
+        
+                IDiagramLink diagramLink = (IDiagramLink )diagramGraphics.get(0);
+                diagramLink.setProperty(Labels.CLASS_REPRES_MODE.name(), DiagramElementStyle.TREE_REFERENCE.getRepresentationMode());
+                diagramLink.setLinePattern(ALTERNATE_LINE_PATTERN);
+                diagramLink.setLineWidth(THREAT_ANALYSIS_DEPENDENCY_LINE_WIDTH);
+                diagramLink.setProperty(Labels.DEPENDENCY_SHOWLABEL.toString(), "true");
+                
                 diagramHandle.save();
                 diagramHandle.close();
             }

@@ -71,6 +71,7 @@ public class AttackTreeDiagramCustomizer implements IDiagramCustomizer {
         group.add(toolRegistry.getRegisteredTool(IAttackTreeCustomizerPredefinedField.CONNECTION));
         group.add(toolRegistry.getRegisteredTool(IAttackTreeCustomizerPredefinedField.COUNTER_MEASURE));
         group.add(toolRegistry.getRegisteredTool(IAttackTreeCustomizerPredefinedField.TREE_REFERENCE));
+        group.add(toolRegistry.getRegisteredTool(IAttackTreeCustomizerPredefinedField.ANALYSE_THREAT));
         
         group.setInitialState(PaletteDrawer.INITIAL_STATE_OPEN);
         return group;

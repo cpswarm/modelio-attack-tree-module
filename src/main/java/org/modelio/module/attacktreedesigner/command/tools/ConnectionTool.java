@@ -26,12 +26,26 @@ public class ConnectionTool extends DefaultLinkTool {
     @Override
     public boolean acceptFirstElement(IDiagramHandle diagramHandle, IDiagramGraphic targetNode) {
         MObject firstElement = targetNode.getElement();
-        return (firstElement instanceof Class 
+        if (firstElement instanceof Class 
                 && ((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.NODE)
                 && ! ((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.SUBTREE)
                 && ! ((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE)
-                && ( ((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR)
-                        || ((ModelElement) firstElement).getDependsOnDependency().size() == 0)      );
+                ){            
+        
+            // if it is an operator it is allowed to have many children
+            if( ((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR)){
+                return true;
+            }
+            
+            // It it is not an operator (only left is Attack), then it must have only one child
+            for(Dependency dependency : (((ModelElement) firstElement).getDependsOnDependency())){
+                if (dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     @objid ("29f80b38-9ce1-482b-980b-2ed98b5f2730")
@@ -39,13 +53,23 @@ public class ConnectionTool extends DefaultLinkTool {
     public boolean acceptSecondElement(IDiagramHandle diagramHandle, IDiagramGraphic sourceNode, IDiagramGraphic targetNode) {
         MObject firstElement = sourceNode.getElement();
         MObject secondElement = targetNode.getElement();
-        return (secondElement instanceof Class 
+        
+        if (secondElement instanceof Class 
                 && (((Class) secondElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.NODE))
                 && !(((Class) secondElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ROOT))
-                && ((ModelElement) secondElement).getImpactedDependency().size()==0  
+                && ! ElementNavigationManager.haveSameSecondLevelAncestor(sourceNode, targetNode)
                 && (((Class) firstElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR) 
-                        || ((Class) secondElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR))
-                && ! ElementNavigationManager.haveSameSecondLevelAncestor(sourceNode, targetNode)) ;
+                    || ((Class) secondElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.OPERATOR))) {
+        
+            for(Dependency dependency : ((ModelElement) secondElement).getImpactedDependency()){
+                if (dependency.isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION)) {
+                    return false;
+                }
+            }
+        
+            return true;
+        }
+        return false;
     }
 
     @objid ("e019777d-2d6c-4712-bec4-d46af7e96675")
