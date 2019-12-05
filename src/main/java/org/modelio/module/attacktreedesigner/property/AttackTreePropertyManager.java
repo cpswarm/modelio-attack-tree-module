@@ -35,7 +35,7 @@ public class AttackTreePropertyManager {
                 // Add Attack Name and Tags to Property Table
                 propertyPage = new AttackPropertyPage();
                 propertyPage.changeProperty(element, currentRow, value);
-                currentRow= currentRow - AttackPropertyPage.PROPERTIES_SIZE;
+                currentRow= currentRow - (element.getTag().size() + 1);
         
                 // Add Attack Counter Measures to Property Table
                 List<Note> attackNotes = element.getDescriptor();

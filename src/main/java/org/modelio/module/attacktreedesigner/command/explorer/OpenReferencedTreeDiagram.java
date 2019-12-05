@@ -12,6 +12,7 @@ import org.modelio.metamodel.uml.statik.Attribute;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
 import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
+import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.impl.AttackTreeDesignerModule;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
@@ -28,7 +29,9 @@ public class OpenReferencedTreeDiagram extends DefaultModuleCommandHandler {
         if(referencedTreeDiagram != null) {
             moduleContext.getModelioServices().getEditionService().openEditor(referencedTreeDiagram);
         } else {
-            MessageDialog.openInformation(Display.getDefault().getActiveShell(), "No Diagram Found!", "Sorry! We could not find the diagram of the referenced tree");
+            MessageDialog.openInformation(Display.getDefault().getActiveShell(), 
+                    Messages.getString ("Ui.Dialog.NoDiagramFound.Label"), 
+                    Messages.getString ("Ui.Dialog.NoDiagramFound.Message"));
         }
     }
 
@@ -41,7 +44,7 @@ public class OpenReferencedTreeDiagram extends DefaultModuleCommandHandler {
                     && (
                             ((selectedElement instanceof Class)
                                     && ((Class) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE))
-                            
+        
                             || ((selectedElement instanceof Attribute)
                                     && ((Attribute) selectedElement).isStereotyped(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.TREE_REFERENCE_ATTRIBUTE))
                             )
@@ -53,7 +56,7 @@ public class OpenReferencedTreeDiagram extends DefaultModuleCommandHandler {
     @objid ("0616cac0-990a-40cb-bf74-8fdbfb982538")
     public AbstractDiagram getReferencedTreeDiagram(MObject selectedElement) {
         AbstractDiagram referencedTreeDiagram = null;
-                
+        
         Attribute referenceTreeAttribute = null;        
         
         if(selectedElement instanceof Class) {

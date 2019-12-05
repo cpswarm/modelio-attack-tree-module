@@ -5,6 +5,7 @@ import java.util.List;
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.api.module.propertiesPage.IModulePropertyTable;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
+import org.modelio.metamodel.uml.infrastructure.TagParameter;
 import org.modelio.metamodel.uml.infrastructure.TaggedValue;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
@@ -17,9 +18,6 @@ import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.TagsManag
 
 @objid ("224ee252-26f1-4b33-9ecc-84279671ca6c")
 public class AttackPropertyPage implements IPropertyContent {
-    @objid ("2594a992-2f3e-4018-962a-cb950f5accaa")
-    public static final int PROPERTIES_SIZE = 7;
-
     /**
      * This method handles the changes of the given property, identified by its row index, of a selected element
      * to a new value.
@@ -55,6 +53,27 @@ public class AttackPropertyPage implements IPropertyContent {
         } else if (row == 7) {
             // row=7 -> Out of scope
             TagsManager.setElementTagValue(element, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.OUT_OF_SCOPE, value);
+        
+        } else if (row > 7 && row <= (element.getTag().size() + 1)) {
+        
+            /*
+             * Add Update custom tag
+             */
+            int customTagPosition = row - 7;
+            int currentCustomTagPosition = 1;
+            List<TaggedValue> attackTags = element.getTag();
+            for(TaggedValue attackTag:attackTags) {
+                String tagDefinitionName = attackTag.getDefinition().getName();
+                if(tagDefinitionName.equals(AttackTreeTagTypes.CUSTOM_TAG)) {
+                    List<TagParameter> tagParameters = attackTag.getActual();
+                    if(currentCustomTagPosition == customTagPosition && tagParameters.size() >= 2) {
+                        tagParameters.get(1).setValue(value);
+                        break;
+                    } else {
+                        currentCustomTagPosition++;
+                    }
+                }
+            }
         }
     }
 
@@ -93,7 +112,7 @@ public class AttackPropertyPage implements IPropertyContent {
         // row=5 -> Security related
         TaggedValue securityRelatedTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SECURITY_RELATED);
         table.addProperty(AttackTreeTagTypes.SECURITY_RELATED, TagsManager.getTagParameter(securityRelatedTag).equals("true"));
-                
+        
         // row=6 -> Safety related
         TaggedValue safetyRelatedTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SAFETY_RELATED);
         table.addProperty(AttackTreeTagTypes.SAFETY_RELATED, TagsManager.getTagParameter(safetyRelatedTag).equals("true"));
@@ -101,6 +120,20 @@ public class AttackPropertyPage implements IPropertyContent {
         // row=7 -> Out of scope
         TaggedValue outOfScopeTag = element.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.OUT_OF_SCOPE);
         table.addProperty(AttackTreeTagTypes.OUT_OF_SCOPE, TagsManager.getTagParameter(outOfScopeTag).equals("true"));
+        
+        /*
+         * Add Custom tags
+         */
+        List<TaggedValue> attackTags = element.getTag();
+        for(TaggedValue attackTag:attackTags) {
+            String tagDefinitionName = attackTag.getDefinition().getName();
+            if(tagDefinitionName.equals(AttackTreeTagTypes.CUSTOM_TAG)) {
+                List<TagParameter> tagParameters = attackTag.getActual();
+                if(tagParameters.size() >= 2) {
+                    table.addProperty(tagParameters.get(0).getValue(), tagParameters.get(1).getValue());
+                }
+            }
+        }
     }
 
     /**

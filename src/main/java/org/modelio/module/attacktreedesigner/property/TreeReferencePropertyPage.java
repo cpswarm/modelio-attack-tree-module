@@ -6,6 +6,7 @@ import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.api.module.propertiesPage.IModulePropertyTable;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.infrastructure.Note;
+import org.modelio.metamodel.uml.infrastructure.TagParameter;
 import org.modelio.metamodel.uml.infrastructure.TaggedValue;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
@@ -89,6 +90,20 @@ public class TreeReferencePropertyPage implements IPropertyContent {
             for(Note rootNote:rootNotes) {
                 if(rootNote.getModel().getName().equals(AttackTreeNoteTypes.COUNTER_MEASURE)) {
                     table.addConsultProperty (AttackTreeNoteTypes.COUNTER_MEASURE,rootNote.getContent());
+                }
+            }
+            
+            /*
+             * Add Custom tags
+             */
+            List<TaggedValue> attackTags = referencedTree.getTag();
+            for(TaggedValue attackTag:attackTags) {
+                String tagDefinitionName = attackTag.getDefinition().getName();
+                if(tagDefinitionName.equals(AttackTreeTagTypes.CUSTOM_TAG)) {
+                    List<TagParameter> tagParameters = attackTag.getActual();
+                    if(tagParameters.size() >= 2) {
+                        table.addConsultProperty(tagParameters.get(0).getValue(), tagParameters.get(1).getValue());
+                    }
                 }
             }
         }        

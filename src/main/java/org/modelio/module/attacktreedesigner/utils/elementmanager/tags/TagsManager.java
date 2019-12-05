@@ -77,7 +77,6 @@ public class TagsManager {
         TaggedValue outOfScopeTag = session.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeTagTypes.OUT_OF_SCOPE, attackElement);
         TagsManager.createTagParameter(session, outOfScopeTag, TagsManager.DEFAULT_OUT_OF_SCOPE);
         
-        
         /*
          * Create Countered Attack Default Tag
          */
@@ -115,6 +114,12 @@ public class TagsManager {
             return RiskLevel.values()[newRiskLevelOrder].toString();
         }
         return null;
+    }
+
+    @objid ("8eafef69-5765-4e28-89bc-3583745e55d2")
+    public static void addTagParameter(IModelingSession session, TaggedValue taggedValue, String value) {
+        TagParameter tagParameter= session.getModel().createTagParameter(value, taggedValue);
+        taggedValue.getActual().add(tagParameter);
     }
 
 }

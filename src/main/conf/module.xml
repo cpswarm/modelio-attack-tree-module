@@ -22,7 +22,7 @@
                     <TagType name="Security related" uid="923a8a26-c1af-4c8d-b627-c75164e8ba61" label="%tagtype.Security related.label" parameter-card="1" is-hidden="false" is-signed="false"/>
                     <TagType name="Safety related" uid="e6005ad7-e8fe-45bd-ad76-6c2e195de688" label="%tagtype.Safety related.label" parameter-card="1" is-hidden="false" is-signed="false"/>
                     <TagType name="Out of scope" uid="6cdb9550-932c-4872-bd5b-47dac059f337" label="%tagtype.Out of scope.label" parameter-card="1" is-hidden="false" is-signed="false"/>
-                    <TagType name="Custom tag" uid="65adbe17-0416-4b30-a996-40e7f9a96860" label="%tagtype.Custom tag.label" parameter-card="1" is-hidden="false" is-signed="false"/>
+                    <TagType name="Custom tag" uid="65adbe17-0416-4b30-a996-40e7f9a96860" label="%tagtype.Custom tag.label" parameter-card="*" is-hidden="false" is-signed="false"/>
                     <TagType name="Countered attack" uid="3268b8f4-f4e7-4899-9341-f1e561a69117" label="%tagtype.Countered attack.label" parameter-card="1" is-hidden="false" is-signed="false"/>
                 </TagTypes>
                 <NoteTypes>
@@ -115,6 +115,16 @@
                 <Scope metaclass="Standard.Project" stereotype=""/>
                 <Handler class="org.modelio.module.attacktreedesigner.command.explorer.ImportPackageCommand"/>
             </Command>
+            <Command id="Add_a_Custom_Tag_property" label="%command.Add_a_Custom_Tag_property.label" tooltip="%command.Add_a_Custom_Tag_property.tooltip" image="res/icon/gui/Add_Custom_Tag_24.png" modify-model="true">
+                <Scope metaclass="Standard.Class" stereotype="AttackTreeDesigner#Attack"/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.explorer.AddCustomTagCommand">
+                    <HParameter name="name" value=""/>
+                </Handler>
+            </Command>
+            <Command id="Remove_a_Custom_Tag_property" label="%command.Remove_a_Custom_Tag_property.label" tooltip="%command.Remove_a_Custom_Tag_property.tooltip" image="res/icon/gui/Remove_Custom_Tag_24.png" modify-model="true">
+                <Scope metaclass="Standard.Class" stereotype="AttackTreeDesigner#Attack"/>
+                <Handler class="org.modelio.module.attacktreedesigner.command.explorer.RemoveCustomTagCommand"/>
+            </Command>
         </Commands>
         <Tools>
             <Tool id="AND" label="%tool.AND.label" tooltip="%tool.AND.tooltip" image="res/icon/gui/AndGate_24.png">
@@ -201,7 +211,10 @@
             </DiagramType>
         </Diagrams>
         <Views>
-            <PropertyPage id="Attack_Tree" class="org.modelio.module.attacktreedesigner.property.AttackTreePropertyPage" label="%propertypage.Attack_Tree.label" image="res/icon/gui/module.png"/>
+            <PropertyPage id="Attack_Tree" class="org.modelio.module.attacktreedesigner.property.AttackTreePropertyPage" label="%propertypage.Attack_Tree.label" image="res/icon/gui/module.png">
+                <CommandRef refid="Add_a_Custom_Tag_property" group="" group-image=""/>
+                <CommandRef refid="Remove_a_Custom_Tag_property" group="" group-image=""/>
+            </PropertyPage>
         </Views>
     </Gui>
     <Resources>
