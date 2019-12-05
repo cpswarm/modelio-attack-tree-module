@@ -32,6 +32,7 @@ import org.modelio.module.attacktreedesigner.api.IAttackTreeDesignerPeerModule;
 import org.modelio.module.attacktreedesigner.conversion.schema.AttackTreeType;
 import org.modelio.module.attacktreedesigner.conversion.schema.AttackType;
 import org.modelio.module.attacktreedesigner.conversion.schema.CounterMeasureType;
+import org.modelio.module.attacktreedesigner.conversion.schema.CustomTagType;
 import org.modelio.module.attacktreedesigner.conversion.schema.OperationType;
 import org.modelio.module.attacktreedesigner.conversion.schema.OperatorType;
 import org.modelio.module.attacktreedesigner.conversion.schema.TagType;
@@ -218,15 +219,16 @@ public class JaxbToModelConvertor {
             }
             TagsManager.createTagParameter(modellingSession, tag, jaxbTag.getValue());
         }
-        
-        /*
-         * [Deprecated]Create Countered Attack Default Tag
-         */
-        //        TaggedValue counteredAttackTag = modellingSession.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, 
-        //                AttackTreeTagTypes.COUNTERED_ATTACK, attackNode);
-        //        TagsManager.createTagParameter(modellingSession, counteredAttackTag, TagsManager.DEFAULT_COUNTERED_ATTACK);
+      
     }
 
+    private void updateAttackCustomTags(IModelingSession modellingSession, AttackType jaxbAttack, Class attackNode) {
+        for(CustomTagType jaxbCustomTag: jaxbAttack.getCustomTag()) {
+            TagsManager.createCustomTag(modellingSession, attackNode, jaxbCustomTag.getName(), jaxbCustomTag.getValue());
+        }
+      
+    }
+    
     @objid ("2e95b475-e490-473d-abd9-4568d8d2b4e4")
     private void createNodeChildren(IModelingSession modellingSession, IUmlModel projectModel, IDiagramHandle diagramHandle, Class node, Class rootElement, Object jaxbElement) {
         if(jaxbElement instanceof AttackType) {
@@ -274,6 +276,7 @@ public class JaxbToModelConvertor {
         
         attackChildNode.setName(jaxbAttackChild.getName());
         updateAttackTags(modellingSession, diagramHandle, jaxbAttackChild, attackChildNode);
+        updateAttackCustomTags(modellingSession, jaxbAttackChild, attackChildNode);
         updateAttackCounterMeasures(modellingSession, diagramHandle, jaxbAttackChild, attackChildNode);
         
         Dependency dependency = modellingSession.getModel().createDependency(node, attackChildNode, IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.CONNECTION); 

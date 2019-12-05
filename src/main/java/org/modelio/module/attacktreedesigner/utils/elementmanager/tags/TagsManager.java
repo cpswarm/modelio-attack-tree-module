@@ -122,4 +122,13 @@ public class TagsManager {
         taggedValue.getActual().add(tagParameter);
     }
 
+    @objid ("d1aa5290-8a50-4e2a-b5bf-ff05fea06b40")
+    public static void createCustomTag(IModelingSession modelingSession, ModelElement element, String customTagName, String customTagValue) {
+        TaggedValue customTag = modelingSession.getModel().createTaggedValue(IAttackTreeDesignerPeerModule.MODULE_NAME, 
+                AttackTreeTagTypes.CUSTOM_TAG, 
+                element);
+        TagsManager.createTagParameter(modelingSession, customTag, customTagName);
+        TagsManager.addTagParameter(modelingSession, customTag, customTagValue);
+    }
+
 }

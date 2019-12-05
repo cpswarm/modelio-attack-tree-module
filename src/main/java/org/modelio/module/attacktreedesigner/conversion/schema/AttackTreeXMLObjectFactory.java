@@ -61,6 +61,14 @@ public class AttackTreeXMLObjectFactory {
     public TagType createTagType() {
         return new TagType();
     }
+    
+    /**
+     * Create an instance of {@link CustomTagType }
+     */
+    @objid ("13e7294d-b739-42c1-bbe2-a5f64ea01fdc")
+    public CustomTagType createCustomTagType() {
+        return new CustomTagType();
+    }
 
     /**
      * Create an instance of {@link OperatorType }

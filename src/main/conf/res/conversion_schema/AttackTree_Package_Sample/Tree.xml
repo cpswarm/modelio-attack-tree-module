@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<attackTree>
+    <treeDiagram name="Tree Diagram"/>
+    <attack name="Tree">
+        <tag name="Severity">HIGH</tag>
+        <tag name="Probability">LOW</tag>
+        <tag name="Security related">false</tag>
+        <tag name="Safety related">true</tag>
+        <tag name="Out of scope">false</tag>
+        <tag name="Countered attack">true</tag>
+        <operator type="AND">
+            <attack name="Attack">
+                <tag name="Severity">HIGH</tag>
+                <tag name="Probability">HIGH</tag>
+                <tag name="Security related">false</tag>
+                <tag name="Safety related">false</tag>
+                <tag name="Out of scope">false</tag>
+                <tag name="Countered attack">true</tag>
+                <customTag name="k1">v1</customTag>
+                <customTag name="k2">v2</customTag>
+                <operator type="OR">
+                    <attack name="Attack2">
+                        <tag name="Severity">MEDIUM</tag>
+                        <tag name="Probability">HIGH</tag>
+                        <tag name="Security related">false</tag>
+                        <tag name="Safety related">false</tag>
+                        <tag name="Out of scope">true</tag>
+                        <tag name="Countered attack">true</tag>
+                        <counterMeasure content="Counter-Measure1"/>
+                    </attack>
+                    <attack name="Attack3">
+                        <tag name="Severity">MEDIUM</tag>
+                        <tag name="Probability">LOW</tag>
+                        <tag name="Security related">false</tag>
+                        <tag name="Safety related">false</tag>
+                        <tag name="Out of scope">false</tag>
+                        <tag name="Countered attack">true</tag>
+                        <customTag name="k1">v1</customTag>
+                        <counterMeasure content="Counter-Measure2"/>
+                    </attack>
+                </operator>
+            </attack>
+            <attack name="Attack1">
+                <tag name="Severity">MEDIUM</tag>
+                <tag name="Probability">LOW</tag>
+                <tag name="Security related">false</tag>
+                <tag name="Safety related">false</tag>
+                <tag name="Out of scope">false</tag>
+                <tag name="Countered attack">false</tag>
+                <customTag name="t1">h1</customTag>
+            </attack>
+        </operator>
+    </attack>
+</attackTree>

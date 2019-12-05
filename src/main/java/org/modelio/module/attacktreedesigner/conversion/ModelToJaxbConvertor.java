@@ -6,6 +6,8 @@ import com.modeliosoft.modelio.javadesigner.annotations.objid;
 import org.modelio.metamodel.diagrams.AbstractDiagram;
 import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.Note;
+import org.modelio.metamodel.uml.infrastructure.TagParameter;
+import org.modelio.metamodel.uml.infrastructure.TaggedValue;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.module.attacktreedesigner.api.AttackTreeNoteTypes;
 import org.modelio.module.attacktreedesigner.api.AttackTreeStereotypes;
@@ -15,6 +17,7 @@ import org.modelio.module.attacktreedesigner.conversion.schema.AttackTreeType;
 import org.modelio.module.attacktreedesigner.conversion.schema.AttackTreeXMLObjectFactory;
 import org.modelio.module.attacktreedesigner.conversion.schema.AttackType;
 import org.modelio.module.attacktreedesigner.conversion.schema.CounterMeasureType;
+import org.modelio.module.attacktreedesigner.conversion.schema.CustomTagType;
 import org.modelio.module.attacktreedesigner.conversion.schema.OperationType;
 import org.modelio.module.attacktreedesigner.conversion.schema.OperatorType;
 import org.modelio.module.attacktreedesigner.conversion.schema.TagType;
@@ -89,6 +92,9 @@ public class ModelToJaxbConvertor {
         AttackType attack = objectFactory.createAttackType();
         attack.setName(modelNode.getName());
         
+        /*
+         * Attack Tags
+         */
         TagType severityTag = objectFactory.createTagType();
         severityTag.setName(AttackTreeTagTypes.SEVERITY);
         severityTag.setValue(TagsManager.getElementTagParameter(modelNode, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY));
@@ -120,7 +126,28 @@ public class ModelToJaxbConvertor {
         counteredAttack.setValue(TagsManager.getElementTagParameter(modelNode, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.COUNTERED_ATTACK));
         attack.getTag().add(counteredAttack);
         
+        /*
+         * Attack Custom Tags
+         */
+        List<TaggedValue> attackTags = modelNode.getTag();
+        for(TaggedValue attackTag:attackTags) {
+            String tagDefinitionName = attackTag.getDefinition().getName();
+            if(tagDefinitionName.equals(AttackTreeTagTypes.CUSTOM_TAG)) {
+                List<TagParameter> tagParameters = attackTag.getActual();
+                if(tagParameters.size() >= 2) {
+                    
+                    // Add a custom tag
+                    CustomTagType customTag = objectFactory.createCustomTagType();
+                    customTag.setName(tagParameters.get(0).getValue());
+                    customTag.setValue(tagParameters.get(1).getValue());
+                    attack.getCustomTag().add(customTag);
+                }
+            }
+        }
         
+        /*
+         * Attack Counter Measures
+         */
         List<Note> nodeNotes = modelNode.getDescriptor();
         for(Note note:nodeNotes) {
             if(note.getModel().getName().equals(AttackTreeNoteTypes.COUNTER_MEASURE)) {
