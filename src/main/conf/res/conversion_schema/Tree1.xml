@@ -2,33 +2,29 @@
 <attackTree>
     <treeDiagram name="Tree1 Diagram"/>
     <attack name="Tree1">
-        <tag name="Severity">HIGH</tag>
-        <tag name="Probability">LOW</tag>
+        <tag name="Severity">MEDIUM</tag>
+        <tag name="Probability">MEDIUM</tag>
         <tag name="Security related">false</tag>
         <tag name="Safety related">false</tag>
         <tag name="Out of scope">false</tag>
-        <tag name="Countered attack">true</tag>
+        <tag name="Countered attack">false</tag>
         <operator type="AND">
             <attack name="Attack">
                 <tag name="Severity">MEDIUM</tag>
-                <tag name="Probability">LOW</tag>
-                <tag name="Security related">false</tag>
-                <tag name="Safety related">true</tag>
-                <tag name="Out of scope">false</tag>
-                <tag name="Countered attack">false</tag>
-                <customTag name="custom1">v1</customTag>
-            </attack>
-            <attack name="Attack1">
-                <tag name="Severity">LOW</tag>
                 <tag name="Probability">MEDIUM</tag>
                 <tag name="Security related">false</tag>
-                <tag name="Safety related">true</tag>
+                <tag name="Safety related">false</tag>
                 <tag name="Out of scope">false</tag>
                 <tag name="Countered attack">false</tag>
-                <customTag name="custom1">v2</customTag>
-                <customTag name="custom3">v3</customTag>
             </attack>
-            <treeReference ref="Tree.xml"/>
+            <attack name="Attack1">
+                <tag name="Severity">MEDIUM</tag>
+                <tag name="Probability">MEDIUM</tag>
+                <tag name="Security related">false</tag>
+                <tag name="Safety related">false</tag>
+                <tag name="Out of scope">false</tag>
+                <tag name="Countered attack">false</tag>
+            </attack>
         </operator>
     </attack>
 </attackTree>
