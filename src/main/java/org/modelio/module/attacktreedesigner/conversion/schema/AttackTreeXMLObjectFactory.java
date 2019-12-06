@@ -61,14 +61,6 @@ public class AttackTreeXMLObjectFactory {
     public TagType createTagType() {
         return new TagType();
     }
-    
-    /**
-     * Create an instance of {@link CustomTagType }
-     */
-    @objid ("13e7294d-b739-42c1-bbe2-a5f64ea01fdc")
-    public CustomTagType createCustomTagType() {
-        return new CustomTagType();
-    }
 
     /**
      * Create an instance of {@link OperatorType }
@@ -109,6 +101,14 @@ public class AttackTreeXMLObjectFactory {
     @XmlElementDecl(namespace = "", name = "attackTree")
     public JAXBElement<AttackTreeType> createAttackTree(AttackTreeType value) {
         return new JAXBElement<>(_AttackTree_QNAME, AttackTreeType.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link CustomTagType }
+     */
+    @objid ("08ec36d0-16a6-4675-b9bb-102096b68df8")
+    public CustomTagType createCustomTagType() {
+        return new CustomTagType();
     }
 
 }

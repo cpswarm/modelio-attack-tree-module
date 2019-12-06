@@ -50,13 +50,14 @@ public class AttackType {
     @objid ("33506b6f-0eea-401b-8716-4974565adf8d")
     protected List<TagType> tag;
 
-    protected List<CustomTagType> customTag;
-
     @objid ("c7671539-4044-4876-9f3c-4aaa2b3f61b0")
     protected List<CounterMeasureType> counterMeasure;
 
     @objid ("e39d3bee-bc0e-4627-833f-80076db917b2")
     protected OperatorType operator;
+
+    @objid ("64bdd11d-5d95-42f2-9120-75a19b09c513")
+    protected List<CustomTagType> customTag;
 
     /**
      * Gets the value of the tag property.
@@ -84,34 +85,6 @@ public class AttackType {
             this.tag = new ArrayList<>();
         }
         return this.tag;
-    }
-
-    /**
-     * Gets the value of the customTag property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the customTag property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     * getCustomTag().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link CustomTagType }
-     */
-    @objid ("833706b2-4a01-4fc2-ba12-fc0895974ebe")
-    public List<CustomTagType> getCustomTag() {
-        if (this.customTag == null) {
-            this.customTag = new ArrayList<>();
-        }
-        return this.customTag;
     }
 
     /**
@@ -182,6 +155,34 @@ public class AttackType {
     @objid ("7886ac53-ff3e-4d06-99c9-0d3c90079e8e")
     public void setName(String value) {
         this.name = value;
+    }
+
+    /**
+     * Gets the value of the customTag property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the customTag property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     * getCustomTag().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link CustomTagType }
+     */
+    @objid ("7f11c29d-ee61-4748-855c-16454afd43e7")
+    public List<CustomTagType> getCustomTag() {
+        if (this.customTag == null) {
+            this.customTag = new ArrayList<>();
+        }
+        return this.customTag;
     }
 
 }
