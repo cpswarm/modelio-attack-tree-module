@@ -6,8 +6,8 @@ Attack Tree Designer
 Attack Tree Designer - User Manual
 ----
 
-See the link of the wiki page below.
-[Attack Tree Designer - User Manual](http://forge.modelio.org/projects/attack-tree-modelio38-user-manual-english/wiki/Wiki)
+Go to the wiki page
+[Attack Tree Designer - User Manual](https://github.com/cpswarm/modelio-attack-tree-module/wiki)
 
 
 ## Dependencies
