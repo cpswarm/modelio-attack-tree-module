@@ -9,3 +9,17 @@ Attack Tree Designer - User Manual
 See the link of the wiki page below.
 [Attack Tree Designer - User Manual](http://forge.modelio.org/projects/attack-tree-modelio38-user-manual-english/wiki/Wiki)
 
+
+## Dependencies
+
+* [Java 8 JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) 
+* [Modelio 3.8](https://www.modelio.org/downloads/download-modelio.html)
+
+## Contributing
+Contributions are welcome. 
+
+Please fork, make your changes, and submit a pull request. For major changes, please open an issue first and discuss it with the other authors.
+
+## Affiliation
+![CPSwarm](https://github.com/cpswarm/template/raw/master/cpswarm.png)  
+This work is supported by the European Commission through the [CPSwarm H2020 project](https://cpswarm.eu) under grant no. 731946.
