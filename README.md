@@ -5,9 +5,6 @@ Attack Tree Designer
 ![Attack Tree Environment](http://forge.modelio.org/attachments/download/22610/Example.png)
 **Figure 1 : Attack Tree Designer Environment**
 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
-
-
 Attack Tree Designer - User Manual
 ----
 
