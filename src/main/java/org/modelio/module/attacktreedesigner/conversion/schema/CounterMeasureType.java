@@ -48,6 +48,7 @@ public class CounterMeasureType {
 
     /**
      * Sets the value of the content property.
+     * 
      * @param value allowed object is
      * {@link String }
      */

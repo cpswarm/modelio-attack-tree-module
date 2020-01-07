@@ -19,6 +19,7 @@ public class AttackTreePropertyManager {
     /**
      * @param MObject
      * : the selected MObject
+     * 
      * @param row : the row of the property
      * @param value : the new value of the property
      * @return the new value of the row
@@ -81,6 +82,7 @@ public class AttackTreePropertyManager {
 
     /**
      * build the property table of the selected Elements
+     * 
      * @param element : the selected element
      * @param table : the property table
      */

@@ -22,6 +22,7 @@ public class AttackPropertyPage implements IPropertyContent {
      * This method handles the changes of the given property, identified by its row index, of a selected element
      * to a new value.
      * @param MObject : the selected element
+     * 
      * @param row : the row of the changed property
      * @param value : the new value of the property
      */
@@ -80,6 +81,7 @@ public class AttackPropertyPage implements IPropertyContent {
     /**
      * This method handles the construction of the property table of a selected element
      * @param MObject : the selected element
+     * 
      * @param table : the property table to fulfill
      */
     @objid ("bc6ed339-b45d-4786-b049-966c4f598c2f")
@@ -138,7 +140,7 @@ public class AttackPropertyPage implements IPropertyContent {
 
     /**
      * Sub array of an array
-     * @param array
+     * 
      * @param indexStart should be superior to 0
      * @param indexEnd should be inferior than array.length
      * @return sub array of array that starts from index indexStart inclusive and ends at indexEnd (inclusive)

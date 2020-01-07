@@ -55,6 +55,7 @@ public class TagType {
 
     /**
      * Sets the value of the value property.
+     * 
      * @param value allowed object is
      * {@link String }
      */
@@ -76,6 +77,7 @@ public class TagType {
 
     /**
      * Sets the value of the name property.
+     * 
      * @param value allowed object is
      * {@link String }
      */

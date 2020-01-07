@@ -2,7 +2,7 @@ package org.modelio.module.attacktreedesigner.utils.elementmanager.tags;
 
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 
-@objid ("5595fc47-4fed-4092-b086-5bcfbba74657")
+@objid ("6175ad87-8226-4191-8d89-48eb440a1319")
 public enum Probability {
     LOW,
     MEDIUM,

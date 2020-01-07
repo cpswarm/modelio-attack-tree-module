@@ -15,6 +15,7 @@ public class OperatorPropertyPage implements IPropertyContent {
      * This method handles the changes of the given property, identified by its row index, of a selected element
      * to a new value.
      * @param MObject : the selected element
+     * 
      * @param row : the row of the changed property
      * @param value : the new value of the property
      */
@@ -41,6 +42,7 @@ public class OperatorPropertyPage implements IPropertyContent {
     /**
      * This method handles the construction of the property table of a selected element
      * @param MObject : the selected element
+     * 
      * @param table : the property table to fulfill
      */
     @objid ("c881fa9a-0f63-432a-a89b-b3b534dd5dc8")

@@ -60,6 +60,7 @@ public class AttackTreeType {
 
     /**
      * Sets the value of the treeDiagram property.
+     * 
      * @param value allowed object is
      * {@link TreeDiagramType }
      */
@@ -81,6 +82,7 @@ public class AttackTreeType {
 
     /**
      * Sets the value of the attack property.
+     * 
      * @param value allowed object is
      * {@link AttackType }
      */

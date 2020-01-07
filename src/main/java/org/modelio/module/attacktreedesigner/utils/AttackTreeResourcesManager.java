@@ -56,6 +56,7 @@ public class AttackTreeResourcesManager {
     /**
      * Method getInstance
      * @author ebrosse
+     * 
      * @return the SysMLResourcesManager instance
      */
     @objid ("8eb9710b-f739-465a-b6bc-a123b3a44272")
@@ -68,6 +69,7 @@ public class AttackTreeResourcesManager {
 
     /**
      * This method sets the current module
+     * 
      * @param module : the current module
      */
     @objid ("a5a0364b-42c7-4318-b3fd-20b91b538d21")
@@ -78,6 +80,7 @@ public class AttackTreeResourcesManager {
     /**
      * Method getImage
      * @author ebrosse
+     * 
      * @param imageName : the name of the image file
      * @return the complete path of the image file
      */
@@ -89,6 +92,7 @@ public class AttackTreeResourcesManager {
     /**
      * Method getStyle
      * @author ebrosse
+     * 
      * @param styleName : the name of the style file
      * @return the absolute path of the style file
      */
@@ -100,6 +104,7 @@ public class AttackTreeResourcesManager {
     /**
      * Method getPropertyName
      * @author ebrosse
+     * 
      * @param propertyName : the name of the property
      * @return the internationalized name of the property
      */

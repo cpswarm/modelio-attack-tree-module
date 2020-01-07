@@ -2,40 +2,40 @@ package org.modelio.module.attacktreedesigner.utils.elementmanager.representatio
 
 import com.modeliosoft.modelio.javadesigner.annotations.objid;
 
-@objid ("3e8931b9-f960-4114-9cc5-f7f89fb94884")
+@objid ("35595e54-c666-4514-a1c1-fc99c7062489")
 public enum DiagramElementStyle {
     OPERATOR ("NONE", "IMAGE"),
     ATTACK ("SIMPLE", "SIMPLE"),
     TREE_REFERENCE ("SIMPLE", "STRUCTURED");
 
-    @objid ("94a929ff-c998-4705-b409-0a0d70ac3828")
+    @objid ("ba8b6174-d142-4e19-91a7-ac0be5ae6732")
     private String showNameProperty;
 
-    @objid ("68cbadd8-3bc2-47c0-a525-f9e2c59bce62")
+    @objid ("68c55436-6917-4cb4-b757-53906a321a83")
     private String representationMode;
 
-    @objid ("8c8cbbc4-cd79-438d-a215-60fc0caad7b8")
+    @objid ("fb4e66a9-b610-449c-bd01-c5e1fcfe95ef")
     DiagramElementStyle(String showNameProperty, String representationMode) {
         this.setShowNameProperty(showNameProperty);
         this.setRepresentationMode(representationMode);
     }
 
-    @objid ("5ffefbd3-9fc3-45a2-9218-e123322e3370")
+    @objid ("1aface22-4015-4858-bbda-3d9d597e830d")
     public String getShowNameProperty() {
         return this.showNameProperty;
     }
 
-    @objid ("fbf8b316-b40a-40ec-8996-ba1ea0712758")
+    @objid ("cc9eba86-1ecf-418b-8018-feedf07388c4")
     public void setShowNameProperty(String showNameProperty) {
         this.showNameProperty = showNameProperty;
     }
 
-    @objid ("f839e669-d94f-4de0-96dc-06d2b4723a11")
+    @objid ("82214f16-633c-49d7-8d90-485fd2e445ce")
     public String getRepresentationMode() {
         return this.representationMode;
     }
 
-    @objid ("6ed6f309-e864-4fde-9e4e-ed2c19016ed0")
+    @objid ("08b13c80-3a80-4e10-b1fd-04cd41cf7836")
     public void setRepresentationMode(String representationMode) {
         this.representationMode = representationMode;
     }

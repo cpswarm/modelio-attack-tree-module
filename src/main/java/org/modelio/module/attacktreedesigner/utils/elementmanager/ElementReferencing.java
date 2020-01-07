@@ -39,7 +39,6 @@ public class ElementReferencing {
     }
 
     /**
-     * @param selectedElement
      * @return List of trees roots contained in the same package as the root of the selectedElement
      */
     @objid ("3e22b7bc-fb49-49c7-a5de-a139307b12d9")

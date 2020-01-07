@@ -33,7 +33,7 @@ public class AttackTreeDesignerLifeCycleHandler extends DefaultModuleLifeCycleHa
     }
 
     /**
-     * @param mdaPath @return
+     * @return
      */
     @objid ("8c0c97e9-c8c1-4a34-bb7e-d5fd2fd5623a")
     public static boolean install(final String modelioPath, final String mdaPath) throws ModuleException {

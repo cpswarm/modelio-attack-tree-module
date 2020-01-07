@@ -69,6 +69,7 @@ public class OperatorType {
 
     /**
      * Sets the value of the type property.
+     * 
      * @param value allowed object is
      * {@link OperationType }
      */

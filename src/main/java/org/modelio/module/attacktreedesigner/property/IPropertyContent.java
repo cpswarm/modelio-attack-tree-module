@@ -42,6 +42,7 @@ public interface IPropertyContent {
      * This method handles the changes of the given property, identified by its row index, of a selected element
      * to a new value.
      * @param MObject : the selected element
+     * 
      * @param row : the row of the changed property
      * @param value : the new value of the property
      */
@@ -51,6 +52,7 @@ public interface IPropertyContent {
     /**
      * This method handles the construction of the property table of a selected element
      * @param MObject : the selected element
+     * 
      * @param table : the property table to fulfill
      */
     @objid ("336cdd6a-bf2d-4551-9ae6-1eae039c23df")

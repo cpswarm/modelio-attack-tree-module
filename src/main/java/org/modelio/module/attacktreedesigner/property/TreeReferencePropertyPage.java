@@ -17,10 +17,9 @@ import org.modelio.module.attacktreedesigner.i18n.Messages;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.ElementReferencing;
 import org.modelio.module.attacktreedesigner.utils.elementmanager.tags.TagsManager;
 
-@objid ("c07b6144-87dc-44fc-ab74-b757ac83385b")
+@objid ("39d81799-aa62-4c74-be58-816a644028f5")
 public class TreeReferencePropertyPage implements IPropertyContent {
-
-    @objid ("e757e838-6b1d-4b74-a4a3-f44158a6f7f6")
+    @objid ("885e6d52-8624-4cc2-99ec-380e66a6b9ab")
     @Override
     public void changeProperty(ModelElement element, int row, String value) {
         if (row == 1) {
@@ -28,7 +27,7 @@ public class TreeReferencePropertyPage implements IPropertyContent {
         }
     }
 
-    @objid ("0ead49a6-f4d8-4b85-8627-a1ba8698ba53")
+    @objid ("f1bf41bd-d40d-4752-a88c-24d467b776bf")
     @Override
     public void update(ModelElement element, IModulePropertyTable table) {
         Class referenceTree = (Class) element;
@@ -51,17 +50,17 @@ public class TreeReferencePropertyPage implements IPropertyContent {
             value = ElementReferencing.getElementFullPath(referencedTree);
         }
         table.addProperty (Messages.getString("Ui.Property.Reference.Name"), value, availableTreeNames);
-       
+               
         
         
         /*
          * Show referenced tree Root tags an counter measures (Show only)
          */
         if(referencedTree != null) {
-
+        
             // Name
             table.addConsultProperty(Messages.getString("Ui.Property.Name.Name"), referencedTree.getName());
-
+        
             // Severity property
             TaggedValue severityTag = referencedTree.getTag(IAttackTreeDesignerPeerModule.MODULE_NAME, AttackTreeStereotypes.ATTACK, AttackTreeTagTypes.SEVERITY);
             table.addConsultProperty (AttackTreeTagTypes.SEVERITY, TagsManager.getTagParameter(severityTag)); 
@@ -106,7 +105,7 @@ public class TreeReferencePropertyPage implements IPropertyContent {
                     }
                 }
             }
-        }        
+        }
     }
 
 }

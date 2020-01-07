@@ -128,6 +128,7 @@ public class AttackType {
 
     /**
      * Sets the value of the operator property.
+     * 
      * @param value allowed object is
      * {@link OperatorType }
      */
@@ -149,6 +150,7 @@ public class AttackType {
 
     /**
      * Sets the value of the name property.
+     * 
      * @param value allowed object is
      * {@link String }
      */

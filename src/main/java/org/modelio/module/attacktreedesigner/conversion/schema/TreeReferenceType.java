@@ -48,6 +48,7 @@ public class TreeReferenceType {
 
     /**
      * Sets the value of the ref property.
+     * 
      * @param value allowed object is
      * {@link String }
      */

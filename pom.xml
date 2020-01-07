@@ -5,7 +5,7 @@
   <!-- definition -->
   <groupId>org.modelio.module</groupId>
   <artifactId>attacktreedesigner</artifactId>
-  <version>0.06.05</version>
+  <version>0.07.00</version>
   <name>AttackTreeDesigner</name>
   <repositories>
       <repository>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.modelio</groupId>
             <artifactId>MDAKit</artifactId>
-            <version>[3.8.0,3.8.1)</version>
+            <version>[4.0.0,4.0.1)</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
@@ -57,7 +57,7 @@
             <plugin>
                 <groupId>org.modelio</groupId>
                 <artifactId>modelio-maven-plugin</artifactId>
-                <version>3.8.0.02</version>
+                <version>4.0.0.00</version>
                 <executions>
                     <execution>
                         <id>ModuleValidation</id>
@@ -181,7 +181,7 @@
                                                 modelio-maven-plugin
                                             </artifactId>
                                             <versionRange>
-                                                [3.8.0.02,)
+                                                [4.0.0.00,)
                                             </versionRange>
                                             <goals>
                                                 <goal>
@@ -203,5 +203,5 @@
                 </plugins>
             </pluginManagement>
         </build>
-    <description>Attack Tree Designer offers an easy and practical environment for users to design attack trees, add AND/OR connections between attacks, add tags and counter measures to attacks, detect countered attacks, etc</description>
+    <description></description>
     </project>
